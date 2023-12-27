@@ -1,113 +1,109 @@
-import Image from 'next/image'
+"use client"
 
-export default function Home() {
+import Image from 'next/image';
+import Home from './sections/HomeSection';
+import Route from './sections/RouteSection';
+import Employees from './sections/EmployeesSection';
+import Vehicle from './sections/VehicleSection';
+import Court from './sections/CourtSection';
+import Product from './sections/ProductSection';
+import { useState } from 'react'
+
+export default function HomePage() {
+
+  const sections = [<Home />, <Route />, <Employees />, <Vehicle />, <Court />, <Product />];
+  const styleselectbuttom = {
+    display: 'flex',
+    width: '47px',
+    height: '48px',
+    padding: '9px 8px 9px 9px',
+    flexShrink: '0',
+    borderRadius: '5px',
+    background: '#acacac',
+  };
+  const [sectionactual, setSectionActual] = useState(0)
+  console.log(sectionactual);
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main className="grid min-h-screen items-center justify-between text-[#000] " style={{
+      gridTemplateColumns: "auto auto 1fr"
+    }}>
+
+
+      
+
+        {/* primera columna */}
+        <div className="bg-[#bbbcbc] flex flex-col items-center pt-16 space-y-14 h-screen w-fit px-4">
+
+          {/* Home */}
+          <button onClick={() => setSectionActual(0)}>
+            <div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 16 16" fill="currentColor" style={(sectionactual === (0)) ? styleselectbuttom : {}}>
+                <path d="M6.5 14.5V10.9947C6.5 10.75 6.75 10.5 7 10.5H9C9.25 10.5 9.5 10.75 9.5 11V14.5C9.5 14.7761 9.72386 15 10 15H14C14.2761 15 14.5 14.7761 14.5 14.5V7.5C14.5 7.36739 14.4473 7.24021 14.3536 7.14645L13 5.79289V2.5C13 2.22386 12.7761 2 12.5 2H11.5C11.2239 2 11 2.22386 11 2.5V3.79289L8.35355 1.14645C8.15829 0.951184 7.84171 0.951184 7.64645 1.14645L1.64645 7.14645C1.55268 7.24021 1.5 7.36739 1.5 7.5V14.5C1.5 14.7761 1.72386 15 2 15H6C6.27614 15 6.5 14.7761 6.5 14.5Z" fill={sectionactual === 0 ? '#000' : '#9c9c9c'} />
+              </svg>
+            </div>
+          </button>
+
+
+          {/* Rutas */}
+          <button onClick={() => setSectionActual(1)}>
+            <div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 16 16" fill="none" style={(sectionactual === (1)) ? styleselectbuttom : {}}>
+                <path d="M8 16C8 16 14 10.3137 14 6C14 2.68629 11.3137 0 8 0C4.68629 0 2 2.68629 2 6C2 10.3137 8 16 8 16ZM8 9C6.34315 9 5 7.65685 5 6C5 4.34315 6.34315 3 8 3C9.65685 3 11 4.34315 11 6C11 7.65685 9.65685 9 8 9Z" fill={sectionactual === 1 ? '#000' : '#9c9c9c'} />
+              </svg>
+            </div>
+          </button>
+
+
+          {/* Empleados */}
+          <button onClick={() => setSectionActual(2)}>
+            <div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 16 16" fill="none" style={(sectionactual === (2)) ? styleselectbuttom : {}}>
+                <path d="M11 5C11 6.65685 9.65685 8 8 8C6.34315 8 5 6.65685 5 5C5 3.34315 6.34315 2 8 2C9.65685 2 11 3.34315 11 5Z" fill={sectionactual === 2 ? '#000' : '#9c9c9c'} />
+                <path d="M2 13C2 14 3 14 3 14H8.25606C8.09023 13.5308 8 13.026 8 12.5C8 11.1463 8.5977 9.93228 9.54358 9.10733C9.07708 9.03817 8.56399 9 8 9C3 9 2 12 2 13Z" fill={sectionactual === 2 ? '#000' : '#9c9c9c'} />
+                <path d="M11.8855 9.45954C12.0661 8.84682 12.9339 8.84682 13.1145 9.45954L13.1583 9.60814C13.2737 9.99964 13.7209 10.1849 14.0793 9.98963L14.2154 9.91553C14.7763 9.60997 15.39 10.2237 15.0845 10.7846L15.0104 10.9207C14.8151 11.2791 15.0004 11.7263 15.3919 11.8417L15.5405 11.8855C16.1532 12.0661 16.1532 12.9339 15.5405 13.1145L15.3919 13.1583C15.0004 13.2737 14.8151 13.7209 15.0104 14.0793L15.0845 14.2154C15.39 14.7763 14.7763 15.39 14.2154 15.0845L14.0793 15.0104C13.7209 14.8151 13.2737 15.0004 13.1583 15.3919L13.1145 15.5405C12.9339 16.1532 12.0661 16.1532 11.8855 15.5405L11.8417 15.3919C11.7263 15.0004 11.2791 14.8151 10.9207 15.0104L10.7846 15.0845C10.2237 15.39 9.60997 14.7763 9.91553 14.2154L9.98963 14.0793C10.1849 13.7209 9.99964 13.2737 9.60814 13.1583L9.45954 13.1145C8.84682 12.9339 8.84682 12.0661 9.45954 11.8855L9.60814 11.8417C9.99964 11.7263 10.1849 11.2791 9.98963 10.9207L9.91553 10.7846C9.60997 10.2237 10.2237 9.60997 10.7846 9.91553L10.9207 9.98963C11.2791 10.1849 11.7263 9.99964 11.8417 9.60814L11.8855 9.45954ZM14 12.5C14 11.6716 13.3284 11 12.5 11C11.6716 11 11 11.6716 11 12.5C11 13.3284 11.6716 14 12.5 14C13.3284 14 14 13.3284 14 12.5Z" fill={sectionactual === 2 ? '#000' : '#9c9c9c'} />
+              </svg>
+            </div>
+          </button>
+
+          {/* Unidades/Vehículos */}
+          <button onClick={() => setSectionActual(3)}>
+            <div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 15 15" fill="none" style={(sectionactual === (3)) ? styleselectbuttom : {}}>
+                <path d="M0 0.5C0 0.223858 0.223858 0 0.5 0H2C2.22943 0 2.42943 0.156149 2.48507 0.378732L2.89039 2H14.5C14.6487 2 14.7898 2.06622 14.8848 2.18068C14.9797 2.29514 15.0188 2.44595 14.9914 2.59214L13.4914 10.5921C13.4471 10.8286 13.2406 11 13 11H12H5H4C3.75939 11 3.55291 10.8286 3.50856 10.5921L2.01131 2.6068L1.60961 1H0.5C0.223858 1 0 0.776142 0 0.5ZM5 11C3.89543 11 3 11.8954 3 13C3 14.1046 3.89543 15 5 15C6.10457 15 7 14.1046 7 13C7 11.8954 6.10457 11 5 11ZM12 11C10.8954 11 10 11.8954 10 13C10 14.1046 10.8954 15 12 15C13.1046 15 14 14.1046 14 13C14 11.8954 13.1046 11 12 11ZM5 12C5.55228 12 6 12.4477 6 13C6 13.5523 5.55228 14 5 14C4.44772 14 4 13.5523 4 13C4 12.4477 4.44772 12 5 12ZM12 12C12.5523 12 13 12.4477 13 13C13 13.5523 12.5523 14 12 14C11.4477 14 11 13.5523 11 13C11 12.4477 11.4477 12 12 12Z" fill={sectionactual === 3 ? '#000' : '#9c9c9c'} />
+              </svg>
+            </div>
+          </button>
+
+          {/* Sistema de Corte */}
+          <button onClick={() => setSectionActual(4)}>
+            <div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 16 16" fill="none" style={(sectionactual === (4)) ? styleselectbuttom : {}}>
+                <path d="M7.9643 1.52734C4.98668 1.52734 2.39271 3.23104 1.64353 5.65234H1.09451C0.473712 5.65234 0.00292572 6.21207 0.109293 6.82368L0.363323 8.28436C0.488276 9.00284 1.11187 9.52734 1.84114 9.52734H2.10387C2.40323 10.0403 2.79178 10.5053 3.24942 10.9092L2.52039 13.3862C2.47589 13.5374 2.50527 13.7007 2.59968 13.8269C2.69408 13.953 2.84245 14.0273 3.00004 14.0273H5.00004C5.21145 14.0273 5.40001 13.8944 5.47101 13.6953L5.95286 12.3437C6.58751 12.5173 7.26366 12.6107 7.9643 12.6107C8.67078 12.6107 9.35235 12.5157 9.99159 12.3394L10.5352 13.7115C10.6107 13.9021 10.795 14.0273 11 14.0273H13C13.1584 14.0273 13.3074 13.9523 13.4017 13.8251C13.496 13.6979 13.5245 13.5335 13.4784 13.3819L12.7167 10.8757C13.8099 9.89461 14.5 8.55873 14.5 7.06901C14.5 6.92359 14.4935 6.77976 14.4809 6.63767C14.7414 6.52776 14.9878 6.37196 15.185 6.19376C15.5 6.5 16 6.5 16 5.77739C16 6 15.5 6 15.5388 5.75071C15.5804 5.66935 15.6117 5.58403 15.6284 5.49586C15.6718 5.267 15.6126 5.03653 15.4267 4.85061C15.21 4.63386 14.9287 4.63943 14.7201 4.75324C14.5236 4.86041 14.3693 5.07111 14.3449 5.31503C14.3207 5.55771 14.4273 5.79535 14.6651 5.96871C14.5841 6.02492 14.4968 6.07662 14.4064 6.1218C13.8723 3.45792 11.1223 1.52734 7.9643 1.52734ZM15.1371 5.40269C15.1259 5.462 15.0944 5.53377 15.0388 5.6132C15.023 5.60495 15.0083 5.59659 14.9947 5.58819C14.8494 5.49838 14.8376 5.41297 14.8425 5.36478C14.8493 5.29619 14.8982 5.22564 14.9595 5.19218C15.0087 5.16536 15.0399 5.17093 15.0732 5.20417C15.1373 5.26826 15.151 5.32947 15.1371 5.40269ZM6.13809 4.75355C5.87269 4.82982 5.59571 4.67649 5.51945 4.41109C5.44319 4.14568 5.59652 3.86871 5.86192 3.79245C6.52273 3.60257 7.23002 3.5 7.96425 3.5C8.72698 3.5 9.46065 3.61068 10.1433 3.81496C10.4079 3.89411 10.5582 4.17275 10.479 4.4373C10.3999 4.70186 10.1212 4.85215 9.85668 4.77299C9.26734 4.59665 8.63026 4.5 7.96425 4.5C7.32314 4.5 6.70882 4.58956 6.13809 4.75355ZM5 6.25C5 6.66421 4.66421 7 4.25 7C3.83579 7 3.5 6.66421 3.5 6.25C3.5 5.83579 3.83579 5.5 4.25 5.5C4.66421 5.5 5 5.83579 5 6.25Z" fill={sectionactual === 4 ? '#000' : '#9c9c9c'} />
+              </svg>
+            </div>
+          </button>
+
+          {/* Productos */}
+          <button onClick={() => setSectionActual(5)}>
+            <div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 16 16" fill="none" style={(sectionactual === (5)) ? styleselectbuttom : {}}>
+                <path fillRule="evenodd" clipRule="evenodd" d="M15.5285 2.97293C15.8133 3.08683 16 3.36261 16 3.66929V12.3308C16 12.6374 15.8133 12.9132 15.5285 13.0271L8.27854 15.9271C8.09974 15.9987 7.90026 15.9987 7.72146 15.9271L0.471457 13.0271C0.186713 12.9132 0 12.6374 0 12.3308V3.66929C0 3.36261 0.186713 3.08683 0.471457 2.97293L7.44291 0.18434L7.44691 0.18275L7.72146 0.0729296C7.90026 0.00140642 8.09974 0.00140615 8.27854 0.0729295L8.55315 0.182774L8.55709 0.18434L15.5285 2.97293ZM14.1537 3.50003L8 5.96151L1.84629 3.50003L1 3.83855V4.23855L7.5 6.83854V14.7615L8 14.9615L8.5 14.7615V6.83854L15 4.23854V3.83855L14.1537 3.50003Z" fill={sectionactual === 5 ? '#000' : '#9c9c9c'} />
+              </svg>
+            </div>
+          </button>
+
+
         </div>
-      </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+        {
+          sections[sectionactual]
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+        }
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+        {/* Tercera columna */}
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+        
     </main>
-  )
+  );
 }
