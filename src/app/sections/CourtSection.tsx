@@ -6,6 +6,34 @@ export default function Court() {
             <div className="flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 px-4 h-[100%] justify-between">
                 <div className="flex flex-col items-start justify-center">
                     <h1 className="text-[#000] text-2xl font-bold mb-1">Sistema de Corte</h1>
+                    <div className="grid grid-cols-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="30" width="30" viewBox="0 0 384 512" transform="rotate(90)">
+                            <path d="M32 448c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c53 0 96-43 96-96l0-306.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 109.3 160 416c0 17.7-14.3 32-32 32l-96 0z" />
+                        </svg><span className="mr-[-40px]">Ruta Jímenez</span>
+                    </div>
+
+                    <div className="flex items-center justify-center bg-[#ccc] h-40 w-40 rounded-full m-auto mt-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="75" width="75" viewBox="0 0 448 512">
+                            <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                        </svg>
+                    </div>
+
+                    <div className="grid grid-rows-3 gap-5 m-auto mt-6">
+                        <div>
+                            <span>Empleado:</span>
+                            <p>Juan Ricardo Jímenez</p>
+                        </div>
+                        <div>
+                            <span>Vehículo asignado:</span>
+                            <p>Vehículo numero 3</p>
+                        </div>
+                        <div>
+                            <span>Estado de ruta:</span>
+                            <p>Lista para realizar corte.</p>
+                        </div>
+
+                    </div>
+
                 </div>
 
                 {/* Botones */}
@@ -31,69 +59,6 @@ export default function Court() {
                 </div>
             </div>
             <div className="text-[#000] flex flex-col items-center gap-20">
-                <h1 className="text-7xl font-semibold">¡Bienvenido!</h1>
-                <span className="text-xl">¿Qué deseas revisar el día de hoy?</span>
-
-
-                <div className="flex flex-col">
-
-
-                    <div className="flex flex-row gap-60">
-
-                        <div className=" h-36 w-80 flex justify-center items-center gap-5  ">
-                            <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 16 16" fill="none">
-                                    <path d="M6.5 14.5V10.9947C6.5 10.75 6.75 10.5 7 10.5H9C9.25 10.5 9.5 10.75 9.5 11V14.5C9.5 14.7761 9.72386 15 10 15H14C14.2761 15 14.5 14.7761 14.5 14.5V7.5C14.5 7.36739 14.4473 7.24021 14.3536 7.14645L13 5.79289V2.5C13 2.22386 12.7761 2 12.5 2H11.5C11.2239 2 11 2.22386 11 2.5V3.79289L8.35355 1.14645C8.15829 0.951184 7.84171 0.951184 7.64645 1.14645L1.64645 7.14645C1.55268 7.24021 1.5 7.36739 1.5 7.5V14.5C1.5 14.7761 1.72386 15 2 15H6C6.27614 15 6.5 14.7761 6.5 14.5Z" fill="#9c9c9c " />
-                                </svg>
-                            </div>
-                            <div className="text-[#000] flex flex-col gap-3">
-                                <span>Administrador</span>
-                                <p>Sesión iniciada como Victor</p>
-                            </div>
-                        </div>
-
-                        <div className=" h-36 w-80 flex justify-center items-center gap-5  ">
-                            <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 16 16" fill="none">
-                                    <path d="M6.5 14.5V10.9947C6.5 10.75 6.75 10.5 7 10.5H9C9.25 10.5 9.5 10.75 9.5 11V14.5C9.5 14.7761 9.72386 15 10 15H14C14.2761 15 14.5 14.7761 14.5 14.5V7.5C14.5 7.36739 14.4473 7.24021 14.3536 7.14645L13 5.79289V2.5C13 2.22386 12.7761 2 12.5 2H11.5C11.2239 2 11 2.22386 11 2.5V3.79289L8.35355 1.14645C8.15829 0.951184 7.84171 0.951184 7.64645 1.14645L1.64645 7.14645C1.55268 7.24021 1.5 7.36739 1.5 7.5V14.5C1.5 14.7761 1.72386 15 2 15H6C6.27614 15 6.5 14.7761 6.5 14.5Z" fill="#9c9c9c " />
-                                </svg>
-                            </div>
-                            <div className="text-[#000] flex flex-col gap-3">
-                                <span>Administrador</span>
-                                <p>Sesión iniciada como Victor</p>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div className="flex flex-row gap-60">
-
-                        <div className=" h-36 w-80 flex justify-center items-center gap-5  ">
-                            <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 16 16" fill="none">
-                                    <path d="M6.5 14.5V10.9947C6.5 10.75 6.75 10.5 7 10.5H9C9.25 10.5 9.5 10.75 9.5 11V14.5C9.5 14.7761 9.72386 15 10 15H14C14.2761 15 14.5 14.7761 14.5 14.5V7.5C14.5 7.36739 14.4473 7.24021 14.3536 7.14645L13 5.79289V2.5C13 2.22386 12.7761 2 12.5 2H11.5C11.2239 2 11 2.22386 11 2.5V3.79289L8.35355 1.14645C8.15829 0.951184 7.84171 0.951184 7.64645 1.14645L1.64645 7.14645C1.55268 7.24021 1.5 7.36739 1.5 7.5V14.5C1.5 14.7761 1.72386 15 2 15H6C6.27614 15 6.5 14.7761 6.5 14.5Z" fill="#9c9c9c " />
-                                </svg>
-                            </div>
-                            <div className="text-[#000] flex flex-col gap-3">
-                                <span>Administrador</span>
-                                <p>Sesión iniciada como Victor</p>
-                            </div>
-                        </div>
-
-                        <div className=" h-36 w-80 flex justify-center items-center gap-5  ">
-                            <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 16 16" fill="none">
-                                    <path d="M6.5 14.5V10.9947C6.5 10.75 6.75 10.5 7 10.5H9C9.25 10.5 9.5 10.75 9.5 11V14.5C9.5 14.7761 9.72386 15 10 15H14C14.2761 15 14.5 14.7761 14.5 14.5V7.5C14.5 7.36739 14.4473 7.24021 14.3536 7.14645L13 5.79289V2.5C13 2.22386 12.7761 2 12.5 2H11.5C11.2239 2 11 2.22386 11 2.5V3.79289L8.35355 1.14645C8.15829 0.951184 7.84171 0.951184 7.64645 1.14645L1.64645 7.14645C1.55268 7.24021 1.5 7.36739 1.5 7.5V14.5C1.5 14.7761 1.72386 15 2 15H6C6.27614 15 6.5 14.7761 6.5 14.5Z" fill="#9c9c9c " />
-                                </svg>
-                            </div>
-                            <div className="text-[#000] flex flex-col gap-3">
-                                <span>Administrador</span>
-                                <p>Sesión iniciada como Victor</p>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
 
             </div>
 
