@@ -11,8 +11,15 @@ import { useState } from 'react'
 
 export default function HomePage() {
 
-  const sections = [<Home />, <Route />, <Employees />, <Vehicle />, <Court />, <Product />];
-  const styleselectbuttom = {
+  const sections = [
+    <Home key="home" />,
+    <Route key="route" />,
+    <Employees key="employees" />,
+    <Vehicle key="vehicle" />,
+    <Court key="court" />,
+    <Product key="product" />
+  ];
+    const styleselectbuttom = {
     display: 'flex',
     width: '47px',
     height: '48px',
