@@ -40,36 +40,38 @@ export default function Employees() {
             </div>
 
 
-            {/* Informacion */}
-            <div className="grid grid-cols-6  bg-[#ccc] w-[1500px] h-[70px] items-center rounded-full mt-[-700px] ml-[50px] ">
-                {/* Primer elemento */}
-                <div className="text-[#000] flex flex-col items-center">
-                    <span className="font-bold">ID</span>
-                </div>
+            <div className="max-h-[100vh] h-full pt-14 flex flex-col overflow-y-auto p-5">
+                {/* Informacion */}
+                <div className="grid grid-cols-6  bg-[#ccc] w-[100%] h-[70px] items-center rounded-full mx-auto ">
+                    {/* Primer elemento */}
+                    <div className="text-[#000] flex flex-col items-center">
+                        <span className="font-bold">ID</span>
+                    </div>
 
-                {/* Segundo elemento */}
-                <div className="text-[#000] flex flex-col items-center">
-                    <span className="font-bold">Usuario</span>
-                </div>
+                    {/* Segundo elemento */}
+                    <div className="text-[#000] flex flex-col items-center">
+                        <span className="font-bold">Usuario</span>
+                    </div>
 
-                {/* Tercer elemento */}
-                <div className="text-[#000] flex flex-col items-center">
-                    <span className="font-bold">Nombre</span>
-                </div>
+                    {/* Tercer elemento */}
+                    <div className="text-[#000] flex flex-col items-center">
+                        <span className="font-bold">Nombre</span>
+                    </div>
 
-                {/* Cuarto elemento */}
-                <div className="text-[#000] flex flex-col items-center">
-                    <span className="font-bold">Apellidos</span>
-                </div>
+                    {/* Cuarto elemento */}
+                    <div className="text-[#000] flex flex-col items-center">
+                        <span className="font-bold">Apellidos</span>
+                    </div>
 
-                {/* Quinto elemento */}
-                <div className="text-[#000] flex flex-col items-center">
-                    <span className="font-bold">Puesto</span>
-                </div>
+                    {/* Quinto elemento */}
+                    <div className="text-[#000] flex flex-col items-center">
+                        <span className="font-bold">Puesto</span>
+                    </div>
 
-                {/* Sexto elemento */}
-                <div className="text-[#000] flex flex-col items-center">
-                    <span className="font-bold">Contraseña</span>
+                    {/* Sexto elemento */}
+                    <div className="text-[#000] flex flex-col items-center">
+                        <span className="font-bold">Contraseña</span>
+                    </div>
                 </div>
             </div>
 

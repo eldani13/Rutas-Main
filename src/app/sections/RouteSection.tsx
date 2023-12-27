@@ -29,10 +29,9 @@ export default function Route() {
             </div>
 
 
-            <div className="text-[#000] flex flex-col items-center gap-20">
-                <div className="flex flex-col">
+            <div className="text-[#000] flex flex-col items-center gap-20 overflow-y-auto max-h-[100vh]">
 
-
+                <div className="flex flex-col ">
                     <div className="flex flex-row gap-60">
 
                         <div className=" h-36 w-80 flex justify-center items-center gap-5" style={{ cursor: 'pointer'}}>

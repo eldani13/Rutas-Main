@@ -3,7 +3,7 @@ import React from "react"
 export default function Court() {
     return (
         <>
-            <div className="flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 px-4 h-[100%] justify-between">
+            <div className="flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 px-4 h-[100%] justify-between  overflow-hidden max-h-[100vh]">
                 <div className="flex flex-col items-start justify-center">
                     <h1 className="text-[#000] text-2xl font-bold mb-1">Sistema de Corte</h1>
                     <div className="grid grid-cols-2">

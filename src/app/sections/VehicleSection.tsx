@@ -38,34 +38,35 @@ export default function Vehicle() {
             </div>
 
 
-            {/* Informacion */}
-            <div className="grid grid-cols-5  bg-[#ccc] w-[1500px] h-[70px] items-center rounded-full mt-[-700px] ml-[50px] ">
-                {/* Primer elemento */}
-                <div className="text-[#000] flex flex-col items-center">
-                    <span className="font-bold">ID</span>
-                </div>
+            <div className="max-h-[100vh] h-full pt-14 flex flex-col overflow-y-auto p-5">
+                {/* Informacion */}
+                <div className="grid grid-cols-5  bg-[#ccc] w-[100%] h-[70px] items-center rounded-full mx-auto ">
+                    {/* Primer elemento */}
+                    <div className="text-[#000] flex flex-col items-center">
+                        <span className="font-bold">ID</span>
+                    </div>
 
-                {/* Segundo elemento */}
-                <div className="text-[#000] flex flex-col items-center">
-                    <span className="font-bold">Marca</span>
-                </div>
+                    {/* Tercer elemento */}
+                    <div className="text-[#000] flex flex-col items-center">
+                        <span className="font-bold">Marca</span>
+                    </div>
 
-                {/* Tercer elemento */}
-                <div className="text-[#000] flex flex-col items-center">
-                    <span className="font-bold">Modelo</span>
-                </div>
+                    {/* Cuarto elemento */}
+                    <div className="text-[#000] flex flex-col items-center">
+                        <span className="font-bold">Modelo</span>
+                    </div>
 
-                {/* Cuarto elemento */}
-                <div className="text-[#000] flex flex-col items-center">
-                    <span className="font-bold">Último cambio de aceite</span>
-                </div>
+                    {/* Quinto elemento */}
+                    <div className="text-[#000] flex flex-col items-center">
+                        <span className="font-bold">Último cambio de aceite </span>
+                    </div>
 
-                {/* Quinto elemento */}
-                <div className="text-[#000] flex flex-col items-center">
-                    <span className="font-bold">Próximo cambio de aceite</span>
+                    {/* Sexto elemento */}
+                    <div className="text-[#000] flex flex-col items-center">
+                        <span className="font-bold">Próximo cambio de aceite</span>
+                    </div>
                 </div>
             </div>
-
 
         </>
 
