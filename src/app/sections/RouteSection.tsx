@@ -42,8 +42,8 @@ export default function Route() {
                                 </svg>
                             </div>
                             <div className="text-[#000] flex flex-col gap-3">
-                                <span>Administrador</span>
-                                <p>Sesión iniciada como Victor</p>
+                                <span>Ruta Jímenez</span>
+                                <p>Descripción pequeña de la ruta</p>
                             </div>
                         </div>
 
