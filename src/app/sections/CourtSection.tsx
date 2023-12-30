@@ -20,16 +20,16 @@ export default function Court() {
 
                     <div className="grid grid-rows-3 gap-5 m-auto mt-6">
                         <div>
-                            <span style={{color: '#5e5e5e', fontWeight:'900'}}>Empleado:</span>
-                            <p style={{color: '#828282'}}>Juan Ricardo Jímenez</p>
+                            <span style={{ color: '#5e5e5e', fontWeight: '900' }}>Empleado:</span>
+                            <p style={{ color: '#828282' }}>Juan Ricardo Jímenez</p>
                         </div>
                         <div>
-                            <span style={{color: '#5e5e5e', fontWeight:'900'}}>Vehículo asignado:</span>
-                            <p style={{color: '#828282'}}>Vehículo numero 3</p>
+                            <span style={{ color: '#5e5e5e', fontWeight: '900' }}>Vehículo asignado:</span>
+                            <p style={{ color: '#828282' }}>Vehículo numero 3</p>
                         </div>
                         <div>
-                            <span style={{color: '#5e5e5e', fontWeight:'900'}}>Estado de ruta:</span>
-                            <p style={{color: '#ecab0f', fontWeight:'600'}}>Lista para realizar corte.</p>
+                            <span style={{ color: '#5e5e5e', fontWeight: '900' }}>Estado de ruta:</span>
+                            <p style={{ color: '#ecab0f', fontWeight: '600' }}>Lista para realizar corte.</p>
                         </div>
 
                     </div>
@@ -56,53 +56,58 @@ export default function Court() {
                 </div>
             </div>
 
-            <div className="flex justify-between p-14 max-h-[100vh] h-full" style={{ alignSelf: 'flex-start' }}>
-                <div className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: '220px' }}>
+            <div className="flex flex-col justify-between px-3  max-h-[100vh] h-full overflow-y-auto" style={{ alignSelf: 'flex-start' }}>
+                
+                <svg xmlns="http://www.w3.org/2000/svg" className="my-3" fill="#ccc" height="20" width="18" viewBox="0 0 448 512"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" /></svg>
+                
+                <hr className="mb-10 border-[1px]" />
+                <div className="grid w-full flex-1"
+                    style={{
+                        gridTemplateColumns: '1fr 1fr 1fr',
+                        gridTemplateRows: '1fr 1fr',
+                        gridTemplateAreas: " 'productSold productSold summary' 'productNotSold productNotSold summary' ",
+                    }}>
 
                     {/* Primer div */}
-                    <div className="grid grid-cols-3 bg-[#ccc] h-[70px] items-center rounded-full " style={{ width: '40rem' }}>
-                        {/* Primer elemento */}
-                        <div className="text-[#000] flex flex-col items-center">
-                            <span className="font-bold">Producto</span>
-                        </div>
+                    <div className="flex text-black px-3" style={{ gridArea: "productSold" }}>
+                        <table className="h-full w-full border-collapse">
+                            <thead >
+                                <tr className="bg-[#ccc] rounded-full grid grid-cols-3 py-2.5">
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
-                        {/* Segundo elemento */}
-                        <div className="text-[#000] flex flex-col items-center">
-                            <span className="font-bold">Cantidad</span>
-                        </div>
-
-                        {/* Tercer elemento */}
-                        <div className="text-[#000] flex flex-col items-center">
-                            <span className="font-bold">Precio</span>
-                        </div>
+                            </tbody>
+                        </table>
                     </div>
 
+                    {/* Tercer div */}
+                    <div className="flex text-black px-3" style={{ gridArea: "productNotSold" }}>
+                        <table className="h-full w-full border-collapse">
+                            <thead >
+                                <tr className="bg-[#ccc] rounded-full grid grid-cols-3 py-2">
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
 
                     {/* Segundo div */}
-                    <div className="grid grid-cols-1 bg-[#ccc]  h-[70px] w-[25rem] items-center rounded-full ">
+                    <div className="flex text-black px-3" style={{ gridArea: "summary" }}>
                         {/* Primer elemento */}
-                        <div className="text-[#000] flex flex-col items-center ">
-                            <span className="font-bold text-[20px]">ESTIMADOS</span>
+                        <div className="text-[#000] flex flex-col items-center w-full h-fit bg-[#ccc] py-2 rounded-full">
+                            <p className="font-bold text-[20px] text-center">ESTIMADOS</p>
                         </div>
                     </div>
-                    
-                    {/* Tercer div */}
-                    <div className="grid grid-cols-3 bg-[#ccc] h-[70px] items-center rounded-full " style={{ width: '40rem' }}>
-                        {/* Primer elemento */}
-                        <div className="text-[#000] flex flex-col items-center">
-                            <span className="font-bold">Producto</span>
-                        </div>
 
-                        {/* Segundo elemento */}
-                        <div className="text-[#000] flex flex-col items-center">
-                            <span className="font-bold">Cantidad</span>
-                        </div>
-
-                        {/* Tercer elemento */}
-                        <div className="text-[#000] flex flex-col items-center">
-                            <span className="font-bold">Precio</span>
-                        </div>
-                    </div>
                 </div>
             </div>
 
