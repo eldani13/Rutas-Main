@@ -37,30 +37,14 @@ export default function Product() {
                 </div>
             </div>
 
-
             <div className="max-h-[100vh] h-full pt-14 flex flex-col overflow-y-auto p-5">
                 {/* Informacion */}
                 <hr className="mb-10 border-[1px]" />
-                <div className="grid grid-cols-4  bg-[#ccc] w-[100%] h-[70px] items-center rounded-full mx-auto ">
-                    {/* Primer elemento */}
-                    <div className="text-[#000] flex flex-col items-center">
-                        <span className="font-bold">ID</span>
-                    </div>
-
-                    {/* Segundo elemento */}
-                    <div className="text-[#000] flex flex-col items-center">
-                        <span className="font-bold">Nombre</span>
-                    </div>
-
-                    {/* Tercer elemento */}
-                    <div className="text-[#000] flex flex-col items-center">
-                        <span className="font-bold">Descripcion</span>
-                    </div>
-
-                    {/* Cuarto elemento */}
-                    <div className="text-[#000] flex flex-col items-center">
-                        <span className="font-bold">Precio</span>
-                    </div>
+                <div className="flex text-center gap-2  justify-around bg-[#ccc] w-[100%] py-5 px-2 items-center rounded-full mx-auto text-black font-bold">
+                    <p>ID</p>
+                    <p>Nombre</p>
+                    <p>Descripcion</p>
+                    <p>Precio</p>
                 </div>
             </div>
 

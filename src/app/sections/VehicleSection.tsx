@@ -42,7 +42,6 @@ export default function Vehicle() {
                 {/* Informacion */}
                 <hr className="mb-10 border-[1px]" />
                 <div className="flex text-center gap-2  justify-around bg-[#ccc] w-[100%] py-5 px-2 items-center rounded-full mx-auto text-black font-bold">
-                    {/* Primer elemento */}
                     <p>ID</p>
                     <p>Marca</p>
                     <p>Modelo</p>

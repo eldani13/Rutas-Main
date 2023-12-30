@@ -44,44 +44,15 @@ export default function Employees() {
             <div className="max-h-[100vh] h-full pt-14 flex flex-col overflow-y-auto p-5">
                 {/* Informacion */}
                 <hr className="mb-10 border-[1px]" />
-                <div className="grid grid-cols-6  bg-[#ccc] w-[100%] h-[70px] items-center rounded-full mx-auto ">
-                    {/* Primer elemento */}
-                    <div className="text-[#000] flex flex-col items-center">
-                        <span className="font-bold">ID</span>
-                    </div>
-
-                    {/* Segundo elemento */}
-                    <div className="text-[#000] flex flex-col items-center">
-                        <span className="font-bold">Usuario</span>
-                    </div>
-
-                    {/* Tercer elemento */}
-                    <div className="text-[#000] flex flex-col items-center">
-                        <span className="font-bold">Nombre</span>
-                    </div>
-
-                    {/* Cuarto elemento */}
-                    <div className="text-[#000] flex flex-col items-center">
-                        <span className="font-bold">Apellidos</span>
-                    </div>
-
-                    {/* Quinto elemento */}
-                    <div className="text-[#000] flex flex-col items-center">
-                        <span className="font-bold">Puesto</span>
-                    </div>
-
-                    {/* Sexto elemento */}
-                    <div className="text-[#000] flex flex-col items-center">
-                        <span className="font-bold">Contraseña</span>
-                    </div>
+                <div className="flex text-center gap-2  justify-around bg-[#ccc] w-[100%] py-5 px-2 items-center rounded-full mx-auto text-black font-bold">
+                    <p>ID</p>
+                    <p>Usuario</p>
+                    <p>Nombre</p>
+                    <p>Apellido</p>
+                    <p>Puesto</p>
+                    <p>Contraseña</p>
                 </div>
             </div>
-
-
-
         </>
-
-
-
     )
 }
