@@ -20,16 +20,16 @@ export default function Court() {
 
                     <div className="grid grid-rows-3 gap-5 m-auto mt-6">
                         <div>
-                            <span>Empleado:</span>
-                            <p>Juan Ricardo Jímenez</p>
+                            <span style={{color: '#5e5e5e', fontWeight:'900'}}>Empleado:</span>
+                            <p style={{color: '#828282'}}>Juan Ricardo Jímenez</p>
                         </div>
                         <div>
-                            <span>Vehículo asignado:</span>
-                            <p>Vehículo numero 3</p>
+                            <span style={{color: '#5e5e5e', fontWeight:'900'}}>Vehículo asignado:</span>
+                            <p style={{color: '#828282'}}>Vehículo numero 3</p>
                         </div>
                         <div>
-                            <span>Estado de ruta:</span>
-                            <p>Lista para realizar corte.</p>
+                            <span style={{color: '#5e5e5e', fontWeight:'900'}}>Estado de ruta:</span>
+                            <p style={{color: '#ecab0f', fontWeight:'600'}}>Lista para realizar corte.</p>
                         </div>
 
                     </div>
@@ -53,14 +53,60 @@ export default function Court() {
                         </svg>
                         <span className="mr-10 text-[14px]">Finalizar Corte</span>
                     </button>
-
-
-
                 </div>
             </div>
-            <div className="text-[#000] flex flex-col items-center gap-20">
 
+            <div className="flex justify-between p-14 max-h-[100vh] h-full" style={{ alignSelf: 'flex-start' }}>
+                <div className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: '220px' }}>
+
+                    {/* Primer div */}
+                    <div className="grid grid-cols-3 bg-[#ccc] h-[70px] items-center rounded-full " style={{ width: '40rem' }}>
+                        {/* Primer elemento */}
+                        <div className="text-[#000] flex flex-col items-center">
+                            <span className="font-bold">Producto</span>
+                        </div>
+
+                        {/* Segundo elemento */}
+                        <div className="text-[#000] flex flex-col items-center">
+                            <span className="font-bold">Cantidad</span>
+                        </div>
+
+                        {/* Tercer elemento */}
+                        <div className="text-[#000] flex flex-col items-center">
+                            <span className="font-bold">Precio</span>
+                        </div>
+                    </div>
+
+
+                    {/* Segundo div */}
+                    <div className="grid grid-cols-1 bg-[#ccc]  h-[70px] w-[25rem] items-center rounded-full ">
+                        {/* Primer elemento */}
+                        <div className="text-[#000] flex flex-col items-center ">
+                            <span className="font-bold text-[20px]">ESTIMADOS</span>
+                        </div>
+                    </div>
+                    
+                    {/* Tercer div */}
+                    <div className="grid grid-cols-3 bg-[#ccc] h-[70px] items-center rounded-full " style={{ width: '40rem' }}>
+                        {/* Primer elemento */}
+                        <div className="text-[#000] flex flex-col items-center">
+                            <span className="font-bold">Producto</span>
+                        </div>
+
+                        {/* Segundo elemento */}
+                        <div className="text-[#000] flex flex-col items-center">
+                            <span className="font-bold">Cantidad</span>
+                        </div>
+
+                        {/* Tercer elemento */}
+                        <div className="text-[#000] flex flex-col items-center">
+                            <span className="font-bold">Precio</span>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+
 
 
         </>

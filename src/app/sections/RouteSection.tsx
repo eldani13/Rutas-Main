@@ -3,19 +3,8 @@ import React, { useState } from "react"
 
 export default function Route() {
 
+    const [isHover, setIsHover] = useState(false);
 
-    // const sections = [<Home />];
-    // const [sectionactual, setSectionActual] = useState(1)
-    // const styleselectbuttom = {
-    //     display: 'flex',
-    //     width: '47px',
-    //     height: '48px',
-    //     padding: '9px 8px 9px 9px',
-    //     flexShrink: '0',
-    //     borderRadius: '5px',
-    //     background: '#acacac',
-    //     fill: '#fff',
-    // };
 
     return (
         <>
@@ -29,184 +18,225 @@ export default function Route() {
             </div>
 
 
-            <div className="text-[#000] flex flex-col items-center gap-20 overflow-y-auto max-h-[100vh]">
-
+            <div className="text-[#000] flex flex-col items-center gap-20">
                 <div className="flex flex-col ">
-                    <div className="flex flex-row gap-60">
+                    <div className="grid px-4 gap-x-64" style={{ gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr 1fr" }}>
 
-                        <div className=" h-36 w-80 flex justify-center items-center gap-5" style={{ cursor: 'pointer'}}>
-                            <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 16 16" fill="none">
-                                    <path d="M6.5 14.5V10.9947C6.5 10.75 6.75 10.5 7 10.5H9C9.25 10.5 9.5 10.75 9.5 11V14.5C9.5 14.7761 9.72386 15 10 15H14C14.2761 15 14.5 14.7761 14.5 14.5V7.5C14.5 7.36739 14.4473 7.24021 14.3536 7.14645L13 5.79289V2.5C13 2.22386 12.7761 2 12.5 2H11.5C11.2239 2 11 2.22386 11 2.5V3.79289L8.35355 1.14645C8.15829 0.951184 7.84171 0.951184 7.64645 1.14645L1.64645 7.14645C1.55268 7.24021 1.5 7.36739 1.5 7.5V14.5C1.5 14.7761 1.72386 15 2 15H6C6.27614 15 6.5 14.7761 6.5 14.5Z" fill="#9c9c9c " />
-                                </svg>
+                        <div className={`group cursor-pointer h-36 w-100 flex  justify-between items-center gap-5 ${isHover ? 'bg-gray-100 rounded-full'  : ''}`}
+                            onMouseEnter={() => setIsHover(true)}
+                            onMouseLeave={() => setIsHover(false)}>
+                            <div className="flex justify-start gap-5">
+                                <div className="flex bg-[#ccc] h-20 w-20 overflow-hidden rounded-full items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="45" width="45" viewBox="0 0 448 512">
+                                        <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                                    </svg>
+                                </div>
+                                <div className="text-[#000] flex flex-col gap-3">
+                                    <span className="font-bold text-[25px]">Ruta Jímenez</span>
+                                    <p className="text-[#bbbcbc] text-[15px]">Descripción pequeña de la ruta</p>
+                                </div>
                             </div>
-                            <div className="text-[#000] flex flex-col gap-3">
-                                <span>Ruta Jímenez</span>
-                                <p>Descripción pequeña de la ruta</p>
-                            </div>
+                            <svg className="group-hover:animate-bounce" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" viewBox="0 0 16 16">
+                                <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                            </svg>
                         </div>
 
-                        <div className=" h-36 w-80 flex justify-center items-center gap-5  ">
-                            <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 16 16" fill="none">
-                                    <path d="M6.5 14.5V10.9947C6.5 10.75 6.75 10.5 7 10.5H9C9.25 10.5 9.5 10.75 9.5 11V14.5C9.5 14.7761 9.72386 15 10 15H14C14.2761 15 14.5 14.7761 14.5 14.5V7.5C14.5 7.36739 14.4473 7.24021 14.3536 7.14645L13 5.79289V2.5C13 2.22386 12.7761 2 12.5 2H11.5C11.2239 2 11 2.22386 11 2.5V3.79289L8.35355 1.14645C8.15829 0.951184 7.84171 0.951184 7.64645 1.14645L1.64645 7.14645C1.55268 7.24021 1.5 7.36739 1.5 7.5V14.5C1.5 14.7761 1.72386 15 2 15H6C6.27614 15 6.5 14.7761 6.5 14.5Z" fill="#9c9c9c " />
-                                </svg>
+                        {/* 2 */}
+                        <div className="group cursor-pointer h-36 w-100 flex justify-between items-center  gap-5">
+                            <div className="flex justify-start gap-5">
+                                <div className="flex bg-[#ccc] h-20 w-20 overflow-hidden rounded-full items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="45" width="45" viewBox="0 0 448 512">
+                                        <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                                    </svg>
+                                </div>
+                                <div className="text-[#000] flex flex-col gap-3">
+                                    <span className="font-bold text-[25px]">Nombre de la ruta</span>
+                                    <p className="text-[#bbbcbc] text-[15px]">Descripción pequeña de la ruta</p>
+                                </div>
                             </div>
-                            <div className="text-[#000] flex flex-col gap-3">
-                                <span>Administrador</span>
-                                <p>Sesión iniciada como Victor</p>
-                            </div>
+                            <svg className="group-hover:animate-bounce" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" viewBox="0 0 16 16">
+                                <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                            </svg>
                         </div>
+
+                        {/* 3 */}
+                        <div className="group cursor-pointer h-36 w-100 flex justify-between items-center gap-5">
+                            <div className="flex justify-start gap-5">
+                                <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="45" width="45" viewBox="0 0 448 512">
+                                        <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                                    </svg>
+                                </div>
+                                <div className="text-[#000] flex flex-col gap-3">
+                                    <span className="font-bold text-[25px]">Nombre de la ruta</span>
+                                    <p className="text-[#bbbcbc] text-[15px]">Descripción pequeña de la ruta</p>
+                                </div>
+                            </div>
+                            <svg className="group-hover:animate-bounce" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" viewBox="0 0 16 16">
+                                <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                            </svg>
+                        </div>
+
+                        {/* 4 */}
+                        <div className="group cursor-pointer h-36 w-100 flex justify-between items-center gap-5">
+                            <div className="flex justify-start gap-5">
+                                <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="45" width="45" viewBox="0 0 448 512">
+                                        <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                                    </svg>
+                                </div>
+                                <div className="text-[#000] flex flex-col gap-3 w-9/12">
+                                    <span className="font-bold text-[25px]">Nombre de la ruta</span>
+                                    <p className="text-[#bbbcbc] text-[13px]">Descripción pequeña de la ruta</p>
+                                </div>
+                            </div>
+                            <svg className="group-hover:animate-bounce" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" viewBox="0 0 16 16">
+                                <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                            </svg>
+                        </div>
+                        {/* 5 */}
+                        <div className="group cursor-pointer h-36 w-100 flex justify-between items-center gap-5">
+                            <div className="flex justify-start gap-5">
+                                <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="45" width="45" viewBox="0 0 448 512">
+                                        <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                                    </svg>
+                                </div>
+                                <div className="text-[#000] flex flex-col gap-3 w-9/12">
+                                    <span className="font-bold text-[25px]">Nombre de la ruta</span>
+                                    <p className="text-[#bbbcbc] text-[13px]">Descripción pequeña de la ruta</p>
+                                </div>
+                            </div>
+                            <svg className="group-hover:animate-bounce" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" viewBox="0 0 16 16">
+                                <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                            </svg>
+                        </div>
+                        {/*6 */}
+                        <div className="group cursor-pointer h-36 w-100 flex justify-between items-center gap-5">
+                            <div className="flex justify-start gap-5">
+                                <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="45" width="45" viewBox="0 0 448 512">
+                                        <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                                    </svg>
+                                </div>
+                                <div className="text-[#000] flex flex-col gap-3 w-9/12">
+                                    <span className="font-bold text-[25px]">Nombre de la ruta</span>
+                                    <p className="text-[#bbbcbc] text-[13px]">Descripción pequeña de la ruta</p>
+                                </div>
+                            </div>
+                            <svg className="group-hover:animate-bounce" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" viewBox="0 0 16 16">
+                                <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                            </svg>
+                        </div>
+                        {/* 7*/}
+                        <div className="group cursor-pointer h-36 w-100 flex justify-between items-center gap-5">
+                            <div className="flex justify-start gap-5">
+                                <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="45" width="45" viewBox="0 0 448 512">
+                                        <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                                    </svg>
+                                </div>
+                                <div className="text-[#000] flex flex-col gap-3 w-9/12">
+                                    <span className="font-bold text-[25px]">Nombre de la ruta</span>
+                                    <p className="text-[#bbbcbc] text-[13px]">Descripción pequeña de la ruta</p>
+                                </div>
+                            </div>
+                            <svg className="group-hover:animate-bounce" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" viewBox="0 0 16 16">
+                                <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                            </svg>
+                        </div>
+                        {/* 8 */}
+                        <div className="group cursor-pointer h-36 w-100 flex justify-between items-center gap-5">
+                            <div className="flex justify-start gap-5">
+                                <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="45" width="45" viewBox="0 0 448 512">
+                                        <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                                    </svg>
+                                </div>
+                                <div className="text-[#000] flex flex-col gap-3 w-9/12">
+                                    <span className="font-bold text-[25px]">Nombre de la ruta</span>
+                                    <p className="text-[#bbbcbc] text-[13px]">Descripción pequeña de la ruta</p>
+                                </div>
+                            </div>
+                            <svg className="group-hover:animate-bounce" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" viewBox="0 0 16 16">
+                                <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                            </svg>
+                        </div>
+                        {/* 9*/}
+                        <div className="group cursor-pointer h-36 w-100 flex justify-between items-center gap-5">
+                            <div className="flex justify-start gap-5">
+                                <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="45" width="45" viewBox="0 0 448 512">
+                                        <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                                    </svg>
+                                </div>
+                                <div className="text-[#000] flex flex-col gap-3 w-9/12">
+                                    <span className="font-bold text-[25px]">Nombre de la ruta</span>
+                                    <p className="text-[#bbbcbc] text-[13px]">Descripción pequeña de la ruta</p>
+                                </div>
+                            </div>
+                            <svg className="group-hover:animate-bounce" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" viewBox="0 0 16 16">
+                                <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                            </svg>
+                        </div>
+                        {/* 10 */}
+                        <div className="group cursor-pointer h-36 w-100 flex justify-between items-center gap-5">
+                            <div className="flex justify-start gap-5">
+                                <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="45" width="45" viewBox="0 0 448 512">
+                                        <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                                    </svg>
+                                </div>
+                                <div className="text-[#000] flex flex-col gap-3 w-9/12">
+                                    <span className="font-bold text-[25px]">Nombre de la ruta</span>
+                                    <p className="text-[#bbbcbc] text-[13px]">Descripción pequeña de la ruta</p>
+                                </div>
+                            </div>
+                            <svg className="group-hover:animate-bounce" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" viewBox="0 0 16 16">
+                                <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                            </svg>
+                        </div>
+                        {/* 11*/}
+                        <div className="group cursor-pointer h-36 w-100 flex justify-between items-center gap-5">
+                            <div className="flex justify-start gap-5">
+                                <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="45" width="45" viewBox="0 0 448 512">
+                                        <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                                    </svg>
+                                </div>
+                                <div className="text-[#000] flex flex-col gap-3 w-9/12">
+                                    <span className="font-bold text-[25px]">Nombre de la ruta</span>
+                                    <p className="text-[#bbbcbc] text-[13px]">Descripción pequeña de la ruta</p>
+                                </div>
+                            </div>
+                            <svg className="group-hover:animate-bounce" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" viewBox="0 0 16 16">
+                                <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                            </svg>
+                        </div>
+                        {/* 12 */}
+                        <div className="group cursor-pointer h-36 w-100 flex justify-between items-center gap-5">
+                            <div className="flex justify-start gap-5">
+                                <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="45" width="45" viewBox="0 0 448 512">
+                                        <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                                    </svg>
+                                </div>
+                                <div className="text-[#000] flex flex-col gap-3 w-9/12">
+                                    <span className="font-bold text-[25px]">Nombre de la ruta</span>
+                                    <p className="text-[#bbbcbc] text-[13px]">Descripción pequeña de la ruta</p>
+                                </div>
+                            </div>
+                            <svg className="group-hover:animate-bounce" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" viewBox="0 0 16 16">
+                                <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                            </svg>
+                        </div>
+
                         
 
                     </div>
-                    
-
-                    <div className="flex flex-row gap-60">
-
-                        <div className=" h-36 w-80 flex justify-center items-center gap-5  ">
-                            <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 16 16" fill="none">
-                                    <path d="M6.5 14.5V10.9947C6.5 10.75 6.75 10.5 7 10.5H9C9.25 10.5 9.5 10.75 9.5 11V14.5C9.5 14.7761 9.72386 15 10 15H14C14.2761 15 14.5 14.7761 14.5 14.5V7.5C14.5 7.36739 14.4473 7.24021 14.3536 7.14645L13 5.79289V2.5C13 2.22386 12.7761 2 12.5 2H11.5C11.2239 2 11 2.22386 11 2.5V3.79289L8.35355 1.14645C8.15829 0.951184 7.84171 0.951184 7.64645 1.14645L1.64645 7.14645C1.55268 7.24021 1.5 7.36739 1.5 7.5V14.5C1.5 14.7761 1.72386 15 2 15H6C6.27614 15 6.5 14.7761 6.5 14.5Z" fill="#9c9c9c " />
-                                </svg>
-                            </div>
-                            <div className="text-[#000] flex flex-col gap-3">
-                                <span>Administrador</span>
-                                <p>Sesión iniciada como Victor</p>
-                            </div>
-                        </div>
-
-                        <div className=" h-36 w-80 flex justify-center items-center gap-5  ">
-                            <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 16 16" fill="none">
-                                    <path d="M6.5 14.5V10.9947C6.5 10.75 6.75 10.5 7 10.5H9C9.25 10.5 9.5 10.75 9.5 11V14.5C9.5 14.7761 9.72386 15 10 15H14C14.2761 15 14.5 14.7761 14.5 14.5V7.5C14.5 7.36739 14.4473 7.24021 14.3536 7.14645L13 5.79289V2.5C13 2.22386 12.7761 2 12.5 2H11.5C11.2239 2 11 2.22386 11 2.5V3.79289L8.35355 1.14645C8.15829 0.951184 7.84171 0.951184 7.64645 1.14645L1.64645 7.14645C1.55268 7.24021 1.5 7.36739 1.5 7.5V14.5C1.5 14.7761 1.72386 15 2 15H6C6.27614 15 6.5 14.7761 6.5 14.5Z" fill="#9c9c9c " />
-                                </svg>
-                            </div>
-                            <div className="text-[#000] flex flex-col gap-3">
-                                <span>Administrador</span>
-                                <p>Sesión iniciada como Victor</p>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div className="flex flex-row gap-60">
-
-                        <div className=" h-36 w-80 flex justify-center items-center gap-5  ">
-                            <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 16 16" fill="none">
-                                    <path d="M6.5 14.5V10.9947C6.5 10.75 6.75 10.5 7 10.5H9C9.25 10.5 9.5 10.75 9.5 11V14.5C9.5 14.7761 9.72386 15 10 15H14C14.2761 15 14.5 14.7761 14.5 14.5V7.5C14.5 7.36739 14.4473 7.24021 14.3536 7.14645L13 5.79289V2.5C13 2.22386 12.7761 2 12.5 2H11.5C11.2239 2 11 2.22386 11 2.5V3.79289L8.35355 1.14645C8.15829 0.951184 7.84171 0.951184 7.64645 1.14645L1.64645 7.14645C1.55268 7.24021 1.5 7.36739 1.5 7.5V14.5C1.5 14.7761 1.72386 15 2 15H6C6.27614 15 6.5 14.7761 6.5 14.5Z" fill="#9c9c9c " />
-                                </svg>
-                            </div>
-                            <div className="text-[#000] flex flex-col gap-3">
-                                <span>Administrador</span>
-                                <p>Sesión iniciada como Victor</p>
-                            </div>
-                        </div>
-
-                        <div className=" h-36 w-80 flex justify-center items-center gap-5  ">
-                            <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 16 16" fill="none">
-                                    <path d="M6.5 14.5V10.9947C6.5 10.75 6.75 10.5 7 10.5H9C9.25 10.5 9.5 10.75 9.5 11V14.5C9.5 14.7761 9.72386 15 10 15H14C14.2761 15 14.5 14.7761 14.5 14.5V7.5C14.5 7.36739 14.4473 7.24021 14.3536 7.14645L13 5.79289V2.5C13 2.22386 12.7761 2 12.5 2H11.5C11.2239 2 11 2.22386 11 2.5V3.79289L8.35355 1.14645C8.15829 0.951184 7.84171 0.951184 7.64645 1.14645L1.64645 7.14645C1.55268 7.24021 1.5 7.36739 1.5 7.5V14.5C1.5 14.7761 1.72386 15 2 15H6C6.27614 15 6.5 14.7761 6.5 14.5Z" fill="#9c9c9c " />
-                                </svg>
-                            </div>
-                            <div className="text-[#000] flex flex-col gap-3">
-                                <span>Administrador</span>
-                                <p>Sesión iniciada como Victor</p>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div className="flex flex-row gap-60">
-
-                        <div className=" h-36 w-80 flex justify-center items-center gap-5  ">
-                            <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 16 16" fill="none">
-                                    <path d="M6.5 14.5V10.9947C6.5 10.75 6.75 10.5 7 10.5H9C9.25 10.5 9.5 10.75 9.5 11V14.5C9.5 14.7761 9.72386 15 10 15H14C14.2761 15 14.5 14.7761 14.5 14.5V7.5C14.5 7.36739 14.4473 7.24021 14.3536 7.14645L13 5.79289V2.5C13 2.22386 12.7761 2 12.5 2H11.5C11.2239 2 11 2.22386 11 2.5V3.79289L8.35355 1.14645C8.15829 0.951184 7.84171 0.951184 7.64645 1.14645L1.64645 7.14645C1.55268 7.24021 1.5 7.36739 1.5 7.5V14.5C1.5 14.7761 1.72386 15 2 15H6C6.27614 15 6.5 14.7761 6.5 14.5Z" fill="#9c9c9c " />
-                                </svg>
-                            </div>
-                            <div className="text-[#000] flex flex-col gap-3">
-                                <span>Administrador</span>
-                                <p>Sesión iniciada como Victor</p>
-                            </div>
-                        </div>
-
-                        <div className=" h-36 w-80 flex justify-center items-center gap-5  ">
-                            <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 16 16" fill="none">
-                                    <path d="M6.5 14.5V10.9947C6.5 10.75 6.75 10.5 7 10.5H9C9.25 10.5 9.5 10.75 9.5 11V14.5C9.5 14.7761 9.72386 15 10 15H14C14.2761 15 14.5 14.7761 14.5 14.5V7.5C14.5 7.36739 14.4473 7.24021 14.3536 7.14645L13 5.79289V2.5C13 2.22386 12.7761 2 12.5 2H11.5C11.2239 2 11 2.22386 11 2.5V3.79289L8.35355 1.14645C8.15829 0.951184 7.84171 0.951184 7.64645 1.14645L1.64645 7.14645C1.55268 7.24021 1.5 7.36739 1.5 7.5V14.5C1.5 14.7761 1.72386 15 2 15H6C6.27614 15 6.5 14.7761 6.5 14.5Z" fill="#9c9c9c " />
-                                </svg>
-                            </div>
-                            <div className="text-[#000] flex flex-col gap-3">
-                                <span>Administrador</span>
-                                <p>Sesión iniciada como Victor</p>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div className="flex flex-row gap-60">
-
-                        <div className=" h-36 w-80 flex justify-center items-center gap-5  ">
-                            <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 16 16" fill="none">
-                                    <path d="M6.5 14.5V10.9947C6.5 10.75 6.75 10.5 7 10.5H9C9.25 10.5 9.5 10.75 9.5 11V14.5C9.5 14.7761 9.72386 15 10 15H14C14.2761 15 14.5 14.7761 14.5 14.5V7.5C14.5 7.36739 14.4473 7.24021 14.3536 7.14645L13 5.79289V2.5C13 2.22386 12.7761 2 12.5 2H11.5C11.2239 2 11 2.22386 11 2.5V3.79289L8.35355 1.14645C8.15829 0.951184 7.84171 0.951184 7.64645 1.14645L1.64645 7.14645C1.55268 7.24021 1.5 7.36739 1.5 7.5V14.5C1.5 14.7761 1.72386 15 2 15H6C6.27614 15 6.5 14.7761 6.5 14.5Z" fill="#9c9c9c " />
-                                </svg>
-                            </div>
-                            <div className="text-[#000] flex flex-col gap-3">
-                                <span>Administrador</span>
-                                <p>Sesión iniciada como Victor</p>
-                            </div>
-                        </div>
-
-                        <div className=" h-36 w-80 flex justify-center items-center gap-5  ">
-                            <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 16 16" fill="none">
-                                    <path d="M6.5 14.5V10.9947C6.5 10.75 6.75 10.5 7 10.5H9C9.25 10.5 9.5 10.75 9.5 11V14.5C9.5 14.7761 9.72386 15 10 15H14C14.2761 15 14.5 14.7761 14.5 14.5V7.5C14.5 7.36739 14.4473 7.24021 14.3536 7.14645L13 5.79289V2.5C13 2.22386 12.7761 2 12.5 2H11.5C11.2239 2 11 2.22386 11 2.5V3.79289L8.35355 1.14645C8.15829 0.951184 7.84171 0.951184 7.64645 1.14645L1.64645 7.14645C1.55268 7.24021 1.5 7.36739 1.5 7.5V14.5C1.5 14.7761 1.72386 15 2 15H6C6.27614 15 6.5 14.7761 6.5 14.5Z" fill="#9c9c9c " />
-                                </svg>
-                            </div>
-                            <div className="text-[#000] flex flex-col gap-3">
-                                <span>Administrador</span>
-                                <p>Sesión iniciada como Victor</p>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div className="flex flex-row gap-60">
-
-                        <div className=" h-36 w-80 flex justify-center items-center gap-5  ">
-                            <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 16 16" fill="none">
-                                    <path d="M6.5 14.5V10.9947C6.5 10.75 6.75 10.5 7 10.5H9C9.25 10.5 9.5 10.75 9.5 11V14.5C9.5 14.7761 9.72386 15 10 15H14C14.2761 15 14.5 14.7761 14.5 14.5V7.5C14.5 7.36739 14.4473 7.24021 14.3536 7.14645L13 5.79289V2.5C13 2.22386 12.7761 2 12.5 2H11.5C11.2239 2 11 2.22386 11 2.5V3.79289L8.35355 1.14645C8.15829 0.951184 7.84171 0.951184 7.64645 1.14645L1.64645 7.14645C1.55268 7.24021 1.5 7.36739 1.5 7.5V14.5C1.5 14.7761 1.72386 15 2 15H6C6.27614 15 6.5 14.7761 6.5 14.5Z" fill="#9c9c9c " />
-                                </svg>
-                            </div>
-                            <div className="text-[#000] flex flex-col gap-3">
-                                <span>Administrador</span>
-                                <p>Sesión iniciada como Victor</p>
-                            </div>
-                        </div>
-
-                        <div className=" h-36 w-80 flex justify-center items-center gap-5  ">
-                            <div className="flex bg-[#ccc] h-20 w-20 rounded-full items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 16 16" fill="none">
-                                    <path d="M6.5 14.5V10.9947C6.5 10.75 6.75 10.5 7 10.5H9C9.25 10.5 9.5 10.75 9.5 11V14.5C9.5 14.7761 9.72386 15 10 15H14C14.2761 15 14.5 14.7761 14.5 14.5V7.5C14.5 7.36739 14.4473 7.24021 14.3536 7.14645L13 5.79289V2.5C13 2.22386 12.7761 2 12.5 2H11.5C11.2239 2 11 2.22386 11 2.5V3.79289L8.35355 1.14645C8.15829 0.951184 7.84171 0.951184 7.64645 1.14645L1.64645 7.14645C1.55268 7.24021 1.5 7.36739 1.5 7.5V14.5C1.5 14.7761 1.72386 15 2 15H6C6.27614 15 6.5 14.7761 6.5 14.5Z" fill="#9c9c9c " />
-                                </svg>
-                            </div>
-                            <div className="text-[#000] flex flex-col gap-3">
-                                <span>Administrador</span>
-                                <p>Sesión iniciada como Victor</p>
-                            </div>
-                        </div>
-
-                    </div>
-
 
                 </div>
-                
             </div>
-            
         </>
     );
 }

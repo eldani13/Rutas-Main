@@ -40,8 +40,10 @@ export default function Employees() {
             </div>
 
 
+            
             <div className="max-h-[100vh] h-full pt-14 flex flex-col overflow-y-auto p-5">
                 {/* Informacion */}
+                <hr className="mb-10 border-[1px]" />
                 <div className="grid grid-cols-6  bg-[#ccc] w-[100%] h-[70px] items-center rounded-full mx-auto ">
                     {/* Primer elemento */}
                     <div className="text-[#000] flex flex-col items-center">

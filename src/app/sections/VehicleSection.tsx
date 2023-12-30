@@ -40,28 +40,29 @@ export default function Vehicle() {
 
             <div className="max-h-[100vh] h-full pt-14 flex flex-col overflow-y-auto p-5">
                 {/* Informacion */}
+                <hr className="mb-10 border-[1px]" />
                 <div className="grid grid-cols-5  bg-[#ccc] w-[100%] h-[70px] items-center rounded-full mx-auto ">
                     {/* Primer elemento */}
                     <div className="text-[#000] flex flex-col items-center">
                         <span className="font-bold">ID</span>
                     </div>
 
-                    {/* Tercer elemento */}
+                    {/* Segundo elemento */}
                     <div className="text-[#000] flex flex-col items-center">
                         <span className="font-bold">Marca</span>
                     </div>
 
-                    {/* Cuarto elemento */}
+                    {/* Tercer elemento */}
                     <div className="text-[#000] flex flex-col items-center">
                         <span className="font-bold">Modelo</span>
                     </div>
 
-                    {/* Quinto elemento */}
+                    {/* Cuarto elemento */}
                     <div className="text-[#000] flex flex-col items-center">
                         <span className="font-bold">Último cambio de aceite </span>
                     </div>
 
-                    {/* Sexto elemento */}
+                    {/* Quinto elemento */}
                     <div className="text-[#000] flex flex-col items-center">
                         <span className="font-bold">Próximo cambio de aceite</span>
                     </div>

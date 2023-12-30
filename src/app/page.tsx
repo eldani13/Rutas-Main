@@ -104,9 +104,6 @@ export default function HomePage() {
 
       }
 
-      {/* Tercera columna */}
-
-
     </main>
   );
 }
