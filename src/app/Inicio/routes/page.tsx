@@ -1,4 +1,5 @@
 "use client"
+import Link from "next/link";
 import React, { useState } from "react"
 // import Home from "./HomeSection";
 
@@ -55,7 +56,7 @@ export default function Route() {
                     <div className="flex flex-wrap max-w-full justify-around px-4 gap-x-10 gap-y-5 py-4">
 
                         {namesRoutes.map((routeName:RoutesName) => (
-                            <div className="group cursor-pointer flex  justify-between items-center gap-10 px-5  py-2 hover:bg-gray-100 rounded-full">
+                            <Link href="/Inicio/routes/ruta" className="group cursor-pointer flex  justify-between items-center gap-10 px-5  py-2 hover:bg-gray-100 rounded-full">
                                 <div className="flex justify-start gap-5">
                                     <div className="flex bg-[#ccc] h-20 w-20 overflow-hidden rounded-full items-center justify-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" height="45" width="45" viewBox="0 0 448 512">
@@ -70,7 +71,7 @@ export default function Route() {
                                 <svg className="group-hover:animate-bounce" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" viewBox="0 0 16 16">
                                     <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
                                 </svg>
-                            </div>
+                            </Link>
                         ))
                         }
 
