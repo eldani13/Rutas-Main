@@ -57,9 +57,9 @@ export default function Court() {
             </div>
 
             <div className="flex flex-col justify-between px-3  max-h-[100vh] h-full overflow-y-auto" style={{ alignSelf: 'flex-start' }}>
-                
+
                 <svg xmlns="http://www.w3.org/2000/svg" className="my-3" fill="#ccc" height="20" width="18" viewBox="0 0 448 512"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" /></svg>
-                
+
                 <hr className="mb-10 border-[1px]" />
                 <div className="grid w-full flex-1"
                     style={{
@@ -101,10 +101,46 @@ export default function Court() {
                     </div>
 
                     {/* Segundo div */}
-                    <div className="flex text-black px-3" style={{ gridArea: "summary" }}>
+                    <div className="flex flex-col text-black px-3 justify-between pb-5" style={{ gridArea: "summary" }}>
                         {/* Primer elemento */}
                         <div className="text-[#000] flex flex-col items-center w-full h-fit bg-[#ccc] py-2 rounded-full">
                             <p className="font-bold text-[20px] text-center">ESTIMADOS</p>
+                        </div>
+                        <div>
+
+                            <div className="grid grid-cols-2 w-full py-5">
+                                <p className="text-center">Salió con</p>
+                                <div className="flex justify-between px-10">
+                                    <p>$</p>
+                                    <p className="relative flex-1 text-right">16,000 <span className=" ps-3 text-sm font-bold absolute top-[-3px]">MXN</span></p>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-2 w-full py-5">
+                                <p className="text-center">Vendió</p>
+                                <div className="flex justify-between px-10">
+                                    <p>$</p>
+                                    <p className="relative flex-1 text-right">16,000 <span className=" ps-3 text-sm font-bold absolute top-[-3px]">MXN</span></p>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-2 w-full py-5">
+                                <p className="text-center">Entregó en<br /> efectivo</p>
+                                <div className="flex justify-between px-10">
+                                    <p>$</p>
+                                    <p className="relative flex-1 text-right">100 <span className=" ps-3 text-sm font-bold absolute top-[-3px]">MXN</span></p>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-2 w-full py-5">
+                                <p className="text-center">Entregó en<br /> mercancia</p>
+                                <div className="flex justify-between px-10">
+                                    <p>$</p>
+                                    <p className="relative flex-1 text-right">910 <span className=" ps-3 text-sm font-bold absolute top-[-3px]">MXN</span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="w-full flex flex-col gap-5 shadow-md rounded-xl text-center py-5">
+                            <p className="font-bold text-lg">LA DIFERENCIA ES DE:</p>
+                            <p className="font-normal text-xl text-red-500 relative">$ 10, 090 <span className=" ps-3 text-sm font-bold absolute top-[-3px]">MXN</span></p>
                         </div>
                     </div>
 
