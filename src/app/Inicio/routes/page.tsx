@@ -69,9 +69,9 @@ export default function Route() {
                     <div className="flex flex-wrap max-w-full justify-around px-4 gap-x-10 gap-y-5 py-4">
 
                         {namesRoutes.map((routeName: RoutesName) => (
-                            <Link href="/Inicio/routes/ruta"
+                            <Link key={routeName.key} href="/Inicio/routes/ruta"
                             className="group cursor-pointer flex  justify-between items-center gap-10 px-5  py-2 hover:bg-gray-100 rounded-full">
-                                <div className="flex justify-start gap-5">
+                                <div  className="flex justify-start gap-5">
                                     <div className="flex bg-[#ccc] h-20 w-20 overflow-hidden rounded-full items-center justify-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" height="45" width="45" viewBox="0 0 448 512">
                                             <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
