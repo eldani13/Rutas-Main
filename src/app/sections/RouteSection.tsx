@@ -1,41 +1,54 @@
 import React, { useState } from "react"
 // import Home from "./HomeSection";
 
-interface RoutesName{
-    name:String,
-    description:String
-} 
+interface RoutesName {
+    name: String,
+    description: String
+}
 
 export default function Route() {
 
     const [isHover, setIsHover] = useState(false);
 
-    const namesRoutes:RoutesName[] = [
+    type RoutesName = {
+        key: string;
+        name: string;
+        description: string;
+    };
+
+    const namesRoutes: RoutesName[] = [
         {
-            name: "Cristhian",
-            description: "Ruta de mensajeria"
+            key: '1',
+            name: 'Cristhian',
+            description: 'Ruta de mensajeria',
         },
         {
-            name: "Luis",
-            description: "Rutas de mensajerias"
+            key: '2',
+            name: 'Luis',
+            description: 'Rutas de mensajerias',
         },
         {
-            name: "cristhian",
-            description: "Rutal de mensajeria"
+            key: '3',
+            name: 'cristhian',
+            description: 'Rutal de mensajeria',
         },
         {
-            name: "cristhian",
-            description: "Rutadsa de mensajeria"
+            key: '4',
+            name: 'cristhian',
+            description: 'Rutadsa de mensajeria',
         },
         {
-            name: "cristhian",
-            description: "Rutads de mensajeria"
+            key: '5',
+            name: 'cristhian',
+            description: 'Rutads de mensajeria',
         },
         {
-            name: "cristhian",
-            description: "Rutads de mensajeria"
-        }
-    ]
+            key: '6',
+            name: 'cristhian',
+            description: 'Rutads de mensajeria',
+        },
+    ];
+
 
     return (
         <>
@@ -53,7 +66,7 @@ export default function Route() {
                 <div className="flex flex-col ">
                     <div className="flex flex-wrap max-w-full justify-around px-4 gap-x-10 gap-y-5 py-4">
 
-                        {namesRoutes.map((routeName:RoutesName) => (
+                        {namesRoutes.map((routeName: RoutesName) => (
                             <div className="group cursor-pointer flex  justify-between items-center gap-10 px-5  py-2 hover:bg-gray-100 rounded-full">
                                 <div className="flex justify-start gap-5">
                                     <div className="flex bg-[#ccc] h-20 w-20 overflow-hidden rounded-full items-center justify-center">
