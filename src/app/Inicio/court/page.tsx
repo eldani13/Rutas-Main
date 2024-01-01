@@ -138,7 +138,7 @@ export default function Court() {
                             </div>
                         </div>
 
-                        <div className="w-full flex flex-col gap-5 shadow-md rounded-xl text-center py-5">
+                        <div className="w-full flex flex-col gap-5  rounded-xl text-center py-5" style={{boxShadow: '0px 6px 13.7px 0px rgba(0, 0, 0, 0.10)'}}>
                             <p className="font-bold text-lg">LA DIFERENCIA ES DE:</p>
                             <p className="font-normal text-xl text-red-500 relative">$ 10, 090 <span className=" ps-3 text-sm font-bold absolute top-[-3px]">MXN</span></p>
                         </div>
