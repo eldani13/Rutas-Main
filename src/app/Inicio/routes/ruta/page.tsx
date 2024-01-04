@@ -1,7 +1,8 @@
 "use client"
 import Link from "next/link";
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 // import Home from "./HomeSection";
+import mapboxgl from "mapbox-gl"
 
 interface RoutesName {
     name: String,
@@ -10,6 +11,17 @@ interface RoutesName {
 
 export default function Route() {
 
+    useEffect(() => {
+        mapboxgl.accessToken = "pk.eyJ1IjoibGRhbmlpMTMiLCJhIjoiY2xxemE3OXBuMDMxaDJxb2ZwbWYyeXczNSJ9.Clw9VnVZszkfexTJ1tOMUw";
+        const map = new mapboxgl.Map({
+            container: "mapview",
+            style: "mapbox://styles/mapbox/streets-v11",
+            center: [-99.1332, 19.4326],
+            zoom: 9
+        })
+        return () => map.remove()
+
+    }, [])
 
     return (
         <>
@@ -77,54 +89,48 @@ export default function Route() {
                     <hr className="mb-10 border-[1px]" />
                 </div>
 
-                <div className="grid w-full flex-1"
-                    style={{
-                        gridTemplateColumns: '1fr 1fr 1fr',
-                        gridTemplateRows: '1fr 1fr',
-                        gridTemplateAreas: " 'productSold productSold summary' 'productNotSold productNotSold summary' ",
-                    }}>
+                <div className="flex flex-1">
                     {/* Primer div */}
-                    <div className="flex text-black px-3" style={{ gridArea: "productSold" }}>
+                    <div className="flex flex-1 flex-col text-black px-3" style={{ gridArea: "productSold" }}>
                         <span className="font-bold">Mapa de la Ruta.</span>
-                    </div>
-                </div>
-
-
-
-                <div className="flex flex-col p-10 gap-y-10" style={{
-                    position: 'absolute',
-                    right: '0',
-                    top: '40px'
-                }}>
-                    {/* Segundo div */}
-                    <div className="flex flex-col items-center text-black px-3 gap-10">
-                        <span className="font-bold">Carga en Mercancía</span>
-                        {/* Card */}
-                        <div className="flex flex-row p-4" style={{ boxShadow: '0px 6px 13.7px 0px rgba(0, 0, 0, 0.10)', borderRadius: '20px',cursor: 'pointer' }}>
-                            <svg className="h-[170px] w-[170px] text-red-400 pr-2" fill="currentColor" viewBox="0 0 20 20">
-                                <circle cx="10" cy="10" r="8" />
-                            </svg>
-                            <div className="flex flex-col justify-center gap-y-3">
-                                <span className="text-4xl">$ 24, 550 <span className="text-base font-bold absolute">MXN</span></span>
-                                <p className="text-xs text-[#5e5e5e] flex text-center">Haga clic para gestionar la carga del vehiculo</p>
-                            </div>
+                        <div className="flex flex-1">
+                            {/* Cris */}
+                            <div id="mapview" className="flex-1 rounded-lg overflow-hidden max-h-[90%]"/>
                         </div>
                     </div>
 
-                    {/* Tercer div */}
-                    <div className=" flex flex-col items-center text-black px-3 gap-10">
-                        <span className="font-bold">Última hora de venta.</span>
-                        <div className="flex flex-row p-4" style={{ boxShadow: '0px 6px 13.7px 0px rgba(0, 0, 0, 0.10)', borderRadius: '20px', cursor: 'pointer' }}>
-                            <svg className="h-[170px] w-[170px] text-yellow-600 pr-2" fill="currentColor" viewBox="0 0 20 20">
-                                <circle cx="10" cy="10" r="8" />
-                            </svg>
-                            <div className="flex flex-col justify-center gap-y-3">
-                                <span className="text-4xl">02 : 35 <span className="text-base font-bold absolute">PM</span></span>
-                                <p className="text-xs text-[#5e5e5e] flex text-center">Haga clic para gestionar el historial de venta</p>
+                    <div className="flex flex-col p-10 gap-y-10 justify-center">
+                        {/* Segundo div */}
+                        <div className="flex flex-col items-center text-black gap-10">
+                            <span className="font-bold">Carga en Mercancía</span>
+                            {/* Card */}
+                            <div className="flex flex-row p-4" style={{ boxShadow: '0px 6px 13.7px 0px rgba(0, 0, 0, 0.10)', borderRadius: '20px', cursor: 'pointer' }}>
+                                <svg className="h-[170px] w-[170px] text-red-400 pr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <circle cx="10" cy="10" r="8" />
+                                </svg>
+                                <div className="flex flex-col justify-center gap-y-3">
+                                    <span className="text-4xl relative">$ 24, 550 <span className="text-base font-bold absolute">MXN</span></span>
+                                    <p className="text-xs text-[#5e5e5e] flex text-center">Haga clic para gestionar la carga del vehiculo</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Tercer div */}
+                        <div className=" flex flex-col items-center text-black gap-10">
+                            <span className="font-bold">Última hora de venta.</span>
+                            <div className="flex flex-row p-4" style={{ boxShadow: '0px 6px 13.7px 0px rgba(0, 0, 0, 0.10)', borderRadius: '20px', cursor: 'pointer' }}>
+                                <svg className="h-[170px] w-[170px] text-yellow-600 pr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <circle cx="10" cy="10" r="8" />
+                                </svg>
+                                <div className="flex flex-col justify-center gap-y-3">
+                                    <span className="text-4xl relative">02 : 35 <span className="text-base font-bold absolute">PM</span></span>
+                                    <p className="text-xs text-[#5e5e5e] flex text-center">Haga clic para gestionar el historial de venta</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </>
     );
