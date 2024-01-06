@@ -1,6 +1,33 @@
-import React from "react";
+"use client"
+import React, { useEffect, useState } from "react";
+
+interface Message {
+    _id: string
+    marca: string
+    modelo: number
+    lastOilChange: string
+    nextOilChange: string
+    __v: number
+}
+
+interface Root {
+    message: Message[]
+    details: boolean
+}
 
 export default function Vehicle() {
+
+    const [dataVehicle, setDataVehicle] = useState<null | Root>(null);
+
+    useEffect(() => {
+        fetch("http://localhost:3002/api/v1/cars-units")
+            .then((env) => env.json())
+            .then((rec) => {
+                // @ts-ignore
+                setDataVehicle(rec)
+            })
+    }, [])
+
     return (
         <>
             <div className="flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 px-4 h-[100%] justify-between">
@@ -48,6 +75,19 @@ export default function Vehicle() {
                     <p>Último cambio de aceite</p>
                     <p>Próximo cambio de aceite</p>
                 </div>
+                {
+                    // @ts-ignore
+                    dataVehicle && dataVehicle?.message.map((data: Message) => (
+                        <div key={data._id} className="flex text-center gap-2  justify-around  w-[100%] py-5 px-2 items-center mx-auto text-black font-bold">
+                            <td>{data._id}</td>
+                            <td>{data.marca}</td>
+                            <td>{data.modelo}</td>
+                            <td>{data.lastOilChange}</td>
+                            <td>{data.nextOilChange}</td>
+                        </div>
+                    ))
+                }
+
             </div>
 
         </>
