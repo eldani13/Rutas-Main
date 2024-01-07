@@ -13,7 +13,8 @@
     "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18",
-    "react-modal": "^3.16.1"
+    "react-modal": "^3.16.1",
+    "sweetalert2": "^11.10.2"
   },
   "devDependencies": {
     "@types/mapbox-gl": "^2.7.19",

@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
+import Swal from "sweetalert2";
 
 interface Message {
   _id: string;
@@ -24,30 +25,56 @@ export default function Employees() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [nuevoDato, setNuevoDato] = useState<Partial<Message>>({});
 
+  let modal;
+
   // Agregar
   const openModal = () => {
-    setModalIsOpen(true);
+    Swal.fire({
+      title: "Agregar nuevo empleado",
+      input: "text",
+      icon: "question",
+      showConfirmButton: true,
+      showCancelButton: true,
+      preConfirm: async () => {
+        try {
+            // post fetch! @danifront
+            const api = "http://localhost:3000/api/v1/employee/new"
+            const response = await fetch(api)
+            
+            // todo: send data
+            
+
+        } catch (error) {
+            console.error(error)
+        }
+      }
+    });
+    // console.log("hello world");
+
+    // modal = true
+    // setModalIsOpen(true);
   };
 
   const closeModal = () => {
-    setModalIsOpen(false);
-    setNuevoDato({}); //
+    modal = false;
+    // setModalIsOpen(false);
+    // setNuevoDato({}); //
   };
 
   const agregarDato = () => {
-    if (modoEdicion) {
-      setDatosNuevos((prevDatos) =>
-        prevDatos.map((dato) =>
-          dato._id === usuarioEditando._id
-            ? { ...dato, ...usuarioEditando }
-            : dato
-        )
-      );
-      setModoEdicion(false);
-      setUsuarioEditando({});
-    } else {
-      openModal();
-    }
+    // if (modoEdicion) {
+    //   setDatosNuevos((prevDatos) =>
+    //     prevDatos.map((dato) =>
+    //       dato._id === usuarioEditando._id
+    //         ? { ...dato, ...usuarioEditando }
+    //         : dato
+    //     )
+    //   );
+    //   setModoEdicion(false);
+    //   setUsuarioEditando({});
+    // } else {
+    //   openModal();
+    // }
   };
 
   const guardarDato = () => {
@@ -117,7 +144,7 @@ export default function Employees() {
         {/* Botones */}
         <div className="pb-10 flex flex-col space-y-10 items-center">
           <button
-            onClick={agregarDato}
+            onClick={openModal}
             className="bg-[#ececec] text-black px-2 py-2 mb-2 rounded-[50px] h-14 w-52 flex items-center justify-between font-bold"
           >
             <svg
@@ -190,7 +217,7 @@ export default function Employees() {
             }
 
             {/* Agregar los nuevos datos a la tabla */}
-            <Modal
+            {/* <Modal
               isOpen={modalIsOpen}
               onRequestClose={closeModal}
               contentLabel="Agregar"
@@ -278,7 +305,7 @@ export default function Employees() {
                   </div>
                 </form>
               </div>
-            </Modal>
+            </Modal> */}
 
             {/* Editar los usuarios */}
             {/* <div>
