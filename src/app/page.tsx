@@ -17,6 +17,36 @@ export default function HomePage() {
   const [sectionactual, setSectionActual] = useState(0)
   console.log(sectionactual);
 
+  const apiUrl = process.env.REACT_APP_API_BASE_URL || '';
+
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+  });
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+  
+    try {
+      const response = await fetch(`${apiUrl}/api/v1/new-session`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      if (response.ok) {
+        window.location.href = '/Inicio';
+      } else {
+        console.log('Inicio de sesión fallido');
+      }
+    } catch (error) {
+      console.error('Error al enviar la solicitud:', error);
+    }
+  };
+  
+
   return (
     <main>
       <div className="bg-[#ccc] h-screen overflow-hidden flex items-center justify-center">
@@ -26,7 +56,7 @@ export default function HomePage() {
             <path d="M288 0C422.4 0 512 35.2 512 80V96l0 32c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32l0 160c0 17.7-14.3 32-32 32v32c0 17.7-14.3 32-32 32H416c-17.7 0-32-14.3-32-32V448H192v32c0 17.7-14.3 32-32 32H128c-17.7 0-32-14.3-32-32l0-32c-17.7 0-32-14.3-32-32l0-160c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h0V96h0V80C64 35.2 153.6 0 288 0zM128 160v96c0 17.7 14.3 32 32 32H272V128H160c-17.7 0-32 14.3-32 32zM304 288H416c17.7 0 32-14.3 32-32V160c0-17.7-14.3-32-32-32H304V288zM144 400a32 32 0 1 0 0-64 32 32 0 1 0 0 64zm288 0a32 32 0 1 0 0-64 32 32 0 1 0 0 64zM384 80c0-8.8-7.2-16-16-16H208c-8.8 0-16 7.2-16 16s7.2 16 16 16H368c8.8 0 16-7.2 16-16z" fill='white'/>
           </svg>
           </div>
-          <form className="p-12 md:p-24">
+          <form className="p-12 md:p-24" action="/api/v1/new-session" method="post">
             <div className="flex items-center text-lg mb-6 md:mb-8">
               <svg className="absolute ml-3" width="24" viewBox="0 0 24 24">
                 <path d="M20.822 18.096c-3.439-.794-6.64-1.49-5.09-4.418 4.72-8.912 1.251-13.678-3.732-13.678-5.082 0-8.464 4.949-3.732 13.678 1.597 2.945-1.725 3.641-5.09 4.418-3.073.71-3.188 2.236-3.178 4.904l.004 1h23.99l.004-.969c.012-2.688-.092-4.222-3.176-4.935z" />
@@ -48,6 +78,8 @@ export default function HomePage() {
           </form>
         </div>
       </div>
+
+      
 
     </main>
   );
