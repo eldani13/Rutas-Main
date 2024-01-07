@@ -26,7 +26,7 @@ export default function HomePage() {
     event.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/new-session`, {
+      const response = await fetch(`http://localhost:3000/api/v1/validate-session`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
