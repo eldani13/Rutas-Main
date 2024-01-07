@@ -42,7 +42,6 @@ export default function Employees() {
             const response = await fetch(api)
             
             // todo: send data
-            
 
         } catch (error) {
             console.error(error)
