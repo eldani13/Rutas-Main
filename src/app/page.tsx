@@ -1,9 +1,8 @@
 "use client"
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function HomePage() {
-
 
   const styleselectbuttom = {
     display: 'flex',
@@ -16,6 +15,10 @@ export default function HomePage() {
   };
   const [sectionactual, setSectionActual] = useState(0)
   console.log(sectionactual);
+
+  useEffect(()=> {
+    const api = "http://localhost:3000"
+  }, )
 
   return (
     <main>
