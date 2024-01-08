@@ -20,7 +20,7 @@ export default function Vehicle() {
 
     const [dataVehicle, setDataVehicle] = useState<null | Root>(null);
     const [clickInVehicle, setclickInVehicle] = useState<null | Message>(null);
-    const [viewAddVehicle, setviewAddVehicle] = useState<boolean>(false);
+    const [viewAddVehicle, setviewAddVehicle] = useState<[boolean, string]>([false, 'insert']);
     const actualTime = new Date();
     const timeInDay = 1000 * 60 * 60 * 24;
 
@@ -32,8 +32,11 @@ export default function Vehicle() {
 
     const getDaysDiference = (dateCurrent: string) => {
         const days: number = Math.floor(((new Date(dateCurrent)).getTime() - actualTime.getTime()) / timeInDay)
-
+        console.log(dateCurrent)
+        console.log(new Date(dateCurrent))
+        console.log(new Date())
         return days == 0 ? 'Hoy' : days < 0 ? `Hace ${Math.abs(days)} días` : `En ${days} días`;
+        
     }
 
     const updateTable = () => {
@@ -46,10 +49,74 @@ export default function Vehicle() {
     }
 
     useEffect(updateTable, [])
+    useEffect(() => {
+        if (viewAddVehicle[1] == "edit" && clickInVehicle != null) {
+            input_marca.current && (input_marca.current.value = clickInVehicle?.marca || "");
+            input_modelo.current && (input_modelo.current.value = clickInVehicle?.modelo.toString() || "");
+            input_ultimoCambioAceite.current && (input_ultimoCambioAceite.current.value = formatoFecha((new Date(clickInVehicle?.lastOilChange || "0-0-0"))) || "");
+            input_proximoCambioAceite.current && (input_proximoCambioAceite.current.value = formatoFecha((new Date(clickInVehicle?.nextOilChange || "0-0-0"))) || "");
+        }
+    }, [viewAddVehicle])
+
+
+
+
+    // Obtener el formato 'YYYY-MM-DD' de la fecha actual
+    const formatoFecha = (fecha: Date): string => {
+        const year = fecha.getFullYear();
+        const month = `${fecha.getMonth() + 1}`.padStart(2, '0'); // Asegura 2 dígitos
+        const day = `${fecha.getDate()}`.padStart(2, '0'); // Asegura 2 dígitos
+        return `${year}-${month}-${day}`;
+    };
 
     const onHandleform_addVehicle = async (e: FormEvent) => {
         e.preventDefault();
+        if (viewAddVehicle[1] == "insert") {
+            await insertVehicleFunction()
+        }
+        else if (viewAddVehicle[1] == "edit") {
+            await editVehicleFunction()
+        }
 
+    }
+    const editVehicleFunction = async () => {
+        try {
+            const response = await fetch(`http://localhost:3002/api/v1/car-unit/edit/${clickInVehicle?._id}`, {
+                method: "PATCH",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "marca": input_marca.current?.value,
+                    "modelo": input_modelo.current?.value,
+                    "lastOilChange": new Date(input_ultimoCambioAceite.current?.value || "0000").toISOString(),
+                    "nextOilChange": new Date(input_proximoCambioAceite.current?.value || "0000").toISOString()
+                })
+            })
+            if (response.ok) {
+                setviewAddVehicle([false, 'insert']);
+                updateTable();
+                formRef.current?.reset();
+                Swal.fire({
+                    title: 'Modificado',
+                    text: '¡Vehículo modificado correctamente!',
+                    icon: 'success',
+                    confirmButtonText: 'Aceptar',
+                })
+            } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'El vehículo no se ha modificado correctamente!',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar',
+                })
+            }
+
+        } catch {
+
+        }
+    }
+    const insertVehicleFunction = async () => {
         try {
             const response = await fetch("http://localhost:3002/api/v1/car-unit/new/", {
                 method: "POST",
@@ -59,12 +126,12 @@ export default function Vehicle() {
                 body: JSON.stringify({
                     "marca": input_marca.current?.value,
                     "modelo": input_modelo.current?.value,
-                    "lastOilChange": input_ultimoCambioAceite.current?.valueAsDate,
-                    "nextOilChange": input_proximoCambioAceite.current?.valueAsDate
+                    "lastOilChange": new Date(input_ultimoCambioAceite.current?.value || "000").toISOString(),
+                    "nextOilChange": new Date(input_proximoCambioAceite.current?.value || "000").toISOString()
                 })
             })
             if (response.ok) {
-                setviewAddVehicle(false);
+                setviewAddVehicle([false, 'insert']);
                 updateTable();
                 formRef.current?.reset();
                 Swal.fire({
@@ -86,7 +153,46 @@ export default function Vehicle() {
 
         }
     }
+    const removeVechicleHandle = async () => {
+        const swalConten = await Swal.fire({
+            title: `Quieres eliminar \nMarca: ${clickInVehicle?.marca} \nModelo: ${clickInVehicle?.modelo}`,
+            showCancelButton: true,
+            cancelButtonText: "Cancelar",
+            confirmButtonText: "Eliminar",
+            confirmButtonColor: "#DC3741"
+        })
+        if (swalConten.isConfirmed) {
+            try {
+                const response = await fetch(`http://localhost:3002/api/v1/car-unit/delete/${clickInVehicle?._id}`, {
+                    method: "DELETE",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                if (response.ok) {
+                    setviewAddVehicle([false, 'insert']);
+                    updateTable();
+                    formRef.current?.reset();
+                    Swal.fire({
+                        title: 'Eliminado',
+                        text: '¡Vehículo Eliminado correctamente!',
+                        icon: 'success',
+                        confirmButtonText: 'Aceptar',
+                    })
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'El vehículo no se ha eliminado correctamente!',
+                        icon: 'error',
+                        confirmButtonText: 'Aceptar',
+                    })
+                }
 
+            } catch {
+
+            }
+        }
+    }
     return (
         <>
             <div className="flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 px-4 h-[100%] justify-between">
@@ -97,14 +203,19 @@ export default function Vehicle() {
 
                 {/* Botones */}
                 <div className="pb-10 flex flex-col space-y-10 items-center">
-                    <button className={`${clickInVehicle === null ? "hidden" : "visible"} bg-[#ececec] text-black px-2 py-2 mb-2 rounded-[50px] h-14 w-52 flex items-center justify-between font-bold`}>
+                    <button onClick={() => setviewAddVehicle([true, 'edit'])} className={`${clickInVehicle === null ? "hidden" : "visible"} bg-[#ececec] text-black px-2 py-2 mb-2 rounded-[50px] h-14 w-52 flex items-center justify-between font-bold`}>
                         <svg className="h-[50px] w-[50px] text-blue-500 pr-2" fill="currentColor" viewBox="0 0 20 20">
                             <circle cx="10" cy="10" r="8" />
                         </svg>
                         <span className="mr-10">Editar</span>
                     </button>
-
-                    <button onClick={() => setviewAddVehicle(true)} className="bg-[#ececec] text-black px-2 py-2 mb-2 rounded-[50px] h-14 w-52 flex items-center justify-between font-bold">
+                    <button className={`${clickInVehicle === null ? "hidden" : "visible"} bg-[#ececec] text-black px-2 py-2 mb-2 rounded-[50px] h-14 w-52 flex items-center justify-between font-bold`}>
+                        <svg className="h-[50px] w-[50px] text-red-500 pr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <circle cx="10" cy="10" r="8" />
+                        </svg>
+                        <span className="mr-10" onClick={removeVechicleHandle}>Eliminar</span>
+                    </button>
+                    <button onClick={() => setviewAddVehicle([true, 'insert'])} className="bg-[#ececec] text-black px-2 py-2 mb-2 rounded-[50px] h-14 w-52 flex items-center justify-between font-bold">
                         <svg className="h-[50px] w-[50px] text-green-500 pr-2" fill="currentColor" viewBox="0 0 20 20">
                             <circle cx="10" cy="10" r="8" />
                         </svg>
@@ -112,12 +223,7 @@ export default function Vehicle() {
                     </button>
 
 
-                    <button className="bg-[#ececec] text-black px-2 py-2 mb-2 rounded-[50px] h-14 w-52 flex items-center justify-between font-bold">
-                        <svg className="h-[50px] w-[50px] text-red-500 pr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <circle cx="10" cy="10" r="8" />
-                        </svg>
-                        <span className="mr-10">Eliminar</span>
-                    </button>
+
 
                 </div>
             </div>
@@ -144,7 +250,7 @@ export default function Vehicle() {
                                     <td className="">{index}</td>
                                     <td className="">{data.marca}</td>
                                     <td className="">{data.modelo}</td>
-                                    <td className="text-center">{getDaysDiference(data.lastOilChange)}</td>
+                                    <td className="text-center">{getDaysDiference(data.lastOilChange)}</td> 
                                     <td className="text-center">{getDaysDiference(data.nextOilChange)}</td>
                                 </div>
                             ))
@@ -172,17 +278,17 @@ export default function Vehicle() {
                     } */}
                 </div>
 
-                <div className={`bg-[#1d1b1b6e] absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${viewAddVehicle ? 'visible' : 'hidden'}`}>
+                <div className={`bg-[#1d1b1b6e] absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${viewAddVehicle[0] ? 'visible' : 'hidden'}`}>
                     <form ref={formRef} onSubmit={onHandleform_addVehicle} action="" className="relative bg-slate-50 flex p-20 flex-col rounded-xl ">
                         <div className="w-full flex absolute justify-center top-[0] -translate-y-[50%] left-0 right-0 ">
-                            <div className="w-20 h-20 bg-teal-300 flex rounded-full items-center justify-center shadow-lg shadow-emerald-800">
+                            <div className={`${viewAddVehicle[1] == 'insert' ? "bg-teal-300" : "bg-sky-400"} w-20 h-20 flex rounded-full items-center justify-center shadow-lg shadow-emerald-800`}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" viewBox="0 0 16 16">
                                     <path d="M4 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0m10 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0M6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2zM4.862 4.276 3.906 6.19a.51.51 0 0 0 .497.731c.91-.073 2.35-.17 3.597-.17s2.688.097 3.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 10.691 4H5.309a.5.5 0 0 0-.447.276" />
                                     <path d="M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679q.05.242.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.8.8 0 0 0 .381-.404l.792-1.848ZM4.82 3a1.5 1.5 0 0 0-1.379.91l-.792 1.847a1.8 1.8 0 0 1-.853.904.8.8 0 0 0-.43.564L1.03 8.904a1.5 1.5 0 0 0-.03.294v.413c0 .796.62 1.448 1.408 1.484 1.555.07 3.786.155 5.592.155s4.037-.084 5.592-.155A1.48 1.48 0 0 0 15 9.611v-.413q0-.148-.03-.294l-.335-1.68a.8.8 0 0 0-.43-.563 1.8 1.8 0 0 1-.853-.904l-.792-1.848A1.5 1.5 0 0 0 11.18 3z" />
                                 </svg>
                             </div>
                         </div>
-                        <h1 className="text-slate-900 font-semibold text-xl text-center">Insertar vehículo</h1>
+                        <h1 className="text-slate-900 font-semibold text-xl text-center">{viewAddVehicle[1] == "insert" ? "Insertar" : "Editar"} vehículo</h1>
                         <div className="flex flex-col gap-3 mb-16">
                             <div >
                                 <label htmlFor="">Marca:</label>
@@ -235,7 +341,7 @@ export default function Vehicle() {
                         </div>
                         <div className="flex justify-between w-full gap-8">
                             <button type="submit" className="bg-blue-500 text-slate-50 px-6 py-2 rounded-full hover:scale-[1.1]">Guardar</button>
-                            <button type="reset" onClick={() => setviewAddVehicle(false)} className="bg-red-500 text-slate-50 px-6 py-2 rounded-full hover:scale-[1.1]">Cancelar</button>
+                            <button type="reset" onClick={() => setviewAddVehicle([false, 'insert'])} className="bg-red-500 text-slate-50 px-6 py-2 rounded-full hover:scale-[1.1]">Cancelar</button>
                         </div>
                     </form>
                 </div>
