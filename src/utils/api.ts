@@ -14,6 +14,7 @@ export const getAllFetchDataValues = async (pathForResponse: string): Promise<an
 }
 
 
+
 export const patchEditVal = async (pathForResponse: string, dataBody: {}, functionDataOk: () => void, modifyName: string): Promise<any> => {
     try {
         const response = await fetch(pathForResponse, {
