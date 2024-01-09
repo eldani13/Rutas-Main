@@ -1,5 +1,6 @@
 "use client"
 import { MessageProduct, RootProduct } from "@/types/product"
+import { getAllFetchDataValues } from "@/utils/api"
 import React, { useEffect, useState } from "react"
 
 export default function Product() {
@@ -8,16 +9,15 @@ export default function Product() {
     const [viewAddProduct, setviewAddProduct] = useState<[boolean, string]>([false, 'insert']);
 
 
-    const updateTable = () => {
-        fetch(process.env.NEXT_PUBLIC_BACK_URL + "products")
-            .then((env) => env.json())
+    const updateTable = async () => {
+        await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}products`)
             .then((rec) => {
                 // @ts-ignore
-                setDataProductList(rec)
+                setDataVehicle(rec)
             })
     }
 
-    useEffect(updateTable, [])
+    useEffect(()=>{updateTable}, [])
 
 
     return (

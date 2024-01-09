@@ -1,11 +1,12 @@
 "use client"
+import { deleteRemoveData, getAllFetchDataValues, patchEditVal, postInsertData } from "@/utils/api";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 import Swal from "sweetalert2";
 
 
 interface Message {
     _id: string
-    marca: string 
+    marca: string
     modelo: number
     lastOilChange: string
     nextOilChange: string
@@ -37,18 +38,21 @@ export default function Vehicle() {
         console.log(new Date(dateCurrent))
         console.log(new Date())
         return days == 0 ? 'Hoy' : days < 0 ? `Hace ${Math.abs(days)} días` : `En ${days} días`;
-        
+
     }
-    const updateTable = () => {
-        fetch( process.env.NEXT_PUBLIC_BACK_URL + "cars-units")
-            .then((env) => env.json())
+    const updateTable = async () => {
+        await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}cars-units`)
             .then((rec) => {
                 // @ts-ignore
                 setDataVehicle(rec)
             })
     }
 
-    useEffect(updateTable, [])
+    useEffect(() => {
+        updateTable();
+    }, [])
+
+
     useEffect(() => {
         if (viewAddVehicle[1] == "edit" && clickInVehicle != null) {
             input_marca.current && (input_marca.current.value = clickInVehicle?.marca || "");
@@ -80,118 +84,41 @@ export default function Vehicle() {
 
     }
     const editVehicleFunction = async () => {
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACK_URL}car-unit/edit/${clickInVehicle?._id}`, {
-                method: "PATCH",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "marca": input_marca.current?.value,
-                    "modelo": input_modelo.current?.value,
-                    "lastOilChange": new Date(input_ultimoCambioAceite.current?.value || "0000").toISOString(),
-                    "nextOilChange": new Date(input_proximoCambioAceite.current?.value || "0000").toISOString()
-                })
-            })
-            if (response.ok) {
+        await patchEditVal(`${process.env.NEXT_PUBLIC_BACK_URL}car-unit/edit/${clickInVehicle?._id}`,
+            {
+                "marca": input_marca.current?.value,
+                "modelo": input_modelo.current?.value,
+                "lastOilChange": new Date(input_ultimoCambioAceite.current?.value || "0000").toISOString(),
+                "nextOilChange": new Date(input_proximoCambioAceite.current?.value || "0000").toISOString()
+            }, () => {
                 setviewAddVehicle([false, 'insert']);
                 updateTable();
                 formRef.current?.reset();
-                Swal.fire({
-                    title: 'Modificado',
-                    text: '¡Vehículo modificado correctamente!',
-                    icon: 'success',
-                    confirmButtonText: 'Aceptar',
-                })
-            } else {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'El vehículo no se ha modificado correctamente!',
-                    icon: 'error',
-                    confirmButtonText: 'Aceptar',
-                })
-            }
-
-        } catch {
-
-        }
+            }, "vehículo"
+        )
     }
     const insertVehicleFunction = async () => {
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACK_URL}car-unit/new/`, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "marca": input_marca.current?.value,
-                    "modelo": input_modelo.current?.value,
-                    "lastOilChange": new Date(input_ultimoCambioAceite.current?.value || "000").toISOString(),
-                    "nextOilChange": new Date(input_proximoCambioAceite.current?.value || "000").toISOString()
-                })
-            })
-            if (response.ok) {
+        await postInsertData(`${process.env.NEXT_PUBLIC_BACK_URL}car-unit/new/`, {
+            "marca": input_marca.current?.value,
+            "modelo": input_modelo.current?.value,
+            "lastOilChange": new Date(input_ultimoCambioAceite.current?.value || "000").toISOString(),
+            "nextOilChange": new Date(input_proximoCambioAceite.current?.value || "000").toISOString()
+        }, () => {
+            setviewAddVehicle([false, 'insert']);
+            updateTable();
+            formRef.current?.reset();
+        }, "vehículo"
+        )
+
+    }
+    const removeVechicleHandle = async () => {
+        await deleteRemoveData(`${process.env.NEXT_PUBLIC_BACK_URL}car-unit/delete/${clickInVehicle?._id}`,
+            () => {
                 setviewAddVehicle([false, 'insert']);
                 updateTable();
                 formRef.current?.reset();
-                Swal.fire({
-                    title: 'Insertado',
-                    text: '¡Vehículo insertado correctamente!',
-                    icon: 'success',
-                    confirmButtonText: 'Aceptar',
-                })
-            } else {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'El vehículo no se ha insertado correctamente!',
-                    icon: 'error',
-                    confirmButtonText: 'Aceptar',
-                })
-            }
+            }, "vehículo", `Quieres eliminar \nMarca: ${clickInVehicle?.marca} \nModelo: ${clickInVehicle?.modelo}`)
 
-        } catch {
-
-        }
-    }
-    const removeVechicleHandle = async () => {
-        const swalConten = await Swal.fire({
-            title: `Quieres eliminar \nMarca: ${clickInVehicle?.marca} \nModelo: ${clickInVehicle?.modelo}`,
-            showCancelButton: true,
-            cancelButtonText: "Cancelar",
-            confirmButtonText: "Eliminar",
-            confirmButtonColor: "#DC3741"
-        })
-        if (swalConten.isConfirmed) {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_BACK_URL}car-unit/delete/${clickInVehicle?._id}`, {
-                    method: "DELETE",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                if (response.ok) {
-                    setviewAddVehicle([false, 'insert']);
-                    updateTable();
-                    formRef.current?.reset();
-                    Swal.fire({
-                        title: 'Eliminado',
-                        text: '¡Vehículo Eliminado correctamente!',
-                        icon: 'success',
-                        confirmButtonText: 'Aceptar',
-                    })
-                } else {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'El vehículo no se ha eliminado correctamente!',
-                        icon: 'error',
-                        confirmButtonText: 'Aceptar',
-                    })
-                }
-
-            } catch {
-
-            }
-        }
     }
     return (
         <>
@@ -209,7 +136,7 @@ export default function Vehicle() {
                         </svg>
                         <span className="mr-10">Editar</span>
                     </button>
-                    <button  onClick={removeVechicleHandle} className={`${clickInVehicle === null ? "hidden" : "visible"} bg-[#ececec] text-black px-2 py-2 mb-2 rounded-[50px] h-14 w-52 flex items-center justify-between font-bold`}>
+                    <button onClick={removeVechicleHandle} className={`${clickInVehicle === null ? "hidden" : "visible"} bg-[#ececec] text-black px-2 py-2 mb-2 rounded-[50px] h-14 w-52 flex items-center justify-between font-bold`}>
                         <svg className="h-[50px] w-[50px] text-red-500 pr-2" fill="currentColor" viewBox="0 0 20 20">
                             <circle cx="10" cy="10" r="8" />
                         </svg>
@@ -250,7 +177,7 @@ export default function Vehicle() {
                                     <td className="">{index}</td>
                                     <td className="">{data.marca}</td>
                                     <td className="">{data.modelo}</td>
-                                    <td className="text-center">{getDaysDiference(data.lastOilChange)}</td> 
+                                    <td className="text-center">{getDaysDiference(data.lastOilChange)}</td>
                                     <td className="text-center">{getDaysDiference(data.nextOilChange)}</td>
                                 </div>
                             ))
