@@ -45,6 +45,8 @@ export default function Vehicle() {
             .then((rec) => {
                 // @ts-ignore
                 setDataVehicle(rec)
+                console.log(rec)
+
             })
     }
 
