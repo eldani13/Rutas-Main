@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from 'react'
-import { useHistory } from 'react-router-dom';
 
 
 export default function HomePage() {
@@ -9,7 +8,6 @@ export default function HomePage() {
   const [role, setRole] = useState('');
   const [error, setError] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const history = useHistory();
 
   const [formData, setFormData] = useState({ username: '', role: '' });
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
