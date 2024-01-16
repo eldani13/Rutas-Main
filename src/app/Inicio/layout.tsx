@@ -42,12 +42,12 @@ export default function RootLayout({
     deleteCookie(processEnv.rol);
     window.location.href = '/';
   }
-  useEffect(() => {
-    getCookie(processEnv.name)
-      .catch(() => {
-        window.location.href = '/';
-      })
-  }, [])
+  // useEffect(() => {
+  //   getCookie(processEnv.name)
+  //     .catch(() => {
+  //       window.location.href = '/';
+  //     })
+  // }, [])
 
   return (
     <div className={`${inter.className} grid min-h-screen items-center justify-between text-[#000] `} style={{ gridTemplateColumns: "auto auto 1fr" }}>

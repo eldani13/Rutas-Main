@@ -1,11 +1,31 @@
 "use client"
 
-import React, { useState } from "react"
+import { RootEmployees } from "@/types/employees"
+import { MessageProduct, RootProduct } from "@/types/product"
+import { getAllFetchDataValues } from "@/utils/api"
+import React, { useEffect, useState } from "react"
 
 
 export default function Home() {
+    const [countEmployees, setCountEmployees] = useState(0)
+    const [countProducts, setCountProducts] = useState(0)
 
-
+    const countEmployeesHandle = async () => {
+        await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}employees`)
+            .then((rec:RootEmployees) => {
+                setCountEmployees(rec.message.length)
+            })
+    }
+    const countProductsHandle = async () => {
+        await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}products`)
+            .then((rec:RootProduct) => {
+                setCountProducts(rec.message.length)
+            })
+    }
+    useEffect(()=>{
+        countEmployeesHandle()
+        countProductsHandle()
+    }, [])
 
     return (
 
@@ -54,7 +74,7 @@ export default function Home() {
                                 </div>
                                 <div className="text-[#000] flex flex-col gap-3">
                                     <span className="font-bold text-[25px]">Empleados</span>
-                                    <p className="text-[#bbbcbc] text-[15px]">Cuenta actualmente con 16 Empleados</p>
+                                    <p className="text-[#bbbcbc] text-[15px]">Cuenta actualmente con {countEmployees} Empleados</p>
                                 </div>
                             </div>
                             <svg className="group-hover:animate-bounce" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" viewBox="0 0 16 16">
@@ -72,7 +92,7 @@ export default function Home() {
                                 </div>
                                 <div className="text-[#000] flex flex-col gap-3">
                                     <span className="font-bold text-[25px]">Rutas</span>
-                                    <p className="text-[#bbbcbc] text-[15px]">Cuentas con 16 Rutas</p>
+                                    <p className="text-[#bbbcbc] text-[15px]">Cuentas con |number| Rutas</p>
                                 </div>
                             </div>
                             <svg className="group-hover:animate-bounce" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" viewBox="0 0 16 16">
@@ -90,7 +110,7 @@ export default function Home() {
                                 </div>
                                 <div className="text-[#000] flex flex-col gap-3 w-9/12">
                                     <span className="font-bold text-[25px]">Productos</span>
-                                    <p className="text-[#bbbcbc] text-[13px]">Actualmente tienes 100 productos registrados</p>
+                                    <p className="text-[#bbbcbc] text-[13px]">Actualmente tienes {countProducts} productos registrados</p>
                                 </div>
                             </div>
                             <svg className="group-hover:animate-bounce" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" viewBox="0 0 16 16">

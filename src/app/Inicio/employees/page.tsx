@@ -1,31 +1,14 @@
 "use client"
+import { MessageEmployees, RootEmployees } from "@/types/employees";
 import { deleteRemoveData, getAllFetchDataValues, patchEditVal, postInsertData } from "@/utils/api";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
-import Swal from "sweetalert2";
 
-
-interface Message {
-    _id: string
-    user: string
-    username: string
-    lastnames: string
-    role: string
-    password: string
-    __v: number
-}
-
-interface Root {
-    message: Message[]
-    details: boolean
-}
 
 export default function Employees() {
 
-    const [dataEmployees, setDataEmployees] = useState<null | Root>(null);
-    const [clickInEmployees, setclickEmployees] = useState<null | Message>(null);
+    const [dataEmployees, setDataEmployees] = useState<null | RootEmployees>(null);
+    const [clickInEmployees, setclickEmployees] = useState<null | MessageEmployees>(null);
     const [viewAddEmployees, setviewAddEmployees] = useState<[boolean, string]>([false, 'insert']);
-    // const actualTime = new Date();
-    // const timeInDay = 1000 * 60 * 60 * 24;
 
     const formRef = useRef<HTMLFormElement>(null);
     const input_user = useRef<HTMLInputElement>(null);
@@ -34,17 +17,9 @@ export default function Employees() {
     const select_role = useRef<HTMLSelectElement>(null);
     const input_password = useRef<HTMLInputElement>(null);
 
-    // const getDaysDiference = (dateCurrent: string) => {
-    //     // const days: number = Math.floor(((new Date(dateCurrent)).getTime() - actualTime.getTime()) / timeInDay)
-    //     console.log(dateCurrent)
-    //     console.log(new Date(dateCurrent))
-    //     console.log(new Date())
-    //     // return days == 0 ? 'Hoy' : days < 0 ? `Hace ${Math.abs(days)} días` : `En ${days} días`;
-
-    // }
     const updateTable = async () => {
         await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}employees`)
-            .then((rec) => {
+            .then((rec:RootEmployees) => {
                 // @ts-ignore
                 setDataEmployees(rec)
                 console.log(rec)
@@ -61,17 +36,13 @@ export default function Employees() {
     };;
 
     useEffect(() => {
-        fetch("http://localhost:3002/api/v1/employees")
+        fetch(`${process.env.NEXT_PUBLIC_BACK_URL}employees`)
             .then((env) => env.json())
             .then((rec) => {
                 // @ts-ignore
                 setDataEmployees(rec)
             })
     }, [])
-
-    // useEffect(() => {
-    //     updateTable();
-    // }, [])
 
 
     useEffect(() => {
@@ -84,16 +55,6 @@ export default function Employees() {
         }
     }, [viewAddEmployees])
 
-
-
-
-    // // Obtener el formato 'YYYY-MM-DD' de la fecha actual
-    // const formatoFecha = (fecha: Date): string => {
-    //     const year = fecha.getFullYear();
-    //     const month = `${fecha.getMonth() + 1}`.padStart(2, '0'); // Asegura 2 dígitos
-    //     const day = `${fecha.getDate()}`.padStart(2, '0'); // Asegura 2 dígitos
-    //     return `${year}-${month}-${day}`;
-    // };
 
     const onHandleform_addEmployees = async (e: FormEvent) => {
         e.preventDefault();
@@ -205,14 +166,14 @@ export default function Employees() {
                                     <td className="text-center">{data.username}</td>
                                     <td className="text-center">{data.lastnames}</td>
                                     <td className="text-center">{data.role}</td>
-                                    <td className="text-center">
-                                        <button onClick={() => handleTogglePassword(data._id)}>
+                                    <td className="text-center max-w-7xl overflow-hidden flex flex-col justify-center ">
+                                        <button className="m-auto" onClick={() => handleTogglePassword(data._id)}>
                                             <svg xmlns="http://www.w3.org/2000/svg" height="16" width="18" viewBox="0 0 576 512">
                                                 <path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z" />
                                             </svg>
                                         </button>
                                         {passwordVisibility[data._id] && (
-                                            <span className="pl-4">{data.password}</span>
+                                            <span className="pl-4 contents break-words">{data.password}</span>
                                         )}
                                     </td>
                                 </div>
