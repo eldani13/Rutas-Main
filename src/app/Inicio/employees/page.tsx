@@ -1,6 +1,7 @@
 "use client"
 import { MessageEmployees, RootEmployees } from "@/types/employees";
 import { deleteRemoveData, getAllFetchDataValues, patchEditVal, postInsertData } from "@/utils/api";
+import Link from "next/link";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 
 
@@ -108,10 +109,11 @@ export default function Employees() {
     return (
         <>
             <div className="flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 px-4 h-[100%] justify-between">
-                <div className="flex flex-col items-start justify-center">
-                    <h1 className="text-[#000] text-2xl font-bold mb-1">Empleados</h1>
-                    <span className="">Listado de empleados <br /> contratados</span>
-                </div>
+                
+                    <div className="flex flex-col items-start justify-center">
+                        <h1 className="text-[#000] text-2xl font-bold mb-1">Empleados</h1>
+                        <span className="">Listado de empleados <br /> contratados</span>
+                    </div>
 
                 {/* Botones */}
                 <div className="pb-10 flex flex-col space-y-10 items-center">
@@ -133,10 +135,6 @@ export default function Employees() {
                         </svg>
                         <span className="mr-10" >Agregar</span>
                     </button>
-
-
-
-
                 </div>
             </div>
 

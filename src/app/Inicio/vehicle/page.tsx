@@ -150,10 +150,6 @@ export default function Vehicle() {
                         </svg>
                         <span className="mr-10" >Agregar</span>
                     </button>
-
-
-
-
                 </div>
             </div>
 

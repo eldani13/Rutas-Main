@@ -22,7 +22,6 @@ export default function HomePage() {
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
-
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACK_URL}validate-session`, {
         method: 'POST',
@@ -31,14 +30,16 @@ export default function HomePage() {
         },
         body: JSON.stringify({
           username: inputUsername.current?.value || "",
-          role: inputPassword.current?.value || "",
-
+          role: inputSelectRol.current?.value || "",
+          password: inputPassword.current?.value || ""
         }),
       });
 
+      console.log(response.statusText);
+
       if (response.ok) {
         const data = await response.json();
-
+        console.log(data);
         if (Array.isArray(data.response) && data.response.length > 0) {
           // Inicio de sesión exitoso
 
@@ -51,7 +52,9 @@ export default function HomePage() {
         }
       } else {
         const errorData = await response.json();
-        setErrorMessage('Error de servidor');
+        setErrorMessage('Credenciales incorrectas');
+
+        // setErrorMessage('Error de servidor');
       }
     } catch (error) {
       setErrorMessage('Upss, error inesperado, por favor contacte con el desarrollador');
@@ -73,7 +76,7 @@ export default function HomePage() {
               </svg>
               <select ref={inputSelectRol} name="" id="" className='bg-gray-200 rounded-full text-black pl-12 py-2 md:py-4 focus:outline-none w-full'>
                 <option value="empleado">Empleado</option>
-                <option value="addministrador">Administrador</option>
+                <option value="administrador">Administrador</option>
               </select>
             </div>
             <div className="flex items-center text-lg mb-6 md:mb-8">
