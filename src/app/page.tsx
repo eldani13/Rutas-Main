@@ -39,8 +39,7 @@ export default function HomePage() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
-        if (Array.isArray(data.response) && data.response.length > 0) {
+        if (Array.isArray(data.data) && data.data.length > 0) {
           // Inicio de sesión exitoso
 
           setCookie(processEnv.name, inputUsername.current?.value || "");

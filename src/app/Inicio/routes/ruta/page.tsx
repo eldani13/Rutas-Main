@@ -82,9 +82,11 @@ export default function Route() {
             <div className="flex flex-col  justify-between px-3  max-h-[100vh] h-full overflow-y-auto" style={{ alignSelf: 'flex-start' }}>
 
                 <div className="">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="my-3" fill="#ccc" height="20" width="18" viewBox="0 0 448 512">
-                        <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
-                    </svg>
+                    <Link href="/Inicio/routes">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="my-3" fill="#ccc" height="20" width="18" viewBox="0 0 448 512">
+                            <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+                        </svg>
+                    </Link>
 
                     <hr className="mb-10 border-[1px]" />
                 </div>
@@ -95,7 +97,7 @@ export default function Route() {
                         <span className="font-bold">Mapa de la Ruta.</span>
                         <div className="flex flex-1">
                             {/* Cris */}
-                            <div id="mapview" className="flex-1 rounded-lg overflow-hidden max-h-[90%]"/>
+                            <div id="mapview" className="flex-1 rounded-lg overflow-hidden max-h-[90%]" />
                         </div>
                     </div>
 
