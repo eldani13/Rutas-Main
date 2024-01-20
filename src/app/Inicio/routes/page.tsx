@@ -60,7 +60,7 @@ export default function Route() {
 
                         {routes && routes.message.map(
                             (routeName: MessageRoute, index: number) => routeName.status?(
-                                <Link key={'ruta_' + index} href="/Inicio/routes/ruta"
+                                <Link key={'ruta_' + index} href={`/Inicio/routes/${routeName._id}`}
                                     className="group cursor-pointer flex  justify-between items-center gap-10 px-5  py-2 hover:bg-gray-100 rounded-full">
                                     <div className="flex justify-start gap-5">
                                         <div className="flex bg-[#ccc] h-20 w-20 overflow-hidden rounded-full items-center justify-center">
