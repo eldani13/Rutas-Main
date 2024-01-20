@@ -2,6 +2,7 @@
 
 import { RootEmployees } from "@/types/employees"
 import { MessageProduct, RootProduct } from "@/types/product"
+import { RootRoute } from "@/types/routes"
 import { getAllFetchDataValues } from "@/utils/api"
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
@@ -10,6 +11,7 @@ import React, { useEffect, useState } from "react"
 export default function Home() {
     const [countEmployees, setCountEmployees] = useState(0)
     const [countProducts, setCountProducts] = useState(0)
+    const [countRoute, setCountRoute] = useState(0)
 
     const countEmployeesHandle = async () => {
         await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}employees`)
@@ -23,9 +25,16 @@ export default function Home() {
                 setCountProducts(rec.message.length)
             })
     }
+    const countRoutesHandle = async () => {
+        await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}rutas`)
+            .then((rec: RootRoute) => {
+                setCountRoute(rec.message.length)
+            })
+    }
     useEffect(() => {
         countEmployeesHandle()
         countProductsHandle()
+        countRoutesHandle()
     }, [])
 
     return (
@@ -96,7 +105,7 @@ export default function Home() {
                                     </div>
                                     <div className="text-[#000] flex flex-col gap-3">
                                         <span className="font-bold text-[25px]">Rutas</span>
-                                        <p className="text-[#bbbcbc] text-[15px]">Cuentas con |number| Rutas</p>
+                                        <p className="text-[#bbbcbc] text-[15px]">Cuentas con {countRoute} Rutas</p>
                                     </div>
                                 </div>
                                 <svg className="group-hover:animate-bounce" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" viewBox="0 0 16 16">

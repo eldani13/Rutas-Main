@@ -15,60 +15,59 @@ export default function Route({ params }) {
     const [employeCurrent, setEmployeCurrent] = useState<null | MessageEmployees>(null);
     const [vehicleCurrent, setVehicleCurrent] = useState<null | MessageVehicle>(null);
 
-    const getAllData = async () => {
-        const dataGetRuta = (await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}rutas/${rutaId}`)
+    const getDataRoute = async () => {
+        await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}rutas/${rutaId}`)
             .then((rec) => {
                 const messList: MessageRoute = rec.message;
                 if (messList != null) {
-                    return messList;
+                    setRouteCurrent(messList);
                 }
-                return null;
-            }).catch(() => null)
-        )
-        setRouteCurrent(dataGetRuta);
-        if (dataGetRuta == null) {
-            return;
-        }
-        const dataGetEmployee = await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}employee/${dataGetRuta && dataGetRuta.empleado}`)
+            }).catch(() => setRouteCurrent(null))
+    }
+    const getDataEmploye = async () => {
+        await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}employee/${routeCurrent && routeCurrent.empleado}`)
             .then((rec) => {
                 const messList: MessageEmployees = rec;
                 console.log(rec);
                 if (messList != null) {
-                    return messList;
+                    setEmployeCurrent(messList);
                 }
-                return null;
-            }).catch(() => null);
-        setEmployeCurrent(dataGetEmployee);
+            }).catch(()=>setEmployeCurrent(null));
 
-
-
+    }
+    const getDataCars = async () => {
         await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}cars-units`)
             .then((rec: RootVehicle) => {
                 const messList: MessageVehicle[] = rec.message;
                 if (Array.isArray(messList) && messList.length > 0) {
                     //@ts-ignore
-                    setVehicleCurrent(messList.find(u => u._id == dataGetRuta.vehicle));
+                    setVehicleCurrent(messList.find(u => u._id == routeCurrent.vehicle));
                 }
             })
     }
 
+
     useEffect(() => {
-        getAllData();
+        getDataRoute();
     }, [])
 
     useEffect(() => {
         if (routeCurrent == null) {
             return;
         }
+        getDataCars();
+        getDataEmploye();
 
         mapboxgl.accessToken = "pk.eyJ1IjoibGRhbmlpMTMiLCJhIjoiY2xxemE3OXBuMDMxaDJxb2ZwbWYyeXczNSJ9.Clw9VnVZszkfexTJ1tOMUw";
         const map = new mapboxgl.Map({
             container: "mapview",
             style: "mapbox://styles/mapbox/streets-v11",
             center: [-99.1332, 19.4326],
-            zoom: 9
+            zoom: 13,
+            scrollZoom: false,
+
         })
-        
+
         return () => map.remove()
     }, [routeCurrent])
 
