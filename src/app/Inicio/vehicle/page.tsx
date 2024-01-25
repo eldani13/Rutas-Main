@@ -1,27 +1,13 @@
 "use client"
+import { MessageVehicle, RootVehicle } from "@/types/vehicles";
 import { deleteRemoveData, getAllFetchDataValues, patchEditVal, postInsertData } from "@/utils/api";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 import Swal from "sweetalert2";
 
-
-interface Message {
-    _id: string
-    marca: string
-    modelo: number
-    lastOilChange: string
-    nextOilChange: string
-    __v: number
-}
-
-interface Root {
-    message: Message[]
-    details: boolean
-}
-
 export default function Vehicle() {
 
-    const [dataVehicle, setDataVehicle] = useState<null | Root>(null);
-    const [clickInVehicle, setclickInVehicle] = useState<null | Message>(null);
+    const [dataVehicle, setDataVehicle] = useState<null | RootVehicle>(null);
+    const [clickInVehicle, setclickInVehicle] = useState<null | MessageVehicle>(null);
     const [viewAddVehicle, setviewAddVehicle] = useState<[boolean, string]>([false, 'insert']);
     const actualTime = new Date();
     const timeInDay = 1000 * 60 * 60 * 24;
@@ -34,9 +20,6 @@ export default function Vehicle() {
 
     const getDaysDiference = (dateCurrent: string) => {
         const days: number = Math.floor(((new Date(dateCurrent)).getTime() - actualTime.getTime()) / timeInDay)
-        console.log(dateCurrent)
-        console.log(new Date(dateCurrent))
-        console.log(new Date())
         return days == 0 ? 'Hoy' : days < 0 ? `Hace ${Math.abs(days)} días` : `En ${days} días`;
 
     }
@@ -45,8 +28,6 @@ export default function Vehicle() {
             .then((rec) => {
                 // @ts-ignore
                 setDataVehicle(rec)
-                console.log(rec)
-
             })
     }
 
@@ -150,10 +131,6 @@ export default function Vehicle() {
                         </svg>
                         <span className="mr-10" >Agregar</span>
                     </button>
-
-
-
-
                 </div>
             </div>
 
@@ -174,7 +151,7 @@ export default function Vehicle() {
 
                         {
                             // @ts-ignore
-                            dataVehicle && dataVehicle?.message.map((data: Message, index: number) => (
+                            dataVehicle && dataVehicle?.message.map((data: MessageVehicle, index: number) => (
                                 <div onClick={() => setclickInVehicle(clickInVehicle != null ? null : data)} className={`grid py-2 px-3 gap-2 font-semibold hover:bg-slate-200 rounded-full cursor-pointer ${clickInVehicle?._id == data._id ? "bg-sky-200" : ""}`} style={{ gridTemplateColumns: "50px 1fr 1fr 1fr 1fr" }}>
                                     <td className="">{index}</td>
                                     <td className="">{data.marca}</td>

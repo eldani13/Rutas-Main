@@ -3,25 +3,73 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react"
 // import Home from "./HomeSection";
 import mapboxgl from "mapbox-gl"
+import { getAllFetchDataValues } from "@/utils/api";
+import { MessageRoute, RootRoute } from "@/types/routes";
+import { MessageVehicle, RootVehicle } from "@/types/vehicles";
+import { MessageEmployees, RootEmployees } from "@/types/employees";
 
-interface RoutesName {
-    name: String,
-    description: String
-}
+// @ts-ignore
+export default function Route({ params }) {
+    const { rutaId } = params;
+    const [routeCurrent, setRouteCurrent] = useState<null | MessageRoute>(null)
+    const [employeCurrent, setEmployeCurrent] = useState<null | MessageEmployees>(null);
+    const [vehicleCurrent, setVehicleCurrent] = useState<null | MessageVehicle>(null);
 
-export default function Route() {
+    const getDataRoute = async () => {
+        await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}rutas/${rutaId}`)
+            .then((rec) => {
+                const messList: MessageRoute = rec.message;
+                if (messList != null) {
+                    setRouteCurrent(messList);
+                }
+            }).catch(() => setRouteCurrent(null))
+    }
+    const getDataEmploye = async () => {
+        await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}employee/${routeCurrent && routeCurrent.empleado}`)
+            .then((rec) => {
+                const messList: MessageEmployees = rec;
+                console.log(rec);
+                if (messList != null) {
+                    setEmployeCurrent(messList);
+                }
+            }).catch(()=>setEmployeCurrent(null));
+
+    }
+    const getDataCars = async () => {
+        await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}cars-units`)
+            .then((rec: RootVehicle) => {
+                const messList: MessageVehicle[] = rec.message;
+                if (Array.isArray(messList) && messList.length > 0) {
+                    //@ts-ignore
+                    setVehicleCurrent(messList.find(u => u._id == routeCurrent.vehicle));
+                }
+            })
+    }
+
 
     useEffect(() => {
+        getDataRoute();
+    }, [])
+
+    useEffect(() => {
+        if (routeCurrent == null) {
+            return;
+        }
+        getDataCars();
+        getDataEmploye();
+
         mapboxgl.accessToken = "pk.eyJ1IjoibGRhbmlpMTMiLCJhIjoiY2xxemE3OXBuMDMxaDJxb2ZwbWYyeXczNSJ9.Clw9VnVZszkfexTJ1tOMUw";
         const map = new mapboxgl.Map({
             container: "mapview",
             style: "mapbox://styles/mapbox/streets-v11",
             center: [-99.1332, 19.4326],
-            zoom: 9
-        })
-        return () => map.remove()
+            zoom: 13,
+            scrollZoom: false,
 
-    }, [])
+        })
+
+        return () => map.remove()
+    }, [routeCurrent])
 
     return (
         <>
@@ -31,7 +79,7 @@ export default function Route() {
                     <div className="grid grid-cols-2">
                         <svg xmlns="http://www.w3.org/2000/svg" height="30" width="30" viewBox="0 0 384 512" transform="rotate(90)">
                             <path d="M32 448c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c53 0 96-43 96-96l0-306.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 109.3 160 416c0 17.7-14.3 32-32 32l-96 0z" />
-                        </svg><span className="mr-[-40px]">Ruta Jímenez</span>
+                        </svg><span className="mr-[-40px]">Ruta {employeCurrent?.lastnames}</span>
                     </div>
 
                     <div className="flex items-center justify-center bg-[#ccc] h-40 w-40 rounded-full m-auto mt-6">
@@ -43,11 +91,11 @@ export default function Route() {
                     <div className="grid grid-rows-3 gap-5 m-auto mt-6">
                         <div>
                             <span style={{ color: '#5e5e5e', fontWeight: '900' }}>Empleado:</span>
-                            <p style={{ color: '#828282' }}>Juan Ricardo Jímenez</p>
+                            <p style={{ color: '#828282' }}>{employeCurrent?.user}</p>
                         </div>
                         <div>
                             <span style={{ color: '#5e5e5e', fontWeight: '900' }}>Vehículo asignado:</span>
-                            <p style={{ color: '#828282' }}>Vehículo numero 3</p>
+                            <p style={{ color: '#828282', maxWidth: "200px" }}>Vehículo numero {vehicleCurrent?._id}</p>
                         </div>
                         <div>
                             <span style={{ color: '#5e5e5e', fontWeight: '900' }}>Estado de ruta:</span>
@@ -82,9 +130,11 @@ export default function Route() {
             <div className="flex flex-col  justify-between px-3  max-h-[100vh] h-full overflow-y-auto" style={{ alignSelf: 'flex-start' }}>
 
                 <div className="">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="my-3" fill="#ccc" height="20" width="18" viewBox="0 0 448 512">
-                        <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
-                    </svg>
+                    <Link href="/Inicio/routes">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="my-3" fill="#ccc" height="20" width="18" viewBox="0 0 448 512">
+                            <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+                        </svg>
+                    </Link>
 
                     <hr className="mb-10 border-[1px]" />
                 </div>
@@ -95,7 +145,7 @@ export default function Route() {
                         <span className="font-bold">Mapa de la Ruta.</span>
                         <div className="flex flex-1">
                             {/* Cris */}
-                            <div id="mapview" className="flex-1 rounded-lg overflow-hidden max-h-[90%]"/>
+                            <div id="mapview" className="flex-1 rounded-lg overflow-hidden max-h-[90%]" />
                         </div>
                     </div>
 
