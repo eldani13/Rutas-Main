@@ -9,6 +9,7 @@ import { MessageVehicle, RootVehicle } from '@/types/vehicles'
 import { MessageEmployees, RootEmployees } from '@/types/employees'
 
 import { Map, LoadingMap } from '@/components'
+import { DirectionsResponse } from '@/types/RouteResponseApi'
 import { routeResponse } from '@/temp/TempResponseDirections'
 
 // @ts-ignore
@@ -21,6 +22,11 @@ export default function Route({ params }) {
   const [vehicleCurrent, setVehicleCurrent] = useState<null | MessageVehicle>(
     null
   )
+
+  const [responseDirections, setResponseDirections] =
+    useState<DirectionsResponse>()
+  const [errorResponseDirections, setErrorResponseDirections] = useState<any>()
+  const [loadingDirections, setLoadingDirections] = useState<boolean>(true)
 
   const getDataRoute = async () => {
     await getAllFetchDataValues(
@@ -61,8 +67,31 @@ export default function Route({ params }) {
     })
   }
 
+  const getDataDirections = async () => {
+    if (process.env.NEXT_PUBLIC_MAPBOX_ACCESS == null) return
+
+    setLoadingDirections(true)
+
+    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/`
+    const routes = `${routeCurrent?.start.join(',')};${routeCurrent?.end.join(
+      ','
+    )}`
+    const options = `?alternatives=false&geometries=geojson&overview=simplified&steps=false&access_token=${process.env.NEXT_PUBLIC_MAPBOX_ACCESS}`
+
+    console.log(url + routes + options)
+
+    await getAllFetchDataValues(`${url}${routes}${options}`)
+      .then(data => {
+        setResponseDirections(data)
+        console.log(data)
+      })
+      .catch(err => setErrorResponseDirections(err))
+      .finally(() => setLoadingDirections(false))
+  }
+
   useEffect(() => {
     getDataRoute()
+    getDataDirections()
   }, [])
 
   useEffect(() => {
@@ -73,8 +102,8 @@ export default function Route({ params }) {
     getDataEmploye()
   }, [routeCurrent])
 
-  // Simulate loading on fetch data
-  const [loading, setLoading] = useState(false)
+  console.log(routeCurrent)
+  console.log(responseDirections)
 
   return (
     <>
@@ -180,7 +209,12 @@ export default function Route({ params }) {
             <span className='font-bold'>Mapa de la Ruta.</span>
             <div className='flex flex-1'>
               {/* Cris */}
-              {loading ? (
+              {/* {errorResponseDirections && (
+                <div>
+                  <p>{errorResponseDirections.message}</p>
+                </div>
+              )} */}
+              {loadingDirections ? (
                 <LoadingMap />
               ) : (
                 <Map route={routeResponse} controls />
