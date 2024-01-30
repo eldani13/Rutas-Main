@@ -61,7 +61,7 @@ export function Map({ mapOptions, route, ...props }: Props): JSX.Element {
       const destination = route && route.waypoints[1].location
 
       const originMarker = new mapboxgl.Marker({
-        color: props.originMarkerColor || 'red',
+        color: props.originMarkerColor || 'blue',
         offset: [0, 0],
       })
       originMarker.setLngLat(origin)
@@ -69,7 +69,7 @@ export function Map({ mapOptions, route, ...props }: Props): JSX.Element {
 
       const destinationMarker = new mapboxgl.Marker({
         offset: [0, 0],
-        color: props.destinationMarkerColor || 'blue',
+        color: props.destinationMarkerColor || 'red',
       })
       destinationMarker.setLngLat(destination)
       destinationMarker.addTo(map)
@@ -118,7 +118,7 @@ export function Map({ mapOptions, route, ...props }: Props): JSX.Element {
             'line-cap': 'round',
           },
           paint: {
-            'line-color': 'blue',
+            'line-color': 'green',
             'line-width': 5,
           },
         })
