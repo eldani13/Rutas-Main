@@ -71,8 +71,6 @@ export default function Route() {
                                             </svg>
                                         </div>
                                         <div className="text-[#000] flex flex-col gap-3  md:min-w-60">
-                                            {/* <span className="font-bold text-xl lg:text-2xl">{routeName.name}</span>
-                                        <p className="text-[#bbbcbc] text-sm lg:text-base">{routeName.description}</p> */}
                                             <span className="font-bold text-xl lg:text-2xl">{employees && employees.message.find(u => u._id === routeName.empleado)?.username}</span>
                                             <p className="text-[#bbbcbc] text-sm lg:text-base">{vehicles && vehicles.message.find(u => u._id === routeName.vehicle)?.marca}</p>
                                         </div>

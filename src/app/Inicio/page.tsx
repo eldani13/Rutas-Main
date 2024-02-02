@@ -18,28 +18,22 @@ export default function Home() {
         routes: 0,
     })
 
-    const countEmployeesHandle = async () => {
-        await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}employees`)
-            .then((rec: RootEmployees) => {
-                setDataView({...dataView, employees: rec.message.length})
-            })
+    const fetchEmployeesCount = async () => {
+        const rec: RootEmployees = await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}employees`);
+        setDataView(prevState => ({ ...prevState, employees: rec.message.length }))
     }
-    const countProductsHandle = async () => {
-        await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}products`)
-            .then((rec: RootProduct) => {
-                setDataView({...dataView, products: rec.message.length})
-            })
+    const fetchProductsCount = async () => {
+        const rec: RootProduct = await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}products`);
+        setDataView(prevState => ( { ...prevState, products: rec.message.length }))
     }
-    const countRoutesHandle = async () => {
-        await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}rutas`)
-            .then((rec: RootRoute) => {
-                setDataView({...dataView, routes: rec.message.length})
-            })
+    const fetchRoutesCount = async () => {
+        const rec: RootProduct = await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}rutas`)
+        setDataView(prevState => ({ ...prevState, routes: rec.message.length }))
     }
     useEffect(() => {
-        countEmployeesHandle()
-        countProductsHandle()
-        countRoutesHandle()
+        fetchEmployeesCount()
+        fetchProductsCount()
+        fetchRoutesCount()
     }, [])
 
     return (

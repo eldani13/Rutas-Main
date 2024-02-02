@@ -113,7 +113,7 @@ export default function RootLayout({
           </svg>
         </div>
       </div>
-      {children}
+      {children} 
 
     </div>
   )
