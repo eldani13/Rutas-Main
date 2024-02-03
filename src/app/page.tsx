@@ -43,10 +43,8 @@ export default function HomePage() {
       });
       
 
-      console.log(response) 
       if (response.ok) {
         const data = await response.json();
-        console.log(data) 
         setCookie(processEnv.jtIdentity, data.token);
         window.location.href = '/Inicio';
       } else {
