@@ -149,11 +149,11 @@ export default function Court() {
             <CourtPDF />
           </PDFViewer>
         ) : (
-          <div className="grid w-full xl:flex-1 grid-cols-3 grid-rows-2 ">
+          <div className="grid w-full flex-1 xl:grid-cols-3 xl:grid-rows-2 grid-rows-3 ">
             {/*gridTemplateAreas: " 'productSold productSold summary' 'productNotSold productNotSold summary'*/}
             */
             {/* Primer div */}
-            <div className="flex text-black px-3 col-span-2 col-start-1 row-start-1">
+            <div className="flex text-black px-3 xl:col-span-2 md:col-span-3 col-start-1 row-start-1">
               <table className="h-full w-full border-collapse">
                 <thead>
                   <tr className="bg-[#ccc] rounded-full grid grid-cols-3 py-2.5">
@@ -166,7 +166,7 @@ export default function Court() {
               </table>
             </div>
             {/* Tercer div */}
-            <div className="flex text-black px-3 col-span-2 row-start-2">
+            <div className="flex text-black px-3 xl:col-span-2 md:col-span-3 row-start-2">
               <table className="h-full w-full border-collapse">
                 <thead>
                   <tr className="bg-[#ccc] rounded-full grid grid-cols-3 py-2">
@@ -179,12 +179,12 @@ export default function Court() {
               </table>
             </div>
             {/* Segundo div */}
-            <div className="flex relative flex-col justify-items-center  text-black px-3  pb-5 row-span-2 h-[100%] col-span-2 col-start-3 row-start-1 ">
+            <div className="flex relative flex-col justify-items-center  text-black px-3  pb-5 row-span-2 h-[100%] xl:col-span-2 md:col-span-3 xl:col-start-3 xl:row-start-1 md:col-start-1 md:row-start-3 ">
               {/* Primer elemento */}
-              <div className="text-[#000] flex flex-col items-center w-full h-fit bg-[#ccc] py-2 rounded-full mb-8">
+              <div className="text-[#000]  flex flex-col items-center w-full h-fit bg-[#ccc] py-2 rounded-full mb-8">
                 <p className="font-bold text-[20px] text-center">ESTIMADOS</p>
               </div>
-              <div className="grid gap-3 ">
+              <div className="grid gap-3 md:mb-10 ">
                 <div className="flex justify-between  ">
                   <p className="justify-self-start">Salio con</p>
                   <p className="relative">
@@ -216,7 +216,7 @@ export default function Court() {
               </div>
 
               <div
-                className="w-full flex flex-col absolute bottom-0 right-1 gap-5 rounded-xl text-center py-5"
+                className="w-full flex flex-col absolute xl:bottom-0 xl:right-1 md:bottom-10 gap-5 rounded-xl text-center py-5"
                 style={{ boxShadow: "0px 6px 13.7px 0px rgba(0, 0, 0, 0.10)" }}
               >
                 <p className="font-bold text-lg">LA DIFERENCIA ES DE:</p>

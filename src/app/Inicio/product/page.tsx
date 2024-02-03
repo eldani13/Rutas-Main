@@ -199,7 +199,7 @@ export default function Product() {
         </div>
       </div>
 
-      <div className="max-h-[100vh] h-full pt-14 flex flex-col overflow-y-auto p-5 relative">
+      <div className="max-h-[100vh] h-full pt-14 flex flex-col overflow-y-auto p-5 ">
         {/* Informacion */}
         <hr className="mb-10 border-[1px]" />
 
