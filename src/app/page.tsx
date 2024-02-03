@@ -11,16 +11,6 @@ export default function HomePage() {
   const inputPassword = useRef<null | HTMLInputElement>(null);
   const inputSelectRol = useRef<null | HTMLSelectElement>(null);
 
-
-
-  useEffect(() => {
-    getCookie(processEnv.name)
-      .then((str) => {
-        console.log(str)
-        window.location.href = '/Inicio';
-      })
-  }, [])
-
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     try {
