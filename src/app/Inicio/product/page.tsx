@@ -81,6 +81,7 @@ export default function Product() {
     });
   };
 
+
   useEffect(() => {
     updateTable();
   }, []);
@@ -229,13 +230,15 @@ export default function Product() {
                     key={index}
                   >
                     <td className=" mt-5 md:m-0 flex gap-1 "><span className="md:hidden font-black">ID:</span>{index}</td>
-                    <td className="flex gap-1 "> <span className="md:hidden font-black">Nombre:</span>{data.productName}</td>
+                    <td className="flex gap-1"> <span className="md:hidden font-black">Nombre:</span>{data.productName}</td>
                     <td className="flex gap-1 "> <span className="md:hidden font-black">Descripción:</span>{data.productDescription}</td>
                     <td className="flex gap-1 "> <span className="md:hidden font-black">Precio: $</span>{data.productPrice}</td>
                     <td className="md:hidden text-center flex absolute   md:static top-0 w-full"><p className="w-full uppercase text-2xl mt-2 font-bold md:font-normal">producto</p></td>
+                    
                   </div>
                 )
               )
+  
           }
         </div>
         <div
