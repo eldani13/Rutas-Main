@@ -1,6 +1,6 @@
 import { Corte } from '@/types/corteResponse'
 
-export const corteResponse: Corte = {
+export const courtResponse: Corte = {
   ruta: 'Ruta 123',
   empleado: 'Juan Perez',
   vehiculo: 'Vehiculo 456',

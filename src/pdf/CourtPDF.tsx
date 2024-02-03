@@ -1,4 +1,5 @@
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer'
+import { Corte } from '@/types/corteResponse'
 
 const styles = StyleSheet.create({
   page: {
@@ -79,7 +80,11 @@ const styles = StyleSheet.create({
   },
 })
 
-export default function CourtPDF({ corte }: any) {
+interface props {
+  corte: Corte
+}
+
+export default function CourtPDF({ corte }: props) {
   return (
     <Document pageMode='fullScreen'>
       <Page size={'A4'} orientation='portrait' wrap={true} style={styles.page}>
