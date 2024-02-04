@@ -154,7 +154,7 @@ export default function Employees() {
                                 <div key={data._id} onClick={() => setclickEmployees(clickInEmployees != null ? null : data)}
                                     className={`bg-[linear-gradient(225deg,_#a1c4fd_10%,_#c2e9fb_90%)] 
                                         relative my-2 py-6 md:py-2 rounded-xl flex flex-col px-3 gap-2 font-semibold hover:bg-slate-200 cursor-pointer ${clickInEmployees?._id == data._id ? "bg-[linear-gradient(225deg,_#acfca2_10%,_#c0faea_90%)]" : " md:bg-none"}
-                                        md:grid md:rounded-full overflow-hidden`} 
+                                        md:grid  justify-items-center md:rounded-full overflow-hidden text-center`} 
                                         style={{ gridTemplateColumns: "50px 1fr 1fr 1fr 1fr 1fr"}}>
                                     <td className="text-center hidden md:block">{index}</td>
                                     <td className="text-center flex gap-2"><span className="block md:hidden">Usuario: </span> {data.user}</td>
