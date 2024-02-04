@@ -3,10 +3,13 @@
 import React, { useState } from "react";
 import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 import CourtPDF from "@/pdf/CourtPDF";
+import { MessageEmployees, RootEmployees } from "@/types/employees";
 
 export default function Court() {
   const [showPDF, setShowPDF] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
+  const [employeCurrent, setEmployeCurrent] = useState<null | MessageEmployees>(
+    null);
 
   return (
     <>
