@@ -8,6 +8,8 @@ import { getAllFetchDataValues } from "@/utils/api"
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
 import Employees from "./employees/page"
+import jwt from "jsonwebtoken"
+import { getCookie, processEnv } from "@/utils/cookies"
 
 
 export default function Home() {
@@ -18,19 +20,31 @@ export default function Home() {
         routes: 0,
     })
 
+
+    const fetchName = async () => {
+        try{
+            const getData = await getCookie(processEnv.jtIdentity);
+            const decodedToken = jwt.decode(getData as string);
+            if (decodedToken && typeof decodedToken !== 'string')
+                setDataView((prevState) => ({ ...prevState, nameUser: (decodedToken?.username as string) }));
+        }catch{
+            
+        }
+    }
     const fetchEmployeesCount = async () => {
         const rec: RootEmployees = await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}employees`);
         setDataView(prevState => ({ ...prevState, employees: rec.message.length }))
     }
     const fetchProductsCount = async () => {
         const rec: RootProduct = await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}products`);
-        setDataView(prevState => ( { ...prevState, products: rec.message.length }))
+        setDataView(prevState => ({ ...prevState, products: rec.message.length }))
     }
     const fetchRoutesCount = async () => {
         const rec: RootProduct = await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}rutas`)
         setDataView(prevState => ({ ...prevState, routes: rec.message.length }))
     }
     useEffect(() => {
+        fetchName()
         fetchEmployeesCount()
         fetchProductsCount()
         fetchRoutesCount()
@@ -58,7 +72,7 @@ export default function Home() {
 
                         {/* Administrador */}
 
-                        <ViewOnlyGetComponent title="Administrador" description="Sesión iniciada como Victor" >
+                        <ViewOnlyGetComponent title="Administrador" description={`Sesión iniciada como ${dataView.nameUser}`} >
                             <svg className=" overflow-visible w-full h-8 md:w-11 md:h-11 flex items-center justify-center " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                                 <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
                             </svg>

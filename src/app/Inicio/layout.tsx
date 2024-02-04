@@ -38,8 +38,7 @@ export default function RootLayout({
 
 
   const handleSessionClose = ()=>{
-    deleteCookie(processEnv.name);
-    deleteCookie(processEnv.rol);
+    deleteCookie(processEnv.jtIdentity);
     window.location.href = '/';
   }
   // useEffect(() => {
