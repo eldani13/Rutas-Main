@@ -6,11 +6,12 @@ import CourtPDF from "@/pdf/CourtPDF";
 
 export default function Court() {
   const [showPDF, setShowPDF] = useState(false);
+  const [isOpenMenu, setIsOpenMenu] = useState(false);
 
   return (
     <>
       <div className=" h-[100vh]">
-        <div className="flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 px-4 h-[100%] justify-between  overflow-hidden max-h-[100vh]">
+        <div className={` ${isOpenMenu ? "visible" : "hidden"} z-10 absolute left-15 xl:static bg-white  xl:flex flex-col items-start xl:border-r-2 xl:border-[#bbbcbc] pt-14 px-4 h-[100%] justify-between  overflow-hidden max-h-[100vh]`}>
           <div className="flex flex-col items-start justify-center">
             <h1 className="text-[#000] text-2xl font-bold mb-1">
               Sistema de Corte
@@ -56,7 +57,7 @@ export default function Court() {
                 <span style={{ color: "#5e5e5e", fontWeight: "900" }}>
                   Estado de ruta:
                 </span>
-                <p style={{ color: "#ecab0f", fontWeight: "600" }}>
+                <p style={{ color: "#ecab0f", fontWeight: "600" }} className="mb-5 xl:mb-0">
                   Lista para realizar corte.
                 </p>
               </div>
@@ -149,11 +150,29 @@ export default function Court() {
             <CourtPDF />
           </PDFViewer>
         ) : (
-          <div className="grid w-full flex-1 xl:grid-cols-3 xl:grid-rows-2 grid-rows-3 ">
+          <div className="xl:grid w-full flex-1 xl:grid-cols-3 xl:grid-rows-2 h-[vh] transition duration-300  ">
+            <button className="xl:hidden flex bg-[#ccc] p-1 absolute top-0 right-0 m-5 rounded-lg items-center cursor-pointer  transition duration-300 transform hover:scale-110"
+            onClick={() => setIsOpenMenu(!isOpenMenu)}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="2em"
+                height="2em"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M3 5h8m-8 7h13M3 19h18"
+                />
+              </svg>
+            </button>
             {/*gridTemplateAreas: " 'productSold productSold summary' 'productNotSold productNotSold summary'*/}
             */
             {/* Primer div */}
-            <div className="flex text-black px-3 xl:col-span-2 md:col-span-3 col-start-1 row-start-1">
+            <div className="flex text-black px-3 xl:col-span-2 col-span-3 col-start-1 row-start-1 h-[20vh] ">
               <table className="h-full w-full border-collapse">
                 <thead>
                   <tr className="bg-[#ccc] rounded-full grid grid-cols-3 py-2.5">
@@ -166,7 +185,7 @@ export default function Court() {
               </table>
             </div>
             {/* Tercer div */}
-            <div className="flex text-black px-3 xl:col-span-2 md:col-span-3 row-start-2">
+            <div className="flex text-black px-3 xl:col-span-2 col-span-3 row-start-2 h-[20vh]">
               <table className="h-full w-full border-collapse">
                 <thead>
                   <tr className="bg-[#ccc] rounded-full grid grid-cols-3 py-2">
@@ -179,44 +198,48 @@ export default function Court() {
               </table>
             </div>
             {/* Segundo div */}
-            <div className="flex relative flex-col justify-items-center  text-black px-3  pb-5 row-span-2 h-[100%] xl:col-span-2 md:col-span-3 xl:col-start-3 xl:row-start-1 md:col-start-1 md:row-start-3 ">
+            <div className="flex  flex-col justify-items-center  text-black px-3  pb-5 row-span-2  xl:col-span-2 col-span-3 xl:col-start-3 xl:row-start-1 col-start-1 row-start-3  xl:justify-start">
               {/* Primer elemento */}
               <div className="text-[#000]  flex flex-col items-center w-full h-fit bg-[#ccc] py-2 rounded-full mb-8">
                 <p className="font-bold text-[20px] text-center">ESTIMADOS</p>
               </div>
-              <div className="grid gap-3 md:mb-10 ">
+              <div className="grid gap-3 mb-10 ">
                 <div className="flex justify-between  ">
-                  <p className="justify-self-start">Salio con</p>
-                  <p className="relative">
+                  <td className="justify-self-start">Salio con</td>
+                  <td className="relative">
                     $16,000
                     <span className=" ps-3 text-sm font-bold top-0">MXN</span>
-                  </p>
+                  </td>
                 </div>
                 <div className="flex justify-between  ">
-                  <p>Vendio</p>
-                  <p className="relative">
+                  <td>Vendio</td>
+                  <td className="relative">
                     $16,000
                     <span className=" ps-3 text-sm font-bold top-0">MXN</span>
-                  </p>
+                  </td>
                 </div>
                 <div className="flex justify-between ">
-                  <p>Entrego en Efectivo</p>
-                  <p className="relative">
+                  <td>Entrego en Efectivo</td>
+                  <td className="relative">
                     $100
                     <span className=" ps-3 text-sm font-bold top-0">MXN</span>
-                  </p>
+                  </td>
                 </div>
                 <div className="flex justify-between  ">
-                  <p>Entrego en mercancia</p>
-                  <p className="relative">
+                  <td>Entrego en mercancia</td>
+                  <td className="relative">
                     $910
-                    <span className=" ps-3 text-sm font-bold   top-[-3]">MXN</span>
-                  </p>
+                    <span className=" ps-3 text-sm font-bold   top-[-3]">
+                      MXN
+                    </span>
+                  </td>
                 </div>
               </div>
-
+            </div>
+            {/* Cuarto div */}
+            <div className="w-full flex flex-col   xl:col-start-3 xl:row-start-2 mb-3 xl:mb-0 xl:justify-end">
               <div
-                className="w-full flex flex-col absolute xl:bottom-0 xl:right-1 md:bottom-10 gap-5 rounded-xl text-center py-5"
+                className="w-full  gap-5 rounded-xl text-center py-5"
                 style={{ boxShadow: "0px 6px 13.7px 0px rgba(0, 0, 0, 0.10)" }}
               >
                 <p className="font-bold text-lg">LA DIFERENCIA ES DE:</p>
