@@ -2,7 +2,8 @@ import cookie from 'js-cookie'
 
 export const processEnv = {
     name: process.env.NEXT_PUBLIC_COOKIE_NAME || "SESSION",
-    rol: process.env.NEXT_PUBLIC_COOKIE_ROL || "ROLESESSION"
+    rol: process.env.NEXT_PUBLIC_COOKIE_ROL || "ROLESESSION",
+    jtIdentity: process.env.NEXT_PUBLIC_JTIdentity || "jtIdentity"
 }
 
 export const setCookie = (name: string, value: string, options: any = {}) => {

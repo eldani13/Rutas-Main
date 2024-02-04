@@ -118,6 +118,7 @@ export default function Court() {
                 </svg>
               </PDFDownloadLink>
             </div>
+
           </div>
         </div>
       </div>
@@ -165,6 +166,7 @@ export default function Court() {
                   ))}
                 </tbody>
               </table>
+
             </div>
             {/* Tercer div */}
             <div className='flex text-black px-3 xl:col-span-2 md:col-span-3 row-start-2'>
