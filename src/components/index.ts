@@ -1,3 +1,5 @@
 export { Map } from './maps/Map'
 export { LoadingMap } from './loaders/LoadingMap'
 export { LoaderSpin } from './loaders/LoaderSpin'
+export { Table } from './tables/Table'
+export { SearchInput } from './Inputs/SearchInput'
