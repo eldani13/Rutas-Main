@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 import CourtPDF from "@/pdf/CourtPDF";
 import { MessageEmployees, RootEmployees } from "@/types/employees";
+import { courtResponse } from '@/temp/TempCourtResponse'
 
 export default function Court() {
   const [showPDF, setShowPDF] = useState(false);
