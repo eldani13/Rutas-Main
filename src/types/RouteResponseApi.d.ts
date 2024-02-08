@@ -27,6 +27,7 @@ export interface Leg {
   steps: any[]
   distance: number
   summary: string
+  notifications?: any[]
 }
 
 export interface Admin {
