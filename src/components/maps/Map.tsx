@@ -30,9 +30,10 @@ export function Map({ mapOptions, route, ...props }: Props): JSX.Element {
   useEffect(() => {
     // Map Definition
 
-    if (process.env.NEXT_PUBLIC_MAPBOX_ACCESS) {
-      mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS
+    if (!process.env.NEXT_PUBLIC_MAPBOX_ACCESS) {
+      return
     }
+    mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS
     const map = new mapboxgl.Map({
       container: mapRef.current!,
       style: 'mapbox://styles/mapbox/streets-v11',
@@ -54,11 +55,11 @@ export function Map({ mapOptions, route, ...props }: Props): JSX.Element {
       map.addControl(nav, 'bottom-right')
     }
 
-    if (route) {
+    if (route && route.code === 'Ok') {
       // Add markers to the map
-
       const origin = route && route.waypoints[0].location
-      const destination = route && route.waypoints[1].location
+      const destinationIndex = route.waypoints.length - 1
+      const destination = route && route.waypoints[destinationIndex].location
 
       const originMarker = new mapboxgl.Marker({
         color: props.originMarkerColor || 'blue',
@@ -73,6 +74,16 @@ export function Map({ mapOptions, route, ...props }: Props): JSX.Element {
       })
       destinationMarker.setLngLat(destination)
       destinationMarker.addTo(map)
+
+      route.waypoints.map((waypoint, index) => {
+        if (index === 0 || index === destinationIndex) return
+        const marker = new mapboxgl.Marker({
+          offset: [0, 0],
+          color: 'gray',
+        })
+        marker.setLngLat(waypoint.location)
+        marker.addTo(map)
+      })
 
       // Add Polyline to the map
 
@@ -118,7 +129,7 @@ export function Map({ mapOptions, route, ...props }: Props): JSX.Element {
             'line-cap': 'round',
           },
           paint: {
-            'line-color': 'green',
+            'line-color': '#57ff54',
             'line-width': 5,
           },
         })
