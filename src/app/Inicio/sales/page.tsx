@@ -6,6 +6,9 @@ import { MessageProduct, RootProduct } from '@/types/product'
 import { Table, SearchInput } from '@/components'
 import Swal from 'sweetalert2'
 import { ButtonCrud } from '@/components/buttons/ButtonCrud'
+import startCamera from '@/components/Scanner/BarcodeScanner' 
+// import { BarcodeScanner } from 'dynamsoft-javascript-barcode'
+
 
 export default function Sales() {
   const [products, setProducts] = useState<RootProduct>()
@@ -70,8 +73,11 @@ export default function Sales() {
         <SearchInput
           label='Buscar Producto'
           value={search}
+          startCamera={startCamera}
           setValue={setSearch}
         />
+
+
 
         {filteredProducts && (
           <Table
