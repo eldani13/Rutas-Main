@@ -6,27 +6,28 @@ import { MessageProduct, RootProduct } from '@/types/product'
 import { Table, SearchInput } from '@/components'
 import Swal from 'sweetalert2'
 import { ButtonCrud } from '@/components/buttons/ButtonCrud'
-import startCamera from '@/components/Scanner/BarcodeScanner' 
+// import startCamera from '@/components/Scanner/BarcodeScanner' 
 // import { BarcodeScanner } from 'dynamsoft-javascript-barcode'
 
 
 export default function Sales() {
-  const [products, setProducts] = useState<RootProduct>()
+  const [products, setProducts] = useState<MessageProduct []>()
   const [clickInProduct, setClickInProduct] = useState<null | MessageProduct>()
   const [search, setSearch] = useState('')
 
   const getProducts = async () => {
-    const products = await getAllFetchDataValues(
-      `${process.env.NEXT_PUBLIC_BACK_URL}products`
+    const productsget = await getAllFetchDataValues(
+      `${process.env.NEXT_PUBLIC_BACK_URL}view-products`
     )
-    setProducts(products)
+    console.log(productsget)
+    setProducts(productsget.details)
   }
 
   useEffect(() => {
     getProducts()
   }, [])
 
-  const filteredProducts = products?.message.filter(product =>
+  const filteredProducts = products?.filter(product =>
     product.productName.toLowerCase().includes(search.toLowerCase())
   )
 
@@ -73,7 +74,7 @@ export default function Sales() {
         <SearchInput
           label='Buscar Producto'
           value={search}
-          startCamera={startCamera}
+          // startCamera={startCamera}
           setValue={setSearch}
         />
 

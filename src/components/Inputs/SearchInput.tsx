@@ -5,7 +5,7 @@ import JsBarcode from 'jsbarcode';
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string
   setValue: (value: string) => void
-  startCamera: (videoRef: React.RefObject<HTMLVideoElement>) => void;
+  // startCamera: (videoRef: React.RefObject<HTMLVideoElement>) => void;
 }
 
 
@@ -75,12 +75,12 @@ const BarcodeScanner: React.FC = () => {
   );
 };
 
-export function SearchInput({ label, startCamera, ...props }: Props): JSX.Element {
+export function SearchInput({ label, ...props }: Props): JSX.Element {
 
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const handleBarcodeIconClick = () => {
-    startCamera(videoRef); 
-  };
+  // const videoRef = useRef<HTMLVideoElement>(null);
+  // const handleBarcodeIconClick = () => {
+  //   startCamera(videoRef); 
+  // };
 
   return (
     <form className='p-4 md:py-8 md:px-64' onSubmit={e => e.preventDefault()}>
@@ -90,8 +90,10 @@ export function SearchInput({ label, startCamera, ...props }: Props): JSX.Elemen
         {label}
       </label>
 
+      {/* onClick={handleBarcodeIconClick}  */}
+
       {/* Codebar */}
-      <button type='button' onClick={handleBarcodeIconClick}  >
+      <button type='button'  >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="30"
