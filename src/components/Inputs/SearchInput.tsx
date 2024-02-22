@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import Instascan from 'instascan';
 import JsBarcode from 'jsbarcode';
 
+
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string
   setValue: (value: string) => void
