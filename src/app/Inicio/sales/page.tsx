@@ -130,7 +130,7 @@ export default function Sales() {
       );
 
       const productFind = products?.find(
-        (item) => item._id == result.codeResult.code
+        (item) => item.productIdScan == parseInt(result.codeResult.code || "0")
       );
       if (
         productFind != undefined &&
