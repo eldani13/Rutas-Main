@@ -6,10 +6,6 @@ import { MessageProduct, RootProduct } from "@/types/product";
 import { Table, SearchInput } from "@/components";
 import Swal from "sweetalert2";
 import { ButtonCrud } from "@/components/buttons/ButtonCrud";
-// import startCamera from '@/components/Scanner/BarcodeScanner'
-// import { BarcodeScanner } from 'dynamsoft-javascript-barcode'
-
-import Image from "next/image";
 
 import Quagga from "@ericblade/quagga2";
 
@@ -17,57 +13,16 @@ export default function Sales() {
   const [products, setProducts] = useState<MessageProduct[]>();
   const [clickInProduct, setClickInProduct] = useState<null | MessageProduct>();
   const [search, setSearch] = useState("");
-
-  // Quagga
-  // const Quagga = require("@ericblade/quagga2").default;
-  //@ts-ignore
-  // Quagga.init({ inputStream: {name: "Live", type :"LiveStream", target: document.querySelector("#viewcamera")}, decoder:{type:"code_128_reader"} }, (err) =>{
-  //   if(err){
-  //     console.log("ocurrio un error")
-  //     return
-  //   }
-  //   Quagga.start();
-  // });
-
-  // Quagga.init({
-
-  //   inputStream : {
-  //     name : "Live",
-  //     type : "LiveStream",
-  //     //@ts-ignore
-  //     target: document.querySelector('#viewcamera')
-  //        // Or '#yourElement' (optional)
-  //   },
-  //   decoder : {
-  //     readers : ["code_128_reader"]
-  //   }
-  // }, function(err) {
-  //     if (err) {
-  //         console.log(err);
-  //         return
-  //     }
-  //     console.log("Initialization finished. Ready to start");
-  //     Quagga.start();
-  // });
-
-  
-
-
-  // Quagga.onDetected(function (data) {
-  //   console.log(data);
-  // });
+  const [_scannerIsRunning, set_scannerIsRunning] = useState(false);
+  const [actualProductSearchScanner, set_actualProductSearchScanner] =
+    useState<MessageProduct | null>(null);
 
   const getProducts = async () => {
     const productsget = await getAllFetchDataValues(
       `${process.env.NEXT_PUBLIC_BACK_URL}view-products`
     );
-    console.log(productsget);
     setProducts(productsget.details);
   };
-
-  useEffect(() => {
-    var _scannerIsRunning = false;
-
   function startScanner() {
     Quagga.init(
       {
@@ -77,8 +32,6 @@ export default function Sales() {
           //@ts-ignore
           target: document.querySelector("#viewcamera"),
           constraints: {
-            width: 480,
-            height: 320,
             facingMode: "environment",
           },
         },
@@ -121,14 +74,15 @@ export default function Sales() {
         Quagga.start();
 
         // Set flag to is running
-        _scannerIsRunning = true;
+        set_scannerIsRunning(true);
       }
     );
 
     Quagga.onProcessed(function (result) {
       var drawingCtx = Quagga.canvas.ctx.overlay,
         drawingCanvas = Quagga.canvas.dom.overlay;
-
+      drawingCanvas.style.position = "absolute";
+      drawingCanvas.style.top = "0";
       if (result) {
         if (result.boxes) {
           drawingCtx.clearRect(
@@ -174,23 +128,40 @@ export default function Sales() {
         "Barcode detected and processed : [" + result.codeResult.code + "]",
         result
       );
+
+      const productFind = products?.find(
+        (item) => item._id == result.codeResult.code
+      );
+      if (
+        productFind != undefined &&
+        productFind != actualProductSearchScanner
+      ) {
+        //@ts-ignore
+        set_actualProductSearchScanner(productFind);
+      }
+
+      // @ts-ignore
+      setSearch(result.codeResult.code);
     });
   }
 
-  // Start/stop scanner
-  document.getElementById("btn")?.addEventListener(
-    "click",
-    function () {
-      if (_scannerIsRunning) {
-        Quagga.stop();
-      } else {
-        startScanner();
-      }
-    },
-    false
-  );
+  useEffect(() => {
     getProducts();
   }, []);
+
+  const handleClickOnOffScanner = (value: boolean) => {
+    console.log("lol");
+    if (!value) {
+      set_scannerIsRunning(value);
+      try {
+        Quagga.stop();
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      startScanner();
+    }
+  };
 
   const filteredProducts = products?.filter((product) =>
     product.productName.toLowerCase().includes(search.toLowerCase())
@@ -222,15 +193,7 @@ export default function Sales() {
           <div className="hidden md:visible md:flex flex-col items-start justify-center ">
             <h1 className="text-[#000] text-2xl font-bold mb-1">Ventas</h1>
             <span>Selecione los productos</span>
-            <button id="btn">hola</button>
           </div>
-          
-
-          <div id="viewcamera">
-
-          </div>
-          
-
           <div className="md:static flex flex-col items-start justify-center pb-10 md:min-w-60">
             <ButtonCrud
               isHidden={clickInProduct === null}
@@ -253,8 +216,6 @@ export default function Sales() {
         </div>
       </div>
 
-      
-
       <div
         className="flex flex-col pl-3  max-h-[100vh] h-full "
         style={{ alignSelf: "flex-start" }}
@@ -262,10 +223,9 @@ export default function Sales() {
         <SearchInput
           label="Buscar Producto"
           value={search}
-          // startCamera={startCamera}
           setValue={setSearch}
+          handleClickOnOffScanner={handleClickOnOffScanner}
         />
-        
 
         {filteredProducts && (
           <Table
@@ -274,6 +234,66 @@ export default function Sales() {
             setClickInProduct={setClickInProduct}
           />
         )}
+      </div>
+
+      <div
+        className={`${
+          !_scannerIsRunning ? "hidden" : "flex"
+        } absolute bg-[#151516cc] top-0 w-full h-full z-10 `}
+      >
+        <div className="relative w-full h-full grid place-content-center ">
+          <div className="relative flex h-fit w-fit">
+            <div id="viewcamera"></div>
+          </div>
+          <div className="absolute bottom-5 w-full flex flex-col items-center">
+            {actualProductSearchScanner && (
+              <div>
+                <div
+                  // bg-[linear-gradient(225deg,_#a1c4fd_10%,_#c2e9fb_90%)]
+                  className={` 
+            relative my-2 justify-center  py-6  justify-content rounded-xl flex flex-col px-5 gap-1 font-semibold hover:bg-slate-200  bg-[linear-gradient(225deg,_#acfca2_10%,_#c0faea_90%)]
+            `}
+                  style={{ gridTemplateColumns: "50px 1fr 1fr 1fr" }}
+                >
+                  <td className=" mt-5  flex gap-1 ">
+                    <span className="font-black">ID:</span>
+                    {actualProductSearchScanner._id}
+                  </td>
+                  <td className="flex gap-1 ">
+                    <span className=" font-black">Nombre:</span>
+                    {actualProductSearchScanner.productName}
+                  </td>
+                  <td className="flex gap-1 ">
+                    <span className=" font-black">Descripción:</span>
+                    {actualProductSearchScanner.productDescription}
+                  </td>
+                  <td className="flex gap-1 ">
+                    <span className=" font-black">Precio: $</span>
+                    {actualProductSearchScanner.productPrice}
+                  </td>
+                  <td className="text-center flex absolute left-0 top-0 w-full">
+                    <p className="w-full uppercase text-xl mt-2 font-bold ">
+                      producto
+                    </p>
+                  </td>
+                </div>
+              </div>
+            )}
+            <div className="flex gap-10 ">
+              <button
+                onClick={() => handleClickOnOffScanner(false)}
+                className="bg-red-400 min-w-40 rounded-full py-2 hover:scale-[1.1]"
+              >
+                Cancelar
+              </button>
+              {actualProductSearchScanner && (
+                <button className=" bg-amber-400 min-w-40 rounded-full py-2 hover:scale-[1.1]">
+                  Si es el producto
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
