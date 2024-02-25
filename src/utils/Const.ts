@@ -1,6 +1,6 @@
 export const Routes = {
   inicio: "/Inicio",
-  routes: "/inicio/routes",
+  routes: "/Inicio/routes",
   routesId: "/Inicio/routes/[rutaId]",
   sales: "/Inicio/sales",
   vehicle: "/Inicio/vehicle",
