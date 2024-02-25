@@ -24,7 +24,7 @@ export function middleware(request: NextRequest) {
       role == "empleado" &&
       (pathname.includes(Routes.court) ||
         pathname.includes(Routes.product) ||
-        pathname.includes(Routes.employees) ||
+        // pathname.includes(Routes.employees) ||
         pathname.includes(Routes.vehicle))
     ) {
       return NextResponse.redirect(new URL(Routes.inicio, request.url));
