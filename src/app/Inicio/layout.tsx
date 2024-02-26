@@ -57,7 +57,7 @@ export default function RootLayout({
     "/Inicio/vehicle",
     "/Inicio/court",
     "/Inicio/product",
-    "/Inicio/sales",
+    // "/Inicio/sales",
   ].indexOf(pathBusqueda);
 
   const handleSessionClose = () => {
@@ -198,7 +198,7 @@ export default function RootLayout({
               </div>
             </Link>
           )}
-          {roleUser === "empleado" && (
+          {/* {roleUser === "empleado" && (
             <Link href="/Inicio/sales">
               <div>
                 <svg
@@ -217,7 +217,7 @@ export default function RootLayout({
                 </svg>
               </div>
             </Link>
-          )}
+          )} */}
 
           <div className="cursor-pointer" onClick={handleSessionClose}>
             <svg
