@@ -96,11 +96,11 @@ export function Map({ mapOptions, route, ...props }: Props): JSX.Element {
         bounds.extend(coord as LngLatLike);
         console.log(coord);
       }
-      if (bounds) {
-        map.fitBounds(bounds, {
-          padding: 50,
-        });
-      }
+      // if (bounds) {
+      //   map.fitBounds(bounds, {
+      //     padding: 50,
+      //   });
+      // }
 
       // draw the lines
       const sourceData: AnySourceData = {

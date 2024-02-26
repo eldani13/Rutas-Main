@@ -3,7 +3,11 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 // import Home from "./HomeSection";
 import mapboxgl from "mapbox-gl";
-import { getAllFetchDataValues, patchEditVal } from "@/utils/api";
+import {
+  deleteRemoveData,
+  getAllFetchDataValues,
+  patchEditVal,
+} from "@/utils/api";
 import { MessageRoute, RootRoute } from "@/types/routes";
 import { MessageVehicle, RootVehicle } from "@/types/vehicles";
 import { MessageEmployees, RootEmployees } from "@/types/employees";
@@ -119,6 +123,17 @@ export default function Route({ params }) {
       .finally(() => setLoadingDirections(false));
   };
 
+  const removeDairectionHandle = async () => {
+    await deleteRemoveData(
+      `${process.env.NEXT_PUBLIC_BACK_URL}rutas/delete/${routeCurrent?._id}`,
+      () => {
+        window.location.href = "/Inicio/routes";
+      },
+      "ruta",
+      `Quieres eliminar \nUsuario: ${employeCurrent?.user} \nCarro: ${vehicleCurrent?.marca}`
+    );
+  };
+
   useEffect(() => {
     getDataRoute();
   }, []);
@@ -202,7 +217,10 @@ export default function Route({ params }) {
             <span className="mr-10">Editar Ruta</span>
           </button>
 
-          <button className="bg-[#ececec] text-black px-2 py-2 mb-2 rounded-[50px] h-14 w-52 flex items-center justify-between font-bold">
+          <button
+            onClick={removeDairectionHandle}
+            className="bg-[#ececec] text-black px-2 py-2 mb-2 rounded-[50px] h-14 w-52 flex items-center justify-between font-bold"
+          >
             <svg
               className="h-[50px] w-[50px] text-red-500 pr-2"
               fill="currentColor"
