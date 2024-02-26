@@ -300,6 +300,9 @@ export default function Route({ params }) {
               <span className="font-bold">Carga en Mercancía</span>
               {/* Card */}
               <div
+                onClick={() => {
+                  window.location.href = `/Inicio/routes/${rutaId}/sales`;
+                }}
                 className="flex flex-row p-4"
                 style={{
                   boxShadow: "0px 6px 13.7px 0px rgba(0, 0, 0, 0.10)",

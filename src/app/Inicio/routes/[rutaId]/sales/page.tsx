@@ -1,21 +1,46 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { getAllFetchDataValues, patchSaleProduct } from "@/utils/api";
+import {
+  getAllFetchDataValues,
+  patchEditVal,
+  patchSaleProduct,
+} from "@/utils/api";
 import { MessageProduct, RootProduct } from "@/types/product";
 import { Table, SearchInput } from "@/components";
 import Swal from "sweetalert2";
 import { ButtonCrud } from "@/components/buttons/ButtonCrud";
 
 import Quagga from "@ericblade/quagga2";
+import { MessageRoute } from "@/types/routes";
 
-export default function Sales() {
+//@ts-ignore
+export default function Sales({ params }) {
+  const { rutaId } = params;
+
   const [products, setProducts] = useState<MessageProduct[]>();
   const [clickInProduct, setClickInProduct] = useState<null | MessageProduct>();
   const [search, setSearch] = useState("");
   const [_scannerIsRunning, set_scannerIsRunning] = useState(false);
   const [actualProductSearchScanner, set_actualProductSearchScanner] =
     useState<MessageProduct | null>(null);
+
+  const [routeCurrent, setRouteCurrent] = useState<null | MessageRoute>(null);
+
+  const getDataRoute = async () => {
+    const dataValues = await getAllFetchDataValues(
+      `${process.env.NEXT_PUBLIC_BACK_URL}rutas/${rutaId}`
+    )
+      .then((rec) => {
+        const messList: MessageRoute = rec.message;
+        if (messList != null) {
+          return messList;
+        }
+      })
+      .catch(() => null);
+
+    setRouteCurrent(dataValues || null);
+  };
 
   const getProducts = async () => {
     const productsget = await getAllFetchDataValues(
@@ -146,6 +171,7 @@ export default function Sales() {
 
   useEffect(() => {
     getProducts();
+    getDataRoute();
   }, []);
 
   const handleClickOnOffScanner = (value: boolean) => {
@@ -189,7 +215,28 @@ export default function Sales() {
           ...productSale,
           productIsSold: true,
         },
-        () => {
+        async () => {
+          const dateCurrent = new Date().toISOString();
+          const amountNew =
+            (routeCurrent?.amountOfMerchandise || 0) + productSale.productPrice;
+          await patchEditVal(
+            `${process.env.NEXT_PUBLIC_BACK_URL}rutas/edit/${routeCurrent?._id}`,
+            {
+              amountOfMerchandise: amountNew,
+              LastMinuteSale: dateCurrent,
+            },
+            () => {
+              // event.currentTarget.reset();
+              //@ts-ignore
+              setRouteCurrent((prev) => ({
+                ...prev,
+                LastMinuteSale: dateCurrent,
+                amountOfMerchandise: amountNew,
+              }));
+            },
+            "Ruta"
+          );
+
           setClickInProduct(null);
           set_actualProductSearchScanner(null);
           getProducts();
@@ -198,6 +245,22 @@ export default function Sales() {
     }
   }
 
+  const clockLastMinuteSale = () => {
+    const date = new Date(routeCurrent?.LastMinuteSale || "");
+
+    return (
+      <div className="mt-5">
+        <p className="font-semibold">- Última hora de venta:</p>
+        <p className="relative ps-8 ">
+          {date.getHours() % 12 || 12} : {date.getMinutes()}
+          <span className="text-base font-bold absolute top-0 ms-2 text-[.6rem]">
+            {date.getHours() >= 12 ? "PM" : "AM"}
+          </span>
+        </p>
+      </div>
+    );
+  };
+
   return (
     <>
       <div className=" h-[100vh] ">
@@ -205,6 +268,16 @@ export default function Sales() {
           <div className="hidden  xl:flex flex-col items-start justify-center ">
             <h1 className="text-[#000] text-2xl font-bold mb-1">Ventas</h1>
             <span>Selecione los productos</span>
+            <div>
+              <p className="font-semibold ">- Carga en Mercancía:</p>
+              <p className="ps-8 relative">
+                {routeCurrent?.amountOfMerchandise}{" "}
+                <span className="absolute text-sm font-bold ms-2 text-[.6rem] top-0">
+                  MXN
+                </span>
+              </p>
+            </div>
+            {clockLastMinuteSale()}
           </div>
           <div className="md:static flex flex-col items-start justify-center pb-10 md:min-w-60">
             <ButtonCrud
