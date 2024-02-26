@@ -40,6 +40,7 @@ export default function Route({ params }) {
         start: modifyRoute.route?.start,
         end: modifyRoute.route?.end,
         status: modifyRoute.route?.status,
+        amountOfMerchandise: modifyRoute.route?.amountOfMerchandise,
       },
       () => {
         // event.currentTarget.reset();
@@ -134,6 +135,19 @@ export default function Route({ params }) {
     );
   };
 
+  const clockLastMinuteSale = () => {
+    const date = new Date(routeCurrent?.LastMinuteSale || "");
+
+    return (
+      <>
+        {date.getHours() % 12 || 12} : {date.getMinutes()}
+        <span className="text-base font-bold absolute">
+          {date.getHours() >= 12 ? "PM" : "AM"}
+        </span>
+      </>
+    );
+  };
+
   useEffect(() => {
     getDataRoute();
   }, []);
@@ -166,7 +180,7 @@ export default function Route({ params }) {
             <span className="mr-[-40px]">Ruta {employeCurrent?.lastnames}</span>
           </div>
 
-          <div className="flex items-center justify-center bg-[#ccc] h-40 w-40 rounded-full m-auto mt-6">
+          <div className="flex items-center justify-center bg-[#ccc] h-32 w-32 rounded-full m-auto mt-6">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="75"
@@ -177,7 +191,7 @@ export default function Route({ params }) {
             </svg>
           </div>
 
-          <div className="grid grid-rows-3 gap-5 m-auto mt-6">
+          <div className="grid grid-rows-3 gap-3 m-auto mt-6">
             <div>
               <span style={{ color: "#5e5e5e", fontWeight: "900" }}>
                 Empleado:
@@ -196,13 +210,20 @@ export default function Route({ params }) {
               <span style={{ color: "#5e5e5e", fontWeight: "900" }}>
                 Estado de ruta:
               </span>
-              <p style={{ color: "#00c040", fontWeight: "600" }}>En curso.</p>
+              <p
+                style={{
+                  color: routeCurrent?.status ? "#00c040" : "#da3636",
+                  fontWeight: "600",
+                }}
+              >
+                {routeCurrent?.status ? "En curso." : "Fuera de servicio"}
+              </p>
             </div>
           </div>
         </div>
 
         {/* Botones */}
-        <div className="pb-10 flex flex-col space-y-10 items-center">
+        <div className="pb-10 flex flex-col space-y-5 items-center">
           <button
             onClick={() => setModifyRoute((prev) => ({ ...prev, state: true }))}
             className="bg-[#ececec] text-black px-2 py-2 mb-2 rounded-[50px] h-14 w-52 flex items-center justify-between font-bold"
@@ -295,7 +316,7 @@ export default function Route({ params }) {
                 </svg>
                 <div className="flex flex-col justify-center gap-y-3">
                   <span className="text-4xl relative">
-                    $ 24, 550{" "}
+                    {routeCurrent?.amountOfMerchandise}
                     <span className="text-base font-bold absolute">MXN</span>
                   </span>
                   <p className="text-xs text-[#5e5e5e] flex text-center">
@@ -325,8 +346,8 @@ export default function Route({ params }) {
                 </svg>
                 <div className="flex flex-col justify-center gap-y-3">
                   <span className="text-4xl relative">
-                    02 : 35{" "}
-                    <span className="text-base font-bold absolute">PM</span>
+                    {/* 02 : 35 */}
+                    {clockLastMinuteSale()}
                   </span>
                   <p className="text-xs text-[#5e5e5e] flex text-center">
                     Haga clic para gestionar el historial de venta
@@ -339,7 +360,7 @@ export default function Route({ params }) {
 
         {modifyRoute.route && (
           <div
-            className={`bg-[#1d1b1b6e] absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${
+            className={`bg-[#1d1b1b6e] z-20 absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${
               modifyRoute.state ? "visible" : "hidden"
             }`}
           >
@@ -427,6 +448,30 @@ export default function Route({ params }) {
                           route: {
                             ...prev.route,
                             end: e.target.value.split(",").map(Number),
+                          },
+                        }))
+                      }
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="">Carga en Mercancía</label>
+                  <div className="ms-2 border-[1px] border-gray-500 flex flex-row overflow-hidden rounded-md">
+                    <div className="bg-slate-200 flex items-center justify-center color-slate-500 p-2 ps-0 border-r-2 border-gray-500">
+                      <p className="text-xs w-6 text-center font-bold">MXN</p>
+                    </div>
+                    <input
+                      type="number"
+                      className="flex w-full h-auto px-3"
+                      name="routeEnd"
+                      value={modifyRoute.route.amountOfMerchandise}
+                      onChange={(e) =>
+                        // @ts-ignore
+                        setModifyRoute((prev) => ({
+                          ...prev,
+                          route: {
+                            ...prev.route,
+                            amountOfMerchandise: e.target.value,
                           },
                         }))
                       }
