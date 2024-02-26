@@ -1,46 +1,35 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { processEnv } from './utils/cookies'
-import jwt from 'jsonwebtoken'
-import { Routes } from './utils/Const'
+import { NextRequest, NextResponse } from "next/server";
+import { processEnv } from "./utils/cookies";
+import jwt from "jsonwebtoken";
+import { Routes } from "./utils/Const";
 
 export function middleware(request: NextRequest) {
-  const cookieSession = request.cookies.get(processEnv.jtIdentity)
-  const pathname = request.nextUrl.pathname
+  const cookieSession = request.cookies.get(processEnv.jtIdentity);
+  const pathname = request.nextUrl.pathname;
 
-  const redirectTo = (url: string) =>
-    NextResponse.redirect(new URL(url, request.url))
+  if (cookieSession === undefined && pathname.includes(Routes.inicio))
+    return NextResponse.redirect(new URL(Routes.login, request.url));
+  else if (pathname === Routes.login && cookieSession != undefined)
+    return NextResponse.redirect(new URL(Routes.inicio, request.url));
 
-  console.log(jwt.decode(cookieSession?.value || ''))
+  if (cookieSession) {
+    const { username, role } = jwt.decode(cookieSession.value) as {
+      username: string;
+      role: string;
+      exp: number;
+      iat: number;
+    };
 
-  // Redirect if not logged in
+    if (
+      role == "empleado" &&
+      (pathname.includes(Routes.court) ||
+        pathname.includes(Routes.product) ||
+        // pathname.includes(Routes.employees) ||
+        pathname.includes(Routes.vehicle))
+    ) {
+      return NextResponse.redirect(new URL(Routes.inicio, request.url));
+    }
+  }
 
-  if (pathname.includes(Routes.inicio) && cookieSession === undefined)
-    return redirectTo(Routes.login)
-
-  if (pathname === Routes.court && cookieSession === undefined)
-    return redirectTo(Routes.login)
-
-  if (pathname === Routes.employees && cookieSession === undefined)
-    return redirectTo(Routes.login)
-
-  if (pathname === Routes.product && cookieSession === undefined)
-    return redirectTo(Routes.login)
-
-  if (pathname === Routes.routes && cookieSession === undefined)
-    return redirectTo(Routes.login)
-
-  if (pathname === Routes.routesId && cookieSession === undefined)
-    return redirectTo(Routes.login)
-
-  if (pathname === Routes.sales && cookieSession === undefined)
-    return redirectTo(Routes.login)
-
-  if (pathname === Routes.vehicle && cookieSession === undefined)
-    return redirectTo(Routes.login)
-
-  // Redirect if logged in
-  if (pathname === Routes.login && cookieSession !== undefined)
-    return redirectTo(Routes.inicio)
-
-  return NextResponse.next()
+  return NextResponse.next();
 }

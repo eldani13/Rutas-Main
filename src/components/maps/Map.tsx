@@ -1,16 +1,16 @@
-import React, { useEffect, useRef } from 'react'
-import mapboxgl, { LngLatLike, AnySourceData } from 'mapbox-gl'
-import 'mapbox-gl/dist/mapbox-gl.css'
+import React, { useEffect, useRef } from "react";
+import mapboxgl, { LngLatLike, AnySourceData } from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
 
-import { DirectionsResponse } from '@/types/RouteResponseApi'
+import { DirectionsResponse } from "@/types/RouteResponseApi";
 
 interface Props {
-  mapOptions?: mapboxgl.MapboxOptions
-  route?: DirectionsResponse
-  center?: LngLatLike
-  controls?: boolean
-  originMarkerColor?: string
-  destinationMarkerColor?: string
+  mapOptions?: mapboxgl.MapboxOptions;
+  route?: DirectionsResponse;
+  center?: LngLatLike;
+  controls?: boolean;
+  originMarkerColor?: string;
+  destinationMarkerColor?: string;
 }
 
 /**
@@ -25,123 +25,128 @@ interface Props {
  * @return {JSX.Element} the map component
  */
 export function Map({ mapOptions, route, ...props }: Props): JSX.Element {
-  const mapRef = useRef<HTMLDivElement>(null)
+  const mapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Map Definition
 
     if (!process.env.NEXT_PUBLIC_MAPBOX_ACCESS) {
-      return
+      return;
     }
-    mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS
+    mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS;
     const map = new mapboxgl.Map({
       container: mapRef.current!,
-      style: 'mapbox://styles/mapbox/streets-v11',
+      style: "mapbox://styles/mapbox/streets-v11",
       zoom: 10,
       ...mapOptions,
       center: (mapOptions && mapOptions.center) ||
         props.center || [-99.1332, 19.4326],
-    })
+    });
 
     // Add controls
     if (props.controls) {
-      map.addControl(new mapboxgl.FullscreenControl())
+      map.addControl(new mapboxgl.FullscreenControl());
 
       const nav = new mapboxgl.NavigationControl({
         visualizePitch: true,
         showCompass: true,
         showZoom: true,
-      })
-      map.addControl(nav, 'bottom-right')
+      });
+      map.addControl(nav, "bottom-right");
     }
-
-    if (route && route.code === 'Ok') {
+    console.log("ok");
+    console.log(route);
+    if (route && route.code === "Ok") {
       // Add markers to the map
-      const origin = route && route.waypoints[0].location
-      const destinationIndex = route.waypoints.length - 1
-      const destination = route && route.waypoints[destinationIndex].location
+      const origin = route && route.waypoints[0].location;
+      const destinationIndex = route.waypoints.length - 1;
+      const destination = route && route.waypoints[destinationIndex].location;
 
       const originMarker = new mapboxgl.Marker({
-        color: props.originMarkerColor || 'blue',
+        color: props.originMarkerColor || "blue",
         offset: [0, 0],
-      })
-      originMarker.setLngLat(origin)
-      originMarker.addTo(map)
+      });
+      originMarker.setLngLat(origin);
+      originMarker.addTo(map);
 
       const destinationMarker = new mapboxgl.Marker({
         offset: [0, 0],
-        color: props.destinationMarkerColor || 'red',
-      })
-      destinationMarker.setLngLat(destination)
-      destinationMarker.addTo(map)
+        color: props.destinationMarkerColor || "red",
+      });
+      destinationMarker.setLngLat(destination);
+      destinationMarker.addTo(map);
 
       route.waypoints.map((waypoint, index) => {
-        if (index === 0 || index === destinationIndex) return
+        if (index === 0 || index === destinationIndex) return;
         const marker = new mapboxgl.Marker({
           offset: [0, 0],
-          color: 'gray',
-        })
-        marker.setLngLat(waypoint.location)
-        marker.addTo(map)
-      })
+          color: "gray",
+        });
+        marker.setLngLat(waypoint.location);
+        marker.addTo(map);
+      });
 
       // Add Polyline to the map
+      console.log(origin + " : " + destination);
 
-      const bounds = new mapboxgl.LngLatBounds(origin, destination)
-      const coords = route.routes[0].geometry.coordinates
+      const bounds = new mapboxgl.LngLatBounds(origin, destination);
+      const coords = route.routes[0].geometry.coordinates;
 
       for (const coord of coords) {
-        bounds.extend(coord as LngLatLike)
+        bounds.extend(coord as LngLatLike);
+        console.log(coord);
       }
-
-      map.fitBounds(bounds, {
-        padding: 50,
-      })
+      // if (bounds) {
+      //   map.fitBounds(bounds, {
+      //     padding: 50,
+      //   });
+      // }
 
       // draw the lines
       const sourceData: AnySourceData = {
-        type: 'geojson',
+        type: "geojson",
         data: {
-          type: 'FeatureCollection',
+          type: "FeatureCollection",
           features: [
             {
-              type: 'Feature',
+              type: "Feature",
               properties: {},
               geometry: {
-                type: 'LineString',
+                type: "LineString",
                 coordinates: coords,
               },
             },
           ],
         },
-      }
+      };
 
       // Add the route to the map when it's loaded
-      map.on('load', () => {
-        map.addSource('route', sourceData)
+      map.on("load", () => {
+        map.addSource("route", sourceData);
 
         map.addLayer({
-          id: 'route',
-          type: 'line',
-          source: 'route',
+          id: "route",
+          type: "line",
+          source: "route",
           layout: {
-            'line-join': 'round',
-            'line-cap': 'round',
+            "line-join": "round",
+            "line-cap": "round",
           },
           paint: {
-            'line-color': '#57ff54',
-            'line-width': 5,
+            "line-color": "#57ff54",
+            "line-width": 5,
           },
-        })
-      })
+        });
+      });
     }
 
-    return () => map.remove()
-  }, [])
+    return () => map.remove();
+  }, []);
 
   return (
     <div
       ref={mapRef}
-      className='flex-1 rounded-lg overflow-hidden max-h-[90%]'></div>
-  )
+      className="flex-1 rounded-lg overflow-hidden max-h-[90%]"
+    ></div>
+  );
 }

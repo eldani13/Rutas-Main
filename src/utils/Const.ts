@@ -1,11 +1,11 @@
 export const Routes = {
-  inicio: '/Inicio',
-  routes: '/inicio/routes',
-  routesId: '/inicio/routes/[rutaId]',
-  sales: '/inicio/sales',
-  vehicle: '/inicio/vehicle',
-  product: '/inicio/product',
-  employees: '/inicio/employees',
-  court: '/inicio/court',
-  login: '/',
-}
+  inicio: "/Inicio",
+  routes: "/Inicio/routes",
+  routesId: "/Inicio/routes/[rutaId]",
+  sales: "/Inicio/sales",
+  vehicle: "/Inicio/vehicle",
+  product: "/Inicio/product",
+  employees: "/Inicio/employees",
+  court: "/Inicio/court",
+  login: "/",
+};

@@ -30,35 +30,22 @@ export default function Home() {
         }));
     } catch {}
   };
-  const fetchEmployeesCount = async () => {
-    const rec: RootEmployees = await getAllFetchDataValues(
-      `${process.env.NEXT_PUBLIC_BACK_URL}employees`
-    );
-    setDataView((prevState) => ({
-      ...prevState,
-      employees: rec.message.length,
-    }));
-  };
-  const fetchProductsCount = async () => {
+
+  const getHomeData = async () => {
     const rec = await getAllFetchDataValues(
-      `${process.env.NEXT_PUBLIC_BACK_URL}view-products`
+      `${process.env.NEXT_PUBLIC_BACK_URL}homeData`
     );
     setDataView((prevState) => ({
       ...prevState,
-      products: rec.details.length,
+      routes: rec.message.routes,
+      employees: rec.message.employees,
+      products: rec.message.products,
     }));
   };
-  const fetchRoutesCount = async () => {
-    const rec: RootProduct = await getAllFetchDataValues(
-      `${process.env.NEXT_PUBLIC_BACK_URL}rutas`
-    );
-    setDataView((prevState) => ({ ...prevState, routes: rec.message.length }));
-  };
+
   useEffect(() => {
     fetchName();
-    fetchEmployeesCount();
-    fetchProductsCount();
-    fetchRoutesCount();
+    getHomeData();
   }, []);
 
   return (
