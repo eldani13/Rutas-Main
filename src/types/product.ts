@@ -8,6 +8,7 @@ export interface MessageProduct {
     productName: string
     productDescription: string
     productPrice: number
-    productIsSold: boolean
+    productIsSold: boolean,
+    productIdScan: number,
     __v: number
 }
