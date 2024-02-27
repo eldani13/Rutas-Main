@@ -71,19 +71,20 @@ export default function Home() {
         <div className="flex flex-col ">
           <div className="grid px-4 grid-cols-1 lg:grid-cols-2 justify-center items-center gap-x-10 gap-y-2">
             {/* Administrador */}
-
-            <ViewOnlyGetComponent
-              title="Administrador"
-              description={`Sesión iniciada como ${dataView.nameUser}`}
-            >
-              <svg
-                className=" overflow-visible w-full h-8 md:w-11 md:h-11 flex items-center justify-center "
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 448 512"
+            <Link href="/Inicio/profile">
+              <ViewOnlyGetComponent
+                title="Administrador"
+                description={`Sesión iniciada como ${dataView.nameUser}`}
               >
-                <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
-              </svg>
-            </ViewOnlyGetComponent>
+                <svg
+                  className=" overflow-visible w-full h-8 md:w-11 md:h-11 flex items-center justify-center "
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 448 512"
+                >
+                  <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                </svg>
+              </ViewOnlyGetComponent>
+            </Link>
 
             {/* Empleados */}
             <Link href="/Inicio/employees">
