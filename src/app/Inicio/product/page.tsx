@@ -38,7 +38,7 @@ export default function Product() {
 
   const insertProductFunction = async () => {
     await postInsertData(
-      `${process.env.BACK_URL}products/new/`,
+      `https://route-provider-system-co1z.onrender.com/api/v1/products/new/`,
       {
         productName: input_nombre.current?.value,
         productDescription: input_descripcion.current?.value,
@@ -56,7 +56,7 @@ export default function Product() {
 
   const editProductFunction = async () => {
     await patchEditVal(
-      `${process.env.BACK_URL}products/edit/${clickInProduct?._id}`,
+      `https://route-provider-system-co1z.onrender.com/api/v1/products/edit/${clickInProduct?._id}`,
       {
         productName: input_nombre.current?.value,
         productDescription: input_descripcion.current?.value,
@@ -74,7 +74,7 @@ export default function Product() {
 
   const updateTable = async () => {
     await getAllFetchDataValues(
-      `${process.env.BACK_URL}view-products`
+      `https://route-provider-system-co1z.onrender.com/api/v1/view-products`
     ).then((rec) => {
       // @ts-ignore
       setDataProductList(rec.details);
@@ -102,7 +102,7 @@ export default function Product() {
 
   const removeProductHandle = async () => {
     await deleteRemoveData(
-      `${process.env.BACK_URL}products/delete/${clickInProduct?._id}`,
+      `https://route-provider-system-co1z.onrender.com/api/v1/products/delete/${clickInProduct?._id}`,
       () => {
         setviewAddProduct([false, "insert"]);
         updateTable();

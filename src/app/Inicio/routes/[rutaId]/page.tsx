@@ -35,7 +35,7 @@ export default function Route({ params }) {
     if (routeCurrent == modifyRoute.route) return;
 
     await patchEditVal(
-      `${process.env.BACK_URL}rutas/edit/${modifyRoute?.route?._id}`,
+      `https://route-provider-system-co1z.onrender.com/api/v1/rutas/edit/${modifyRoute?.route?._id}`,
       {
         start: modifyRoute.route?.start,
         end: modifyRoute.route?.end,
@@ -66,7 +66,7 @@ export default function Route({ params }) {
 
   const getDataRoute = async () => {
     const dataValues = await getAllFetchDataValues(
-      `${process.env.BACK_URL}rutas/${rutaId}`
+      `https://route-provider-system-co1z.onrender.com/api/v1/rutas/${rutaId}`
     )
       .then((rec) => {
         const messList: MessageRoute = rec.message;
@@ -82,7 +82,7 @@ export default function Route({ params }) {
   };
   const getDataEmploye = async () => {
     await getAllFetchDataValues(
-      `${process.env.BACK_URL}employee/${
+      `https://route-provider-system-co1z.onrender.com/api/v1/employee/${
         routeCurrent && routeCurrent.empleado
       }`
     )
@@ -97,7 +97,7 @@ export default function Route({ params }) {
   };
   const getDataCars = async () => {
     await getAllFetchDataValues(
-      `${process.env.BACK_URL}cars-units`
+      `https://route-provider-system-co1z.onrender.com/api/v1/cars-units`
     ).then((rec: RootVehicle) => {
       const messList: MessageVehicle[] = rec.message;
       if (Array.isArray(messList) && messList.length > 0) {
@@ -126,7 +126,7 @@ export default function Route({ params }) {
 
   const removeDairectionHandle = async () => {
     await deleteRemoveData(
-      `${process.env.BACK_URL}rutas/delete/${routeCurrent?._id}`,
+      `https://route-provider-system-co1z.onrender.com/api/v1/rutas/delete/${routeCurrent?._id}`,
       () => {
         window.location.href = "/Inicio/routes";
       },

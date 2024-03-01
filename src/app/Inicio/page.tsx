@@ -33,7 +33,7 @@ export default function Home() {
 
   const getHomeData = async () => {
     const rec = await getAllFetchDataValues(
-      `${process.env.BACK_URL}homeData`
+      `https://route-provider-system-co1z.onrender.com/api/v1/homeData`
     );
     setDataView((prevState) => ({
       ...prevState,

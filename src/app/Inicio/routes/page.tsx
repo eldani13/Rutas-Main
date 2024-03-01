@@ -15,7 +15,7 @@ export default function Route() {
 
   const getAllData = async () => {
     await getAllFetchDataValues(
-      `${process.env.BACK_URL}rutas`
+      `https://route-provider-system-co1z.onrender.com/api/v1/rutas`
     ).then((rec: RootRoute) => {
       setRoutes(rec);
     });
@@ -23,7 +23,7 @@ export default function Route() {
 
   const getAllEmployess = async () => {
     await getAllFetchDataValues(
-      `${process.env.BACK_URL}employees`
+      `https://route-provider-system-co1z.onrender.com/api/v1/employees`
     ).then((rec: RootEmployees) => {
       setEmployees(rec);
     });
@@ -31,7 +31,7 @@ export default function Route() {
 
   const getAllVehicles = async () => {
     await getAllFetchDataValues(
-      `${process.env.BACK_URL}cars-units`
+      `https://route-provider-system-co1z.onrender.com/api/v1/cars-units`
     ).then((rec: RootVehicle) => {
       setVehicles(rec);
     });
@@ -54,7 +54,7 @@ export default function Route() {
     // console.log(employee + vehicle + start + )
 
     await postInsertData(
-      `${process.env.BACK_URL}rutas/new`,
+      `https://route-provider-system-co1z.onrender.com/api/v1/rutas/new`,
       {
         empleado: employee,
         vehicle: vehicle,

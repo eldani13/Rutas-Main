@@ -29,7 +29,7 @@ export default function Sales({ params }) {
 
   const getDataRoute = async () => {
     const dataValues = await getAllFetchDataValues(
-      `${process.env.BACK_URL}rutas/${rutaId}`
+      `https://route-provider-system-co1z.onrender.com/api/v1/rutas/${rutaId}`
     )
       .then((rec) => {
         const messList: MessageRoute = rec.message;
@@ -44,7 +44,7 @@ export default function Sales({ params }) {
 
   const getProducts = async () => {
     const productsget = await getAllFetchDataValues(
-      `${process.env.BACK_URL}view-products`
+      `https://route-provider-system-co1z.onrender.com/api/v1/view-products`
     );
     setProducts(productsget.details);
   };
@@ -210,7 +210,7 @@ export default function Sales({ params }) {
       });
     } else {
       patchSaleProduct(
-        `${process.env.BACK_URL}products/edit/${productSale._id}`,
+        `https://route-provider-system-co1z.onrender.com/api/v1/products/edit/${productSale._id}`,
         {
           ...productSale,
           productIsSold: true,
@@ -220,7 +220,7 @@ export default function Sales({ params }) {
           const amountNew =
             (routeCurrent?.amountOfMerchandise || 0) + productSale.productPrice;
           await patchEditVal(
-            `${process.env.BACK_URL}rutas/edit/${routeCurrent?._id}`,
+            `https://route-provider-system-co1z.onrender.com/api/v1/rutas/edit/${routeCurrent?._id}`,
             {
               amountOfMerchandise: amountNew,
               LastMinuteSale: dateCurrent,
