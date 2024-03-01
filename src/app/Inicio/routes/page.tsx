@@ -15,7 +15,7 @@ export default function Route() {
 
   const getAllData = async () => {
     await getAllFetchDataValues(
-      `${process.env.NEXT_PUBLIC_BACK_URL}rutas`
+      `${process.env.BACK_URL}rutas`
     ).then((rec: RootRoute) => {
       setRoutes(rec);
     });
@@ -23,7 +23,7 @@ export default function Route() {
 
   const getAllEmployess = async () => {
     await getAllFetchDataValues(
-      `${process.env.NEXT_PUBLIC_BACK_URL}employees`
+      `${process.env.BACK_URL}employees`
     ).then((rec: RootEmployees) => {
       setEmployees(rec);
     });
@@ -31,7 +31,7 @@ export default function Route() {
 
   const getAllVehicles = async () => {
     await getAllFetchDataValues(
-      `${process.env.NEXT_PUBLIC_BACK_URL}cars-units`
+      `${process.env.BACK_URL}cars-units`
     ).then((rec: RootVehicle) => {
       setVehicles(rec);
     });
@@ -54,7 +54,7 @@ export default function Route() {
     // console.log(employee + vehicle + start + )
 
     await postInsertData(
-      `${process.env.NEXT_PUBLIC_BACK_URL}rutas/new`,
+      `${process.env.BACK_URL}rutas/new`,
       {
         empleado: employee,
         vehicle: vehicle,

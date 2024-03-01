@@ -16,7 +16,7 @@ export default function UserPage() {
     if (dataInitial == dataCamb) return;
 
     await patchEditVal(
-      `${process.env.NEXT_PUBLIC_BACK_URL}employee/edit/${dataCamb?._id}`,
+      `${process.env.BACK_URL}employee/edit/${dataCamb?._id}`,
       {
         user: dataCamb?.user,
         username: dataCamb?.username,
@@ -44,7 +44,7 @@ export default function UserPage() {
     };
 
     const rec: MessageEmployees | null = await getAllFetchDataValues(
-      `${process.env.NEXT_PUBLIC_BACK_URL}employee/${_id}`
+      `${process.env.BACK_URL}employee/${_id}`
     );
     setDataCamb(rec);
     setDataInitial(rec);
