@@ -8,7 +8,7 @@ import {
 } from "@/utils/api";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 import Swal from "sweetalert2";
-import { ButtonCrud } from "@/components/buttons/ButtonCrud";   
+import { ButtonCrud } from "@/components/buttons/ButtonCrud";
 
 export default function Vehicle() {
   const [dataVehicle, setDataVehicle] = useState<null | RootVehicle>(null);
@@ -28,16 +28,30 @@ export default function Vehicle() {
   const input_ultimoCambioAceite = useRef<HTMLInputElement>(null);
   const input_proximoCambioAceite = useRef<HTMLInputElement>(null);
 
+  // const getDaysDiference = (dateCurrent: string) => {
+  //   const days: number = Math.floor(
+  //     (new Date(dateCurrent).getTime() - actualTime.getTime()) / timeInDay
+  //   );
+  //   return days == 0
+  //     ? "Hoy"
+  //     : days < 0
+  //     ? `Hace ${Math.abs(days)} días`
+  //     : `En ${days} días`;
+  // };
+
   const getDaysDiference = (dateCurrent: string) => {
-    const days: number = Math.floor(
-      (new Date(dateCurrent).getTime() - actualTime.getTime()) / timeInDay
-    );
-    return days == 0
-      ? "Hoy"
-      : days < 0
-      ? `Hace ${Math.abs(days)} días`
-      : `En ${days} días`;
-  };
+    const currentDate = new Date(dateCurrent); //FECHA EN UN OBJETO DATE
+    const differenceInDays = Math.floor((currentDate.getTime() - actualTime.getTime()) / timeInDay); //CALCULAR LA DIFERENCIA EN DIAS
+    
+    if(differenceInDays === 0){
+      return 'Hoy';
+    }else if (differenceInDays < 0){
+      return `Hace ${Math.abs(differenceInDays)} dias(s)`;
+    }else{
+      return `En ${(differenceInDays)} dias(s)`;
+    }
+  }
+
   const updateTable = async () => {
     await getAllFetchDataValues(
       `${process.env.NEXT_PUBLIC_BACK_URL}cars-units`
@@ -221,7 +235,7 @@ export default function Vehicle() {
               </svg>
             </ButtonCrud>
           </div>
-      </div>
+        </div>
       </div>
 
       <div className="max-h-[100vh] h-full relative">
@@ -251,20 +265,43 @@ export default function Vehicle() {
                         setclickInVehicle(clickInVehicle != null ? null : data)
                       }
                       className={`bg-[linear-gradient(225deg,_#a1c4fd_10%,_#c2e9fb_90%)] 
-                    relative my-2   py-6 md:py-2  rounded-xl flex flex-col px-3 pl-5 gap-1 font-semibold hover:bg-slate-200 cursor-pointer ${clickInVehicle?._id == data._id ? "bg-[linear-gradient(225deg,_#acfca2_10%,_#c0faea_90%)]" : " md:bg-none"}
-                    md:grid  justify-items-center  md:rounded-full overflow-hidden md:items-center`} 
+                    relative my-2   py-6 md:py-2  rounded-xl flex flex-col px-3 pl-5 gap-1 font-semibold hover:bg-slate-200 cursor-pointer ${
+                      clickInVehicle?._id == data._id
+                        ? "bg-[linear-gradient(225deg,_#acfca2_10%,_#c0faea_90%)]"
+                        : " md:bg-none"
+                    }
+                    md:grid  justify-items-center  md:rounded-full overflow-hidden md:items-center`}
                       style={{ gridTemplateColumns: "50px 1fr 1fr 1fr 1fr" }}
                     >
-                      <td className="flex gap-1 mt-5 md:m-0"><span className="md:hidden font-black">ID:</span>{index}</td>
-                      <td className=" flex  gap-1"><span className="md:hidden font-black">Marca:</span>{data.marca}</td>
-                      <td className="flex  gap-1"><span className="md:hidden font-black">Modelo:</span>{data.modelo}</td>
-                      <td className="flex gap-1"><span className="md:hidden font-black">Último cambio de aceite:</span>
+                      <td className="flex gap-1 mt-5 md:m-0">
+                        <span className="md:hidden font-black">ID:</span>
+                        {index}
+                      </td>
+                      <td className=" flex  gap-1">
+                        <span className="md:hidden font-black">Marca:</span>
+                        {data.marca}
+                      </td>
+                      <td className="flex  gap-1">
+                        <span className="md:hidden font-black">Modelo:</span>
+                        {data.modelo}
+                      </td>
+                      <td className="flex gap-1">
+                        <span className="md:hidden font-black">
+                          Último cambio de aceite:
+                        </span>
                         {getDaysDiference(data.lastOilChange)}
                       </td>
-                      <td className="flex  gap-1"><span className="md:hidden font-black">Próximo cambio de aceite</span>
+                      <td className="flex  gap-1">
+                        <span className="md:hidden font-black">
+                          Próximo cambio de aceite
+                        </span>
                         {getDaysDiference(data.nextOilChange)}
                       </td>
-                      <td className="md:hidden text-center flex absolute   md:static top-0 w-full"><p className="w-full uppercase text-xl mt-2 font-bold md:font-normal">vehiculo</p></td>
+                      <td className="md:hidden text-center flex absolute   md:static top-0 w-full">
+                        <p className="w-full uppercase text-xl mt-2 font-bold md:font-normal">
+                          vehiculo
+                        </p>
+                      </td>
                     </div>
                   )
                 )
@@ -431,3 +468,7 @@ export default function Vehicle() {
     </>
   );
 }
+function getDate() {
+  throw new Error("Function not implemented.");
+}
+

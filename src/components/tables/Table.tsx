@@ -25,7 +25,7 @@ export function Table({
         </div>
         {
           // @ts-ignore
-          products &&
+          products.productIsSold &&
             products?.map((data: MessageProduct, index: number) => (
               <div
                 onClick={() =>
