@@ -13,7 +13,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(Routes.inicio, request.url));
 
   if (cookieSession) {
-    console.log(jwt.decode(cookieSession.value));
+    // console.log(jwt.decode(cookieSession.value));
     const { username, role } = jwt.decode(cookieSession.value) as {
       username: string;
       role: string;
