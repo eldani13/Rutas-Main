@@ -7,7 +7,6 @@ import {
   postInsertData,
 } from "@/utils/api";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
-import Swal from "sweetalert2";
 import { ButtonCrud } from "@/components/buttons/ButtonCrud";   
 
 export default function Vehicle() {
@@ -246,7 +245,7 @@ export default function Vehicle() {
               dataVehicle &&
                 dataVehicle?.message.map(
                   (data: MessageVehicle, index: number) => (
-                    <div
+                    <div key={"vehicle-" + index}
                       onClick={() =>
                         setclickInVehicle(clickInVehicle != null ? null : data)
                       }

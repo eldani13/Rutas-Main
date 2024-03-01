@@ -113,20 +113,20 @@ export default function CourtPDF({ corte }: props) {
         <View style={styles.table}>
           <View style={styles.column}>
             <Text style={styles.tableHeader}>Productos</Text>
-            {corte.productosVendidos.map((product: any) => (
-              <Text style={styles.text}>{product.nombre}</Text>
+            {corte.productosVendidos.map((product: any, index:number) => (
+              <Text style={styles.text} key={"textSale-products-" + index}>{product.nombre}</Text>
             ))}
           </View>
           <View style={styles.column}>
             <Text style={styles.tableHeader}>Cantidad</Text>
-            {corte.productosVendidos.map((product: any) => (
-              <Text style={styles.text}>{product.cantidad}</Text>
+            {corte.productosVendidos.map((product: any, index:number) => (
+              <Text style={styles.text} key={"textSale-cantidad-" + index}>{product.cantidad}</Text>
             ))}
           </View>
           <View style={styles.column}>
             <Text style={styles.tableHeader}>Precio</Text>
-            {corte.productosVendidos.map((product: any) => (
-              <Text style={styles.text}>{product.precio}</Text>
+            {corte.productosVendidos.map((product: any, index:number) => (
+              <Text style={styles.text} key={"textSale-price-" + index}>{product.precio}</Text>
             ))}
           </View>
         </View>
@@ -135,20 +135,20 @@ export default function CourtPDF({ corte }: props) {
         <View style={styles.table}>
           <View style={styles.column}>
             <Text style={styles.tableHeader}>Productos</Text>
-            {corte.productosNoVendidos.map((product: any) => (
-              <Text style={styles.text}>{product.nombre}</Text>
+            {corte.productosNoVendidos.map((product: any, index:number) => (
+              <Text style={styles.text} key={"textNoSale-products-" + index}>{product.nombre}</Text>
             ))}
           </View>
           <View style={styles.column}>
             <Text style={styles.tableHeader}>Cantidad</Text>
-            {corte.productosNoVendidos.map((product: any) => (
-              <Text style={styles.text}>{product.cantidad}</Text>
+            {corte.productosNoVendidos.map((product: any, index:number) => (
+              <Text style={styles.text}  key={"textNoSale-cantidad-" + index}>{product.cantidad}</Text>
             ))}
           </View>
           <View style={styles.column}>
             <Text style={styles.tableHeader}>Precio</Text>
-            {corte.productosNoVendidos.map((product: any) => (
-              <Text style={styles.text}>{product.precio}</Text>
+            {corte.productosNoVendidos.map((product: any, index:number) => (
+              <Text style={styles.text}  key={"textNoSale-price-" + index}>{product.precio}</Text>
             ))}
           </View>
         </View>

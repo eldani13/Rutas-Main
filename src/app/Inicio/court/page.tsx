@@ -182,7 +182,7 @@ export default function Court() {
                 <tbody>
                   {currentCourt.productosVendidos.map((product, index) => (
                     <tr
-                      key={index}
+                      key={"productoVendido-" + index}
                       className='grid grid-cols-3 py-2.5 text-center'>
                       <td>{product.nombre}</td>
                       <td>{product.cantidad}</td>
@@ -208,7 +208,7 @@ export default function Court() {
                 <tbody>
                   {currentCourt.productosNoVendidos.map((product, index) => (
                     <tr
-                      key={index}
+                      key={"productoNoVendido-"+ index}
                       className='grid grid-cols-3 py-2.5 text-center'>
                       <td>{product.nombre}</td>
                       <td>{product.cantidad}</td>

@@ -7,7 +7,7 @@ import { getCookie, processEnv } from "@/utils/cookies";
 import jwt from "jsonwebtoken";
 
 //@ts-ignore
-export default function userPage() {
+export default function UserPage() {
   const [dataCamb, setDataCamb] = useState<MessageEmployees | null>(null);
   const [dataInitial, setDataInitial] = useState<MessageEmployees | null>(null);
 
@@ -91,7 +91,7 @@ export default function userPage() {
                   htmlFor="email"
                   className="block mb-2 text-sm font-medium text-gray-900 "
                 >
-                  Tu email
+                  Tu usuario
                 </label>
                 <input
                   type="text"

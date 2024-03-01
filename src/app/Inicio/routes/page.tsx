@@ -202,7 +202,7 @@ export default function Route() {
 
                     <select className="w-full" name="employee">
                       {employees?.message.map((emp) => (
-                        <option value={emp._id}>
+                        <option value={emp._id} key={"mapping-" + emp._id}>
                           Usuario: {emp.username} | Apellidos: {emp.lastnames}
                         </option>
                       ))}
@@ -226,7 +226,7 @@ export default function Route() {
 
                     <select className="w-full" name="vehicle">
                       {vehicles?.message.map((veh) => (
-                        <option value={veh._id}>
+                        <option value={veh._id} key={"mappOption2-" + veh._id}>
                           Marca:{veh.marca} | Modelo:{veh.modelo}
                         </option>
                       ))}
