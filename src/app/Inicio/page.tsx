@@ -33,7 +33,7 @@ export default function Home() {
 
   const getHomeData = async () => {
     const rec = await getAllFetchDataValues(
-      `${process.env.NEXT_PUBLIC_BACK_URL}homeData`
+      `${process.env.BACK_URL}homeData`
     );
     setDataView((prevState) => ({
       ...prevState,

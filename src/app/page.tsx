@@ -17,7 +17,7 @@ export default function HomePage() {
     e.preventDefault();
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACK_URL}createtoken`,
+        `${process.env.BACK_URL}createtoken`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

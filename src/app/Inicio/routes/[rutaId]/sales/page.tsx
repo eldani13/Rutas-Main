@@ -29,7 +29,7 @@ export default function Sales({ params }) {
 
   const getDataRoute = async () => {
     const dataValues = await getAllFetchDataValues(
-      `${process.env.NEXT_PUBLIC_BACK_URL}rutas/${rutaId}`
+      `${process.env.BACK_URL}rutas/${rutaId}`
     )
       .then((rec) => {
         const messList: MessageRoute = rec.message;
@@ -44,7 +44,7 @@ export default function Sales({ params }) {
 
   const getProducts = async () => {
     const productsget = await getAllFetchDataValues(
-      `${process.env.NEXT_PUBLIC_BACK_URL}view-products`
+      `${process.env.BACK_URL}view-products`
     );
     setProducts(productsget.details);
   };
@@ -210,7 +210,7 @@ export default function Sales({ params }) {
       });
     } else {
       patchSaleProduct(
-        `${process.env.NEXT_PUBLIC_BACK_URL}products/edit/${productSale._id}`,
+        `${process.env.BACK_URL}products/edit/${productSale._id}`,
         {
           ...productSale,
           productIsSold: true,
@@ -220,7 +220,7 @@ export default function Sales({ params }) {
           const amountNew =
             (routeCurrent?.amountOfMerchandise || 0) + productSale.productPrice;
           await patchEditVal(
-            `${process.env.NEXT_PUBLIC_BACK_URL}rutas/edit/${routeCurrent?._id}`,
+            `${process.env.BACK_URL}rutas/edit/${routeCurrent?._id}`,
             {
               amountOfMerchandise: amountNew,
               LastMinuteSale: dateCurrent,

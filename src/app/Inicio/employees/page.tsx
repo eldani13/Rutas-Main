@@ -20,7 +20,7 @@ export default function Employees() {
     const input_password = useRef<HTMLInputElement>(null);
 
     const updateTable = async () => {
-        await getAllFetchDataValues(`${process.env.NEXT_PUBLIC_BACK_URL}employees`)
+        await getAllFetchDataValues(`${process.env.BACK_URL}employees`)
             .then((rec: RootEmployees) => {
                 // @ts-ignore
                 setDataEmployees(rec)
@@ -38,7 +38,7 @@ export default function Employees() {
     };;
 
     useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_BACK_URL}employees`)
+        fetch(`${process.env.BACK_URL}employees`)
             .then((env) => env.json())
             .then((rec) => {
                 // @ts-ignore
@@ -69,7 +69,7 @@ export default function Employees() {
 
     }
     const editEmployeesFunction = async () => {
-        await patchEditVal(`${process.env.NEXT_PUBLIC_BACK_URL}employee/edit/${clickInEmployees?._id}`,
+        await patchEditVal(`${process.env.BACK_URL}employee/edit/${clickInEmployees?._id}`,
             {
                 "user": input_user.current?.value,
                 "username": input_username.current?.value,
@@ -84,7 +84,7 @@ export default function Employees() {
         )
     }
     const insertEmployeesFunction = async () => {
-        await postInsertData(`${process.env.NEXT_PUBLIC_BACK_URL}employee/new/`, {
+        await postInsertData(`${process.env.BACK_URL}employee/new/`, {
             "user": input_user.current?.value,
             "username": input_username.current?.value,
             "lastnames": input_lastnames.current?.value,
@@ -99,7 +99,7 @@ export default function Employees() {
 
     }
     const removeEmployeesHandle = async () => {
-        await deleteRemoveData(`${process.env.NEXT_PUBLIC_BACK_URL}employee/delete/${clickInEmployees?._id}`,
+        await deleteRemoveData(`${process.env.BACK_URL}employee/delete/${clickInEmployees?._id}`,
             () => {
                 setviewAddEmployees([false, 'insert']);
                 updateTable();

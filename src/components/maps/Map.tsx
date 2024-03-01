@@ -30,10 +30,10 @@ export function Map({ mapOptions, route, ...props }: Props): JSX.Element {
   useEffect(() => {
     // Map Definition
 
-    if (!process.env.NEXT_PUBLIC_MAPBOX_ACCESS) {
+    if (!process.env.MAPBOX_ACCESS) {
       return;
     }
-    mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS;
+    mapboxgl.accessToken = process.env.MAPBOX_ACCESS;
     const map = new mapboxgl.Map({
       container: mapRef.current!,
       style: "mapbox://styles/mapbox/streets-v11",

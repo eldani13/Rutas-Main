@@ -35,7 +35,7 @@ export default function Route({ params }) {
     if (routeCurrent == modifyRoute.route) return;
 
     await patchEditVal(
-      `${process.env.NEXT_PUBLIC_BACK_URL}rutas/edit/${modifyRoute?.route?._id}`,
+      `${process.env.BACK_URL}rutas/edit/${modifyRoute?.route?._id}`,
       {
         start: modifyRoute.route?.start,
         end: modifyRoute.route?.end,
@@ -66,7 +66,7 @@ export default function Route({ params }) {
 
   const getDataRoute = async () => {
     const dataValues = await getAllFetchDataValues(
-      `${process.env.NEXT_PUBLIC_BACK_URL}rutas/${rutaId}`
+      `${process.env.BACK_URL}rutas/${rutaId}`
     )
       .then((rec) => {
         const messList: MessageRoute = rec.message;
@@ -82,7 +82,7 @@ export default function Route({ params }) {
   };
   const getDataEmploye = async () => {
     await getAllFetchDataValues(
-      `${process.env.NEXT_PUBLIC_BACK_URL}employee/${
+      `${process.env.BACK_URL}employee/${
         routeCurrent && routeCurrent.empleado
       }`
     )
@@ -97,7 +97,7 @@ export default function Route({ params }) {
   };
   const getDataCars = async () => {
     await getAllFetchDataValues(
-      `${process.env.NEXT_PUBLIC_BACK_URL}cars-units`
+      `${process.env.BACK_URL}cars-units`
     ).then((rec: RootVehicle) => {
       const messList: MessageVehicle[] = rec.message;
       if (Array.isArray(messList) && messList.length > 0) {
@@ -108,13 +108,13 @@ export default function Route({ params }) {
   };
 
   const getDataDirections = async (currentRoute: MessageRoute | null) => {
-    if (process.env.NEXT_PUBLIC_MAPBOX_ACCESS == null) return;
+    if (process.env.MAPBOX_ACCESS == null) return;
 
     setLoadingDirections(true);
 
     const url = `https://api.mapbox.com/directions/v5/mapbox/driving/`;
     const routes = `${currentRoute?.start[0]}, ${currentRoute?.start[1]}; ${currentRoute?.end[0]}, ${currentRoute?.end[1]}`;
-    const options = `?alternatives=false&geometries=geojson&overview=simplified&steps=false&access_token=${process.env.NEXT_PUBLIC_MAPBOX_ACCESS}`;
+    const options = `?alternatives=false&geometries=geojson&overview=simplified&steps=false&access_token=${process.env.MAPBOX_ACCESS}`;
 
     await getAllFetchDataValues(`${url}${routes}${options}`)
       .then((data) => {
@@ -126,7 +126,7 @@ export default function Route({ params }) {
 
   const removeDairectionHandle = async () => {
     await deleteRemoveData(
-      `${process.env.NEXT_PUBLIC_BACK_URL}rutas/delete/${routeCurrent?._id}`,
+      `${process.env.BACK_URL}rutas/delete/${routeCurrent?._id}`,
       () => {
         window.location.href = "/Inicio/routes";
       },
