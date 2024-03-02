@@ -15,6 +15,7 @@ import { MessageEmployees, RootEmployees } from "@/types/employees";
 import { Map, LoadingMap } from "@/components";
 import { DirectionsResponse } from "@/types/RouteResponseApi";
 import { routeResponse } from "@/temp/TempResponseDirections";
+import { ButtonCrud } from "@/components/buttons/ButtonCrud";
 
 // @ts-ignore
 export default function Route({ params }) {
@@ -108,7 +109,6 @@ export default function Route({ params }) {
   };
 
   const getDataDirections = async (currentRoute: MessageRoute | null) => {
-
     setLoadingDirections(true);
 
     const url = `https://api.mapbox.com/directions/v5/mapbox/driving/`;
@@ -161,8 +161,8 @@ export default function Route({ params }) {
 
   return (
     <>
-      <div className="flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 px-4 h-[100%] justify-between  overflow-hidden max-h-[100vh]">
-        <div className="flex flex-col items-start justify-center">
+      <div className="flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 ml:px-4 h-[100%] justify-between  overflow-hidden max-h-[100vh]">
+        <div className="hidden  xl:flex flex-col items-start justify-center">
           <h1 className="text-[#000] text-2xl font-bold mb-1">
             Sistema de Corte
           </h1>
@@ -222,8 +222,35 @@ export default function Route({ params }) {
         </div>
 
         {/* Botones */}
-        <div className="pb-10 flex flex-col space-y-5 items-center">
-          <button
+        <div className="z-20 absolute bottom-0 ms-3 ps-3 xl:ps-0 gap-3 xl:gap-0 xl:static pb-10 flex  xl:flex-col xl:space-y-5 items-center">
+          <ButtonCrud
+            isHidden={false}
+            text="Editar Ruta"
+            color="bg-[#ececec] text-blue-500"
+            onclickHandle={() =>
+              setModifyRoute((prev) => ({ ...prev, state: true }))
+            }
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24"><path fill="currentColor" d="m14.06 9.02l.92.92L5.92 19H5v-.92zM17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83l3.75 3.75l1.83-1.83a.996.996 0 0 0 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29m-3.6 3.19L3 17.25V21h3.75L17.81 9.94z"/></svg>
+            
+          </ButtonCrud>
+          <ButtonCrud
+              isHidden={false}
+              text="Eliminar"
+              color="bg-[#ececec] text-red-500"
+              onclickHandle={removeDairectionHandle}
+            >
+              <svg
+                className="w-6 h-6 text-red-500"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 2048 2048"
+              >
+                <path fill="rgb(239 68 68 / 1)"
+                  d="M1086 91L281 896h999v960q0 40-15 75t-41 61t-61 41t-75 15H320q-40 0-75-15t-61-41t-41-61t-15-75v-807l-37 37l-91-90l272-272l-91-90q-18-18-27-41t-10-50q0-51 37-90l271-272q18-18 41-27t50-10q26 0 49 9t42 28l90 91L996 0zm66 1765v-832H256v832q0 26 19 45t45 19h768q26 0 45-19t19-45M543 272L272 543l90 91l272-272zm1377-16h128v512h-512V640h292q-77-60-167-91t-188-31q-115 0-219 43t-185 124l-90-90q100-100 226-152t268-53q123 0 238 41t209 119zm-896 896v640H896v-640zm-256 0v640H640v-640zm-256 0v640H384v-640z"
+                />
+              </svg>
+            </ButtonCrud>
+          {/* <button
             onClick={() => setModifyRoute((prev) => ({ ...prev, state: true }))}
             className="bg-[#ececec] text-black px-2 py-2 mb-2 rounded-[50px] h-14 w-52 flex items-center justify-between font-bold"
           >
@@ -235,9 +262,9 @@ export default function Route({ params }) {
               <circle cx="10" cy="10" r="8" />
             </svg>
             <span className="mr-10">Editar Ruta</span>
-          </button>
+          </button> */}
 
-          <button
+          {/* <button
             onClick={removeDairectionHandle}
             className="bg-[#ececec] text-black px-2 py-2 mb-2 rounded-[50px] h-14 w-52 flex items-center justify-between font-bold"
           >
@@ -249,12 +276,12 @@ export default function Route({ params }) {
               <circle cx="10" cy="10" r="8" />
             </svg>
             <span className="mr-10 text-[14px]">Eliminar</span>
-          </button>
+          </button> */}
         </div>
       </div>
 
       <div
-        className="flex flex-col  justify-between px-3  max-h-[100vh] h-full overflow-y-auto"
+        className="z-10 flex flex-col  justify-between px-3  max-h-[100vh] h-full overflow-y-auto"
         style={{ alignSelf: "flex-start" }}
       >
         <div className="">
