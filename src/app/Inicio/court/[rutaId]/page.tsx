@@ -68,15 +68,14 @@ export default function Route({ params }) {
   }
 
   const getDataDirections = async () => {
-    if (process.env.NEXT_PUBLIC_MAPBOX_ACCESS == null) return
-
+    
     setLoadingDirections(true)
 
     const url = `https://api.mapbox.com/directions/v5/mapbox/driving/`
     const routes = `${routeCurrent?.start.join(',')};${routeCurrent?.end.join(
       ','
     )}`
-    const options = `?alternatives=false&geometries=geojson&overview=simplified&steps=false&access_token=${process.env.NEXT_PUBLIC_MAPBOX_ACCESS}`
+    const options = `?alternatives=false&geometries=geojson&overview=simplified&steps=false&access_token=pk.eyJ1IjoibGRhbmlpMTMiLCJhIjoiY2xxemE3OXBuMDMxaDJxb2ZwbWYyeXczNSJ9.Clw9VnVZszkfexTJ1tOMUw`
 
     console.log(url + routes + options)
 
