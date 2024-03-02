@@ -188,11 +188,15 @@ export default function Sales({ params }) {
     }
   };
 
+  // useEffect(() => {
   const filteredProducts = products?.filter(
     (product) =>
       product.productName.toLowerCase().includes(search.toLowerCase()) ||
-      product.productIdScan.toString().includes(search)
+      product.productDescription.toLowerCase().includes(search.toLowerCase()) ||
+      (`${product.productIdScan}`).includes(search)
   );
+  console.log(products)
+  // }, []);
 
   function saleProduct(productSale: MessageProduct | null | undefined) {
     if (!productSale) {

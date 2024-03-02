@@ -108,13 +108,12 @@ export default function Route({ params }) {
   };
 
   const getDataDirections = async (currentRoute: MessageRoute | null) => {
-    if (process.env.MAPBOX_ACCESS == null) return;
 
     setLoadingDirections(true);
 
     const url = `https://api.mapbox.com/directions/v5/mapbox/driving/`;
     const routes = `${currentRoute?.start[0]}, ${currentRoute?.start[1]}; ${currentRoute?.end[0]}, ${currentRoute?.end[1]}`;
-    const options = `?alternatives=false&geometries=geojson&overview=simplified&steps=false&access_token=${process.env.MAPBOX_ACCESS}`;
+    const options = `?alternatives=false&geometries=geojson&overview=simplified&steps=false&access_token=pk.eyJ1IjoibGRhbmlpMTMiLCJhIjoiY2xxemE3OXBuMDMxaDJxb2ZwbWYyeXczNSJ9.Clw9VnVZszkfexTJ1tOMUw`;
 
     await getAllFetchDataValues(`${url}${routes}${options}`)
       .then((data) => {
