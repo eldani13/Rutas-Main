@@ -8,6 +8,8 @@ import {
 } from "@/utils/api";
 import React, { useEffect, useRef, useState, FormEvent } from "react";
 import { ButtonCrud } from "@/components/buttons/ButtonCrud";
+import { getCookie, processEnv } from "@/utils/cookies";
+import jwt from "jsonwebtoken";
 
 export default function Product() {
   const [getAllDataProducts, setAllDataProducts] = useState<
@@ -36,6 +38,24 @@ export default function Product() {
       const newArray: MessageProduct[] | null = prev && [...prev];
       if (newArray) newArray[index].productAmount = newNumber;
       return newArray;
+    });
+  };
+
+  const handleSendData = async () => {
+    await getCookie(processEnv.jtIdentity).then(async(jwt_get) => {
+      const jwt_decode = jwt.decode(jwt_get+"");
+      const data = {
+        // @ts-ignore
+        employee: (jwt_decode?._id) || "",
+        products: getProductsSelect?.map((product) => ({
+          productId: product._id,
+          amount: product.productAmount,
+        })),
+      };
+
+      await postInsertData(`http://localhost:3000/api/v1/request-products/add`,data, ()=>{
+        console.log("genial")
+      }, 'pedido')
     });
   };
 
@@ -226,9 +246,9 @@ export default function Product() {
               <div className="w-full flex justify-center gap-5 mt-10">
                 <button
                   type="button"
-                  onClick={()=>{
-                    updateTable()
-                    setProductsSelect(null)
+                  onClick={() => {
+                    updateTable();
+                    setProductsSelect(null);
                   }}
                   className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
                 >
@@ -237,6 +257,7 @@ export default function Product() {
 
                 <button
                   type="button"
+                  onClick={handleSendData}
                   className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 "
                 >
                   Realizar solicitud
