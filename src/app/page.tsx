@@ -17,7 +17,7 @@ export default function HomePage() {
     e.preventDefault();
     try {
       const response = await fetch(
-        `https://route-provider-system-co1z.onrender.com/api/v1/createtoken`,
+        `http://localhost:3000/api/v1/createtoken`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
