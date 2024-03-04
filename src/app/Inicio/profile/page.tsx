@@ -7,7 +7,7 @@ import { getCookie, processEnv } from "@/utils/cookies";
 import jwt from "jsonwebtoken";
 
 //@ts-ignore
-export default function userPage() {
+export default function UserPage() {
   const [dataCamb, setDataCamb] = useState<MessageEmployees | null>(null);
   const [dataInitial, setDataInitial] = useState<MessageEmployees | null>(null);
 
@@ -16,7 +16,7 @@ export default function userPage() {
     if (dataInitial == dataCamb) return;
 
     await patchEditVal(
-      `${process.env.NEXT_PUBLIC_BACK_URL}employee/edit/${dataCamb?._id}`,
+      `https://route-provider-system-co1z.onrender.com/api/v1/employee/edit/${dataCamb?._id}`,
       {
         user: dataCamb?.user,
         username: dataCamb?.username,
@@ -44,7 +44,7 @@ export default function userPage() {
     };
 
     const rec: MessageEmployees | null = await getAllFetchDataValues(
-      `${process.env.NEXT_PUBLIC_BACK_URL}employee/${_id}`
+      `https://route-provider-system-co1z.onrender.com/api/v1/employee/${_id}`
     );
     setDataCamb(rec);
     setDataInitial(rec);
@@ -91,7 +91,7 @@ export default function userPage() {
                   htmlFor="email"
                   className="block mb-2 text-sm font-medium text-gray-900 "
                 >
-                  Tu email
+                  Tu usuario
                 </label>
                 <input
                   type="text"

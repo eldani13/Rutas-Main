@@ -164,7 +164,9 @@ export default function Court() {
         >
           <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
         </svg>
-        <hr className="mb-10 border-[1px]" />
+
+        <hr className='mb-10 border-[1px]' />
+
         {showPDF ? (
           <PDFViewer className="w-full h-[100vh]" showToolbar>
             <CourtPDF corte={currentCourt} />
@@ -206,9 +208,10 @@ export default function Court() {
                 <tbody>
                   {currentCourt.productosVendidos.map((product, index) => (
                     <tr
-                      key={index}
-                      className="grid grid-cols-3 py-2.5 text-center"
-                    >
+
+                      key={"productoVendido-" + index}
+                      className='grid grid-cols-3 py-2.5 text-center'>
+
                       <td>{product.nombre}</td>
                       <td>{product.cantidad}</td>
                       <td>{product.precio}</td>
@@ -231,9 +234,10 @@ export default function Court() {
                 <tbody>
                   {currentCourt.productosNoVendidos.map((product, index) => (
                     <tr
-                      key={index}
-                      className="grid grid-cols-3 py-2.5 text-center"
-                    >
+
+                      key={"productoNoVendido-"+ index}
+                      className='grid grid-cols-3 py-2.5 text-center'>
+
                       <td>{product.nombre}</td>
                       <td>{product.cantidad}</td>
                       <td>{product.precio}</td>

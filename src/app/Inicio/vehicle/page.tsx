@@ -7,7 +7,6 @@ import {
   postInsertData,
 } from "@/utils/api";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
-import Swal from "sweetalert2";
 import { ButtonCrud } from "@/components/buttons/ButtonCrud";   
 
 export default function Vehicle() {
@@ -40,7 +39,7 @@ export default function Vehicle() {
   };
   const updateTable = async () => {
     await getAllFetchDataValues(
-      `${process.env.NEXT_PUBLIC_BACK_URL}cars-units`
+      `https://route-provider-system-co1z.onrender.com/api/v1/cars-units`
     ).then((rec) => {
       // @ts-ignore
       setDataVehicle(rec);
@@ -86,7 +85,7 @@ export default function Vehicle() {
   };
   const editVehicleFunction = async () => {
     await patchEditVal(
-      `${process.env.NEXT_PUBLIC_BACK_URL}car-unit/edit/${clickInVehicle?._id}`,
+      `https://route-provider-system-co1z.onrender.com/api/v1/car-unit/edit/${clickInVehicle?._id}`,
       {
         marca: input_marca.current?.value,
         modelo: input_modelo.current?.value,
@@ -107,7 +106,7 @@ export default function Vehicle() {
   };
   const insertVehicleFunction = async () => {
     await postInsertData(
-      `${process.env.NEXT_PUBLIC_BACK_URL}car-unit/new/`,
+      `https://route-provider-system-co1z.onrender.com/api/v1/car-unit/new/`,
       {
         marca: input_marca.current?.value,
         modelo: input_modelo.current?.value,
@@ -128,7 +127,7 @@ export default function Vehicle() {
   };
   const removeVechicleHandle = async () => {
     await deleteRemoveData(
-      `${process.env.NEXT_PUBLIC_BACK_URL}car-unit/delete/${clickInVehicle?._id}`,
+      `https://route-provider-system-co1z.onrender.com/api/v1/car-unit/delete/${clickInVehicle?._id}`,
       () => {
         setviewAddVehicle([false, "insert"]);
         updateTable();
@@ -246,7 +245,7 @@ export default function Vehicle() {
               dataVehicle &&
                 dataVehicle?.message.map(
                   (data: MessageVehicle, index: number) => (
-                    <div
+                    <div key={"vehicle-" + index}
                       onClick={() =>
                         setclickInVehicle(clickInVehicle != null ? null : data)
                       }

@@ -16,7 +16,7 @@ export default function Route() {
 
   const getAllData = async () => {
     await getAllFetchDataValues(
-      `${process.env.NEXT_PUBLIC_BACK_URL}rutas`
+      `https://route-provider-system-co1z.onrender.com/api/v1/rutas`
     ).then((rec: RootRoute) => {
       setRoutes(rec);
     });
@@ -24,7 +24,7 @@ export default function Route() {
 
   const getAllEmployess = async () => {
     await getAllFetchDataValues(
-      `${process.env.NEXT_PUBLIC_BACK_URL}employees`
+      `https://route-provider-system-co1z.onrender.com/api/v1/employees`
     ).then((rec: RootEmployees) => {
       setEmployees(rec);
     });
@@ -32,7 +32,7 @@ export default function Route() {
 
   const getAllVehicles = async () => {
     await getAllFetchDataValues(
-      `${process.env.NEXT_PUBLIC_BACK_URL}cars-units`
+      `https://route-provider-system-co1z.onrender.com/api/v1/cars-units`
     ).then((rec: RootVehicle) => {
       setVehicles(rec);
     });
@@ -55,7 +55,7 @@ export default function Route() {
     // console.log(employee + vehicle + start + )
 
     await postInsertData(
-      `${process.env.NEXT_PUBLIC_BACK_URL}rutas/new`,
+      `https://route-provider-system-co1z.onrender.com/api/v1/rutas/new`,
       {
         empleado: employee,
         vehicle: vehicle,
@@ -203,7 +203,7 @@ export default function Route() {
 
                     <select className="w-full" name="employee">
                       {employees?.message.map((emp) => (
-                        <option value={emp._id}>
+                        <option value={emp._id} key={"mapping-" + emp._id}>
                           Usuario: {emp.username} | Apellidos: {emp.lastnames}
                         </option>
                       ))}
@@ -227,7 +227,7 @@ export default function Route() {
 
                     <select className="w-full" name="vehicle">
                       {vehicles?.message.map((veh) => (
-                        <option value={veh._id}>
+                        <option value={veh._id} key={"mappOption2-" + veh._id}>
                           Marca:{veh.marca} | Modelo:{veh.modelo}
                         </option>
                       ))}
