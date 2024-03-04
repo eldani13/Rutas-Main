@@ -12,6 +12,8 @@ import { Map, LoadingMap } from '@/components'
 import { DirectionsResponse } from '@/types/RouteResponseApi'
 import { routeResponse } from '@/temp/TempResponseDirections'
 
+import './style.css'
+
 // @ts-ignore
 export default function Route({ params }) {
   const { rutaId } = params

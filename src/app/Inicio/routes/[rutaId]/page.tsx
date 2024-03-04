@@ -16,10 +16,14 @@ import { Map, LoadingMap } from "@/components";
 import { DirectionsResponse } from "@/types/RouteResponseApi";
 import { routeResponse } from "@/temp/TempResponseDirections";
 
+import './style.css';
+
 // @ts-ignore
 export default function Route({ params }) {
   const { rutaId } = params;
   const [routeCurrent, setRouteCurrent] = useState<null | MessageRoute>(null);
+  const [isOpenMenu, setIsOpenMenu] = useState(false);
+
 
   const [modifyRoute, setModifyRoute] = useState<{
     state: boolean;
@@ -162,10 +166,10 @@ export default function Route({ params }) {
 
   return (
     <>
-      <div className="flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 px-4 h-[100%] justify-between  overflow-hidden max-h-[100vh]">
+      <div className="burguer flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 px-4 h-[100%] justify-between  overflow-hidden max-h-[100vh]">
         <div className="flex flex-col items-start justify-center">
           <h1 className="text-[#000] text-2xl font-bold mb-1">
-            Sistema de Corte
+            Sistema de Ruta
           </h1>
           <div className="grid grid-cols-2">
             <svg
@@ -253,7 +257,26 @@ export default function Route({ params }) {
           </button>
         </div>
       </div>
-
+      {/* <button
+              className="burger-menu-button xl:hidden flex bg-[#ccc] p-1 absolute top-0 right-0 m-5 rounded-lg items-center cursor-pointer  transition duration-300 transform hover:scale-110"
+              onClick={() => setIsOpenMenu(!isOpenMenu)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="2em"
+                height="2em"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M3 5h8m-8 7h13M3 19h18"
+                />
+              </svg>
+            </button> */}
       <div
         className="flex flex-col  justify-between px-3  max-h-[100vh] h-full overflow-y-auto"
         style={{ alignSelf: "flex-start" }}
@@ -275,10 +298,10 @@ export default function Route({ params }) {
           <hr className="mb-10 border-[1px]" />
         </div>
 
-        <div className="flex flex-1">
+        <div className="mapa flex flex-1">
           {/* Primer div */}
           <div
-            className="flex flex-1 flex-col text-black px-3"
+            className="mapa flex flex-1 flex-col text-black px-3"
             style={{ gridArea: "productSold" }}
           >
             <span className="font-bold">Mapa de la Ruta.</span>
@@ -294,9 +317,9 @@ export default function Route({ params }) {
             </div>
           </div>
 
-          <div className="flex flex-col p-10 gap-y-10 justify-center">
+          <div className="template flex flex-col p-10 gap-y-10 justify-center">
             {/* Segundo div */}
-            <div className="flex flex-col items-center text-black gap-10">
+            <div className="card1 flex flex-col items-center text-black gap-10">
               <span className="font-bold">Carga en Mercancía</span>
               {/* Card */}
               <div
@@ -330,7 +353,7 @@ export default function Route({ params }) {
             </div>
 
             {/* Tercer div */}
-            <div className=" flex flex-col items-center text-black gap-10">
+            <div className="card2 flex flex-col items-center text-black gap-10">
               <span className="font-bold">Última hora de venta.</span>
               <div
                 className="flex flex-row p-4"

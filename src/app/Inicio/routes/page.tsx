@@ -7,6 +7,7 @@ import Link from "next/link";
 import React, { SyntheticEvent, useEffect, useState } from "react";
 // import Home from "./HomeSection";
 
+
 export default function Route() {
   const [routes, setRoutes] = useState<null | RootRoute>(null);
   const [employees, setEmployees] = useState<null | RootEmployees>(null);
