@@ -1,18 +1,21 @@
-/* @media (max-width: 430px){
-    .burguer {
-        display: none;
-    }
-
-    .toggle-button {
-        display: block;
-    }
-
+ @media (max-width: 430px){
     .mapa {
-        position: absolute;
-        height: 50vh;
+        display: flex;
+        flex-direction: column;
     }
+    .template{
+        padding: 0;
+    }
+}
 
-    .card1, .card2 {
-        width: 170px;
+
+@media (max-width: 768px){
+    .mapa {
+        display: flex;
+        flex-direction: column;
+        min-width: auto;
     }
-} */
+    .template{
+        padding: 0;
+    }
+}

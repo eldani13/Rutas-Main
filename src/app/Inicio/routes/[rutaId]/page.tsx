@@ -26,7 +26,8 @@ export default function Route({ params }) {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
 
 
-  const [modifyRoute, setModifyRoute] = useState<{
+  const [esEmpleado, setEsEmpleado] = useState(true); 
+  const [modifyRoute, setModifyRoute] = useState<{ 
     state: boolean;
     route: MessageRoute | null;
   }>({
@@ -138,6 +139,32 @@ export default function Route({ params }) {
     );
   };
 
+
+// const handleLogin = async () => {
+//   try {
+//     const response = await fetch(
+//       `https://route-provider-system-co1z.onrender.com/api/v1/createtoken`,
+//       {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({
+//           username: inputValues.username,
+//           password: inputValues.password,
+//           role: inputValues.selectRol,
+//         }),
+//       }
+//     );
+//     const data = await response.json();
+    
+//     if (data.role === 'empleado') {
+//       console.log('Los empleados no pueden eliminar datos.');
+//     }
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
+
+
   const clockLastMinuteSale = () => {
     const date = new Date(routeCurrent?.LastMinuteSale || "");
 
@@ -163,9 +190,15 @@ export default function Route({ params }) {
     getDataEmploye();
   }, [routeCurrent]);
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+      setMenuOpen(!menuOpen);
+  };
+
   return (
     <>
-      <div className="flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 ml:px-4 h-[100%] justify-between  overflow-hidden max-h-[100vh]">
+      <div className={` ${menuOpen ? 'sm:ml-0' : 'hidden'} hidden xl:flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 ml:px-4 h-[100%] justify-between  overflow-hidden max-h-[100vh] p-4`}>
         <div className="hidden  xl:flex flex-col items-start justify-center">
           <h1 className="text-[#000] text-2xl font-bold mb-1">
             Sistema de Ruta
@@ -227,6 +260,8 @@ export default function Route({ params }) {
 
         {/* Botones */}
         <div className="z-20 absolute bottom-0 ms-3 ps-3 xl:ps-0 gap-3 xl:gap-0 xl:static pb-10 flex  xl:flex-col xl:space-y-5 items-center">
+          {!esEmpleado ? null : (
+
           <ButtonCrud
             isHidden={false}
             text="Editar Ruta"
@@ -238,11 +273,13 @@ export default function Route({ params }) {
             <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24"><path fill="currentColor" d="m14.06 9.02l.92.92L5.92 19H5v-.92zM17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83l3.75 3.75l1.83-1.83a.996.996 0 0 0 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29m-3.6 3.19L3 17.25V21h3.75L17.81 9.94z"/></svg>
             
           </ButtonCrud>
+          )}
           <ButtonCrud
               isHidden={false}
               text="Eliminar"
               color="bg-[#ececec] text-red-500"
               onclickHandle={removeDairectionHandle}
+              
             >
               <svg
                 className="w-6 h-6 text-red-500"
@@ -283,26 +320,6 @@ export default function Route({ params }) {
           </button> */}
         </div>
       </div>
-      {/* <button
-              className="burger-menu-button xl:hidden flex bg-[#ccc] p-1 absolute top-0 right-0 m-5 rounded-lg items-center cursor-pointer  transition duration-300 transform hover:scale-110"
-              onClick={() => setIsOpenMenu(!isOpenMenu)}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="2em"
-                height="2em"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="1.5"
-                  d="M3 5h8m-8 7h13M3 19h18"
-                />
-              </svg>
-            </button> */}
       <div
         className="z-10 flex flex-col  justify-between px-3  max-h-[100vh] h-full overflow-y-auto"
         style={{ alignSelf: "flex-start" }}
@@ -324,7 +341,27 @@ export default function Route({ params }) {
           <hr className="mb-10 border-[1px]" />
         </div>
 
-        <div className="mapa flex flex-1">
+        <div className="mapa flex flex-1 xl:flex-row">
+        <button
+              className="xl:hidden flex bg-[#ccc] p-1 absolute top-0 right-0 m-5 rounded-lg items-center cursor-pointer  transition duration-300 transform hover:scale-110"
+              onClick={toggleMenu}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="2em"
+                height="2em"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M3 5h8m-8 7h13M3 19h18"
+                />
+              </svg>
+            </button>
           {/* Primer div */}
           <div
             className="mapa flex flex-1 flex-col text-black px-3"
