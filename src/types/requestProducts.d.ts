@@ -2,7 +2,7 @@ export interface MessageRequestProducts {
   _id: string;
   state: string;
   dateTime: string;
-  employee: string;
+  route: string;
   products: Product[];
   __v: number;
 }

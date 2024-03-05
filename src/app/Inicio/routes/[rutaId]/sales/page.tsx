@@ -13,13 +13,17 @@ import { ButtonCrud } from "@/components/buttons/ButtonCrud";
 
 import Quagga from "@ericblade/quagga2";
 import { MessageRoute } from "@/types/routes";
+import { getCookie, processEnv } from "@/utils/cookies";
+import jwt from "jsonwebtoken";
+import { MessageRequestProducts } from "@/types/requestProducts";
+import Link from "next/link";
 
 //@ts-ignore
 export default function Sales({ params }) {
   const { rutaId } = params;
 
   const [products, setProducts] = useState<MessageProduct[]>();
-  const [clickInProduct, setClickInProduct] = useState<null | MessageProduct>();
+  const [clickInProduct, setClickInProduct] = useState<null | MessageProduct>(null);
   const [search, setSearch] = useState("");
   const [_scannerIsRunning, set_scannerIsRunning] = useState(false);
   const [actualProductSearchScanner, set_actualProductSearchScanner] =
@@ -27,9 +31,12 @@ export default function Sales({ params }) {
 
   const [routeCurrent, setRouteCurrent] = useState<null | MessageRoute>(null);
 
+  const [requestCurrentIfExist, setRequestCurrentIfExist] =
+    useState<null | MessageRequestProducts>(null);
+
   const getDataRoute = async () => {
     const dataValues = await getAllFetchDataValues(
-      `https://route-provider-system-co1z.onrender.com/api/v1/rutas/${rutaId}`
+      `http://localhost:3000/api/v1/rutas/${rutaId}`
     )
       .then((rec) => {
         const messList: MessageRoute = rec.message;
@@ -44,7 +51,7 @@ export default function Sales({ params }) {
 
   const getProducts = async () => {
     const productsget = await getAllFetchDataValues(
-      `https://route-provider-system-co1z.onrender.com/api/v1/view-products`
+      `http://localhost:3000/api/v1/view-products`
     );
     setProducts(productsget.details);
   };
@@ -170,6 +177,7 @@ export default function Sales({ params }) {
   }
 
   useEffect(() => {
+    getIfProductSelect();
     getProducts();
     getDataRoute();
   }, []);
@@ -193,9 +201,9 @@ export default function Sales({ params }) {
     (product) =>
       product.productName.toLowerCase().includes(search.toLowerCase()) ||
       product.productDescription.toLowerCase().includes(search.toLowerCase()) ||
-      (`${product.productIdScan}`).includes(search)
+      `${product.productIdScan}`.includes(search)
   );
-  console.log(products)
+  console.log(products);
   // }, []);
 
   function saleProduct(productSale: MessageProduct | null | undefined) {
@@ -249,6 +257,7 @@ export default function Sales({ params }) {
     }
   }
 
+  console.log(routeCurrent);
   const clockLastMinuteSale = () => {
     const date = new Date(routeCurrent?.LastMinuteSale || "");
 
@@ -264,6 +273,21 @@ export default function Sales({ params }) {
       </div>
     );
   };
+
+  const getIfProductSelect = async () => {
+    await getCookie(processEnv.jtIdentity).then(async (jwt_get) => {
+      const jwt_decode = jwt.decode(jwt_get + "");
+
+      await getAllFetchDataValues(
+        //@ts-ignore
+        `http://localhost:3000/api/v1/request-product/user/${jwt_decode?._id}`
+      ).then((rec: RootProduct) => {
+        // @ts-ignore
+        setRequestCurrentIfExist(rec.details);
+      });
+    });
+  };
+  console.log(requestCurrentIfExist);
 
   return (
     <>
@@ -305,27 +329,49 @@ export default function Sales({ params }) {
         </div>
       </div>
 
-      <div
-        className="flex flex-col pl-3  max-h-[100vh] h-full "
-        style={{ alignSelf: "flex-start" }}
-      >
-        <SearchInput
-          label="Buscar Producto"
-          value={search}
-          setValue={setSearch}
-          handleClickOnOffScanner={handleClickOnOffScanner}
-        />
-
-        {filteredProducts && (
-          <Table
-            products={filteredProducts.sort(
-              (a, b) => (a.productIsSold ? 1 : -1) - (b.productIsSold ? 1 : -1)
-            )}
-            clickInProduct={clickInProduct}
-            setClickInProduct={setClickInProduct}
+      {requestCurrentIfExist && (
+        <div
+          className="flex flex-col pl-3  max-h-[100vh] h-full "
+          style={{ alignSelf: "flex-start" }}
+        >
+          <SearchInput
+            label="Buscar Producto"
+            value={search}
+            setValue={setSearch}
+            handleClickOnOffScanner={handleClickOnOffScanner}
           />
-        )}
-      </div>
+
+          {filteredProducts && (
+            <Table
+              products={filteredProducts.sort(
+                (a, b) =>
+                  (a.productIsSold ? 1 : -1) - (b.productIsSold ? 1 : -1)
+              )}
+              clickInProduct={clickInProduct}
+              setClickInProduct={setClickInProduct}
+            />
+          )}
+        </div>
+      )}
+      {!requestCurrentIfExist && (
+        <div
+          className="flex flex-col pl-3  max-h-[100vh] h-full items-center justify-center"
+          style={{ alignSelf: "flex-start" }}
+        >
+          <p className="text-xl font-bold mb-10">No tienes productos asignados</p>
+
+          <Link href="/Inicio/request">
+            <button
+              type="button"
+              className="inline-block rounded border-2 hover:scale-105
+                border-info px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-info transition duration-150 ease-in-out hover:border-info-600 hover:bg-info-50/50 hover:text-info-600 focus:border-info-600 focus:bg-info-50/50 focus:text-info-600 focus:outline-none focus:ring-0 active:border-info-700 active:text-info-700 motion-reduce:transition-none "
+              data-twe-ripple-init
+            >
+              Realizar un requisito de productos
+            </button>
+          </Link>
+        </div>
+      )}
 
       <div
         className={`${
