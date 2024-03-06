@@ -3,7 +3,9 @@ import cookie from 'js-cookie'
 export const processEnv = {
     name: process.env.COOKIE_NAME || "SESSION",
     rol: process.env.COOKIE_ROL || "ROLESESSION",
-    jtIdentity: process.env.NEXT_PUBLIC_JTIdentity || "jtIdentity"
+    jtIdentity: process.env.NEXT_PUBLIC_JTIdentity || "jtIdentity",
+    back: process.env.NEXT_PUBLIC_BACK || "http://localhost:3000/api/v1/"
+    // back: process.env.NEXT_PUBLIC_BACK || "https://route-provider-system-co1z.onrender.com/api/v1/"
 }
 
 export const setCookie = (name: string, value: string, options: any = {}) => {

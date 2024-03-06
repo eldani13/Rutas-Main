@@ -39,7 +39,7 @@ export default function Sales({ params }) {
 
   const getDataRoute = async () => {
     const dataValues = await getAllFetchDataValues(
-      `http://localhost:3000/api/v1/rutas/${rutaId}`
+      `${processEnv.back}rutas/${rutaId}`
     )
       .then((rec) => {
         const messList: MessageRoute = rec.message;
@@ -54,7 +54,7 @@ export default function Sales({ params }) {
 
   const getProducts = async () => {
     const productsget = await getAllFetchDataValues(
-      `http://localhost:3000/api/v1/view-products`
+      `${processEnv.back}view-products`
     );
     setAllProducts(productsget.details);
   };
@@ -250,7 +250,7 @@ export default function Sales({ params }) {
     } else {
 
       // await patchEditVal(
-      //   `http://localhost:3000/api/v1/request-products/edit/${rutaId}`,
+      //   `${processEnv.back}request-products/edit/${rutaId}`,
       //   {
       //     state: state,
       //   },
@@ -259,7 +259,7 @@ export default function Sales({ params }) {
       // );
 
       patchSaleProduct(
-        `http://localhost:3000/api/v1/api/v1/products/edit/${productSale._id}`,
+        `${processEnv.back}api/v1/products/edit/${productSale._id}`,
         {
           ...productSale,
           productIsSold: true,
@@ -269,7 +269,7 @@ export default function Sales({ params }) {
           const amountNew =
             (routeCurrent?.amountOfMerchandise || 0) + productSale.productPrice;
           await patchEditVal(
-            `http://localhost:3000/api/v1/api/v1/rutas/edit/${routeCurrent?._id}`,
+            `${processEnv.back}api/v1/rutas/edit/${routeCurrent?._id}`,
             {
               amountOfMerchandise: amountNew,
               LastMinuteSale: dateCurrent,
@@ -314,7 +314,7 @@ export default function Sales({ params }) {
   const getIfProductSelect = async () => {
     try {
       await getAllFetchDataValues(
-        `http://localhost:3000/api/v1/request-product/route/${rutaId}`
+        `${processEnv.back}request-product/route/${rutaId}`
       ).then((rec) => {
         console.log(rec);
         // @ts-ignore

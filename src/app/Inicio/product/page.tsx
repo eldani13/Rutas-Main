@@ -8,6 +8,7 @@ import {
 } from "@/utils/api";
 import React, { useEffect, useRef, useState, FormEvent } from "react";
 import { ButtonCrud } from "@/components/buttons/ButtonCrud";
+import { processEnv } from "@/utils/cookies";
 
 export default function Product() {
   const [dataProductList, setDataProductList] = useState<
@@ -38,7 +39,7 @@ export default function Product() {
 
   const insertProductFunction = async () => {
     await postInsertData(
-      `https://route-provider-system-co1z.onrender.com/api/v1/products/new/`,
+      `${processEnv.back}products/new/`,
       {
         productName: input_nombre.current?.value,
         productDescription: input_descripcion.current?.value,
@@ -56,7 +57,7 @@ export default function Product() {
 
   const editProductFunction = async () => {
     await patchEditVal(
-      `https://route-provider-system-co1z.onrender.com/api/v1/products/edit/${clickInProduct?._id}`,
+      `${processEnv.back}products/edit/${clickInProduct?._id}`,
       {
         productName: input_nombre.current?.value,
         productDescription: input_descripcion.current?.value,
@@ -74,7 +75,7 @@ export default function Product() {
 
   const updateTable = async () => {
     await getAllFetchDataValues(
-      `https://route-provider-system-co1z.onrender.com/api/v1/view-products`
+      `${processEnv.back}view-products`
     ).then((rec) => {
       // @ts-ignore
       setDataProductList(rec.details);
@@ -102,7 +103,7 @@ export default function Product() {
 
   const removeProductHandle = async () => {
     await deleteRemoveData(
-      `https://route-provider-system-co1z.onrender.com/api/v1/products/delete/${clickInProduct?._id}`,
+      `${processEnv.back}products/delete/${clickInProduct?._id}`,
       () => {
         setviewAddProduct([false, "insert"]);
         updateTable();

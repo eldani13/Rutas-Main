@@ -39,7 +39,7 @@ export default function Product() {
       const jwt_decode = jwt.decode(jwt_get + "");
       await getAllFetchDataValues(
         //@ts-ignore
-        `http://localhost:3000/api/v1/rutas/employee/${jwt_decode?._id}`
+        `${processEnv.back}rutas/employee/${jwt_decode?._id}`
       ).then((rec) => {
         setAllDataRoutes(rec.message);
       });
@@ -47,7 +47,7 @@ export default function Product() {
   };
   const fnGetAllDataVehicle = async () => {
     await getAllFetchDataValues(
-      `http://localhost:3000/api/v1/cars-units/`
+      `${processEnv.back}cars-units/`
     ).then((rec) => {
       setAllDataVehicle(rec.message);
     });
@@ -55,7 +55,7 @@ export default function Product() {
 
   const updateTable = async () => {
     await getAllFetchDataValues(
-      `http://localhost:3000/api/v1/view-products`
+      `${processEnv.back}view-products`
     ).then((rec: RootProduct) => {
       // @ts-ignore
       setAllDataProducts(rec.details);
@@ -73,7 +73,7 @@ export default function Product() {
   const handleUpdateProductSelect = (index: number, newNumber: number) => {
     setProductsSelect((prev) => {
       const newArray: MessageProduct[] | null = prev && [...prev];
-      if (newArray) newArray[index].productAmount = newNumber;
+      if (newArray) newArray[index].amount = newNumber;
       return newArray;
     });
   };
@@ -85,12 +85,12 @@ export default function Product() {
       dateTime: new Date().toISOString(),
       products: getProductsSelect?.map((product) => ({
         productId: product._id,
-        amount: product.productAmount,
+        amount: product.amount,
       })),
     };
 
     await postInsertData(
-      `http://localhost:3000/api/v1/request-products/add`,
+      `${processEnv.back}request-products/add`,
       data,
       () => {
         setRouteSelect(null);
@@ -101,7 +101,7 @@ export default function Product() {
 
   const getIfProductSelect = async (routeSelection: MessageRoute) => {
     const getDta = await getAllFetchDataValues(
-      `http://localhost:3000/api/v1/request-product/route/${routeSelection?._id}`
+      `${processEnv.back}request-product/route/${routeSelection?._id}`
     );
 
 
@@ -139,8 +139,8 @@ export default function Product() {
           </div>
           <div className="flex flex-col pt-5 gap-3">
             {allDataRoutes &&
-              allDataRoutes.map((requestRoute) => (
-                <div
+              allDataRoutes.map((requestRoute, index) => (
+                <div key={"route-"+index}
                   onClick={() => {
                     console.log(requestRoute);
                     setRouteSelect(requestRoute);
@@ -300,7 +300,7 @@ export default function Product() {
                 <div className="w-full pt-5 flex flex-col gap-6">
                   {getProductsSelect &&
                     getProductsSelect.map((product, index) => (
-                      <div className="flex w-full justify-center items-center gap-3">
+                      <div className="flex w-full justify-center items-center gap-3" key={"select-prod-"+index}>
                         <button
                           onClick={() => {
                             const newData = getProductsSelect.filter(
@@ -338,12 +338,12 @@ export default function Product() {
                         </div>
                         <div className="flex items-center gap-1 font-bold text-xl">
                           <button
-                            disabled={(product?.productAmount ?? 0) === 0}
+                            disabled={(product?.amount ?? 0) === 0}
                             className="w-8 h-8 bg-red-200 rounded-md"
                             onClick={() =>
                               handleUpdateProductSelect(
                                 index,
-                                (product?.productAmount ?? 0) - 1
+                                (product?.amount ?? 0) - 1
                               )
                             }
                           >
@@ -359,14 +359,14 @@ export default function Product() {
                                 parseInt(e.target.value)
                               )
                             }
-                            value={product.productAmount ?? 0}
+                            value={product.amount ?? 0}
                           />
                           <button
                             className="w-8 h-8 bg-green-200 rounded-md"
                             onClick={() =>
                               handleUpdateProductSelect(
                                 index,
-                                (product?.productAmount ?? 0) + 1
+                                (product?.amount ?? 0) + 1
                               )
                             }
                           >

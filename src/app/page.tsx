@@ -17,7 +17,7 @@ export default function HomePage() {
     e.preventDefault();
     try {
       const response = await fetch(
-        `http://localhost:3000/api/v1/createtoken`,
+        `${processEnv.back}createtoken`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

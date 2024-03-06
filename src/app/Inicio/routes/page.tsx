@@ -3,6 +3,7 @@ import { RootEmployees } from "@/types/employees";
 import { MessageRoute, RootRoute } from "@/types/routes";
 import { RootVehicle } from "@/types/vehicles";
 import { getAllFetchDataValues, postInsertData } from "@/utils/api";
+import { processEnv } from "@/utils/cookies";
 import Link from "next/link";
 import React, { SyntheticEvent, useEffect, useState } from "react";
 // import Home from "./HomeSection";
@@ -15,7 +16,7 @@ export default function Route() {
 
   const getAllData = async () => {
     await getAllFetchDataValues(
-      `http://localhost:3000/api/v1/rutas/`
+      `${processEnv.back}rutas/`
     ).then((rec: RootRoute) => {
       setRoutes(rec);
     });
@@ -23,7 +24,7 @@ export default function Route() {
 
   const getAllEmployess = async () => {
     await getAllFetchDataValues(
-      `http://localhost:3000/api/v1/employees`
+      `${processEnv.back}employees`
     ).then((rec: RootEmployees) => {
       setEmployees(rec);
     });
@@ -31,7 +32,7 @@ export default function Route() {
 
   const getAllVehicles = async () => {
     await getAllFetchDataValues(
-      `http://localhost:3000/api/v1/cars-units`
+      `${processEnv.back}cars-units`
     ).then((rec: RootVehicle) => {
       setVehicles(rec);
     });
@@ -54,7 +55,7 @@ export default function Route() {
     // console.log(employee + vehicle + start + )
 
     await postInsertData(
-      `http://localhost:3000/api/v1/rutas/new`,
+      `${processEnv.back}rutas/new`,
       {
         empleado: employee,
         vehicle: vehicle,

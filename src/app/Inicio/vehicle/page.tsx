@@ -8,6 +8,7 @@ import {
 } from "@/utils/api";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { ButtonCrud } from "@/components/buttons/ButtonCrud";   
+import { processEnv } from "@/utils/cookies";
 
 export default function Vehicle() {
   const [dataVehicle, setDataVehicle] = useState<null | RootVehicle>(null);
@@ -39,7 +40,7 @@ export default function Vehicle() {
   };
   const updateTable = async () => {
     await getAllFetchDataValues(
-      `https://route-provider-system-co1z.onrender.com/api/v1/cars-units`
+      `${processEnv.back}cars-units`
     ).then((rec) => {
       // @ts-ignore
       setDataVehicle(rec);
@@ -85,7 +86,7 @@ export default function Vehicle() {
   };
   const editVehicleFunction = async () => {
     await patchEditVal(
-      `https://route-provider-system-co1z.onrender.com/api/v1/car-unit/edit/${clickInVehicle?._id}`,
+      `${processEnv.back}car-unit/edit/${clickInVehicle?._id}`,
       {
         marca: input_marca.current?.value,
         modelo: input_modelo.current?.value,
@@ -106,7 +107,7 @@ export default function Vehicle() {
   };
   const insertVehicleFunction = async () => {
     await postInsertData(
-      `https://route-provider-system-co1z.onrender.com/api/v1/car-unit/new/`,
+      `${processEnv.back}car-unit/new/`,
       {
         marca: input_marca.current?.value,
         modelo: input_modelo.current?.value,
@@ -127,7 +128,7 @@ export default function Vehicle() {
   };
   const removeVechicleHandle = async () => {
     await deleteRemoveData(
-      `https://route-provider-system-co1z.onrender.com/api/v1/car-unit/delete/${clickInVehicle?._id}`,
+      `${processEnv.back}car-unit/delete/${clickInVehicle?._id}`,
       () => {
         setviewAddVehicle([false, "insert"]);
         updateTable();

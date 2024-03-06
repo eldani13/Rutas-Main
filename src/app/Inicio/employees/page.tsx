@@ -2,6 +2,7 @@
 import { ButtonCrud } from "@/components/buttons/ButtonCrud";
 import { MessageEmployees, RootEmployees } from "@/types/employees";
 import { deleteRemoveData, getAllFetchDataValues, patchEditVal, postInsertData } from "@/utils/api";
+import { processEnv } from "@/utils/cookies";
 import Link from "next/link";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 
@@ -20,7 +21,7 @@ export default function Employees() {
     const input_password = useRef<HTMLInputElement>(null);
 
     const updateTable = async () => {
-        await getAllFetchDataValues(`https://route-provider-system-co1z.onrender.com/api/v1/employees`)
+        await getAllFetchDataValues(`${processEnv.back}employees`)
             .then((rec: RootEmployees) => {
                 // @ts-ignore
                 setDataEmployees(rec)
@@ -38,7 +39,7 @@ export default function Employees() {
     };;
 
     useEffect(() => {
-        fetch(`https://route-provider-system-co1z.onrender.com/api/v1/employees`)
+        fetch(`${processEnv.back}employees`)
             .then((env) => env.json())
             .then((rec) => {
                 // @ts-ignore
@@ -69,7 +70,7 @@ export default function Employees() {
 
     }
     const editEmployeesFunction = async () => {
-        await patchEditVal(`https://route-provider-system-co1z.onrender.com/api/v1/employee/edit/${clickInEmployees?._id}`,
+        await patchEditVal(`${processEnv.back}employee/edit/${clickInEmployees?._id}`,
             {
                 "user": input_user.current?.value,
                 "username": input_username.current?.value,
@@ -84,7 +85,7 @@ export default function Employees() {
         )
     }
     const insertEmployeesFunction = async () => {
-        await postInsertData(`https://route-provider-system-co1z.onrender.com/api/v1/employee/new/`, {
+        await postInsertData(`${processEnv.back}employee/new/`, {
             "user": input_user.current?.value,
             "username": input_username.current?.value,
             "lastnames": input_lastnames.current?.value,
@@ -99,7 +100,7 @@ export default function Employees() {
 
     }
     const removeEmployeesHandle = async () => {
-        await deleteRemoveData(`https://route-provider-system-co1z.onrender.com/api/v1/employee/delete/${clickInEmployees?._id}`,
+        await deleteRemoveData(`${processEnv.back}employee/delete/${clickInEmployees?._id}`,
             () => {
                 setviewAddEmployees([false, 'insert']);
                 updateTable();

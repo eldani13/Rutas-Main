@@ -27,7 +27,7 @@ export default function Product() {
 
   const getAllProducts = async () => {
     await getAllFetchDataValues(
-      `http://localhost:3000/api/v1/view-products`
+      `${processEnv.back}view-products`
     ).then((rec: RootProduct) => {
       // @ts-ignore
       setAllDataProducts(rec.details);
@@ -35,7 +35,7 @@ export default function Product() {
   };
   const getAllRequest = async () => {
     await getAllFetchDataValues(
-      `http://localhost:3000/api/v1/request-products`
+      `${processEnv.back}request-products`
     ).then((rec) => {
       // @ts-ignore
       setAllDataRequest(rec.details);
@@ -43,7 +43,7 @@ export default function Product() {
   };
 
   const getAllDataEmployees = async () => {
-    await getAllFetchDataValues(`http://localhost:3000/api/v1/employees`).then(
+    await getAllFetchDataValues(`${processEnv.back}employees`).then(
       (rec: RootEmployees) => {
         // @ts-ignore
         setAllDataEmployees(rec.message);
@@ -53,7 +53,7 @@ export default function Product() {
 
   const updateTable = async (state: string) => {
     await patchEditVal(
-      `http://localhost:3000/api/v1/request-products/edit/${selectDataRequest?._id}`,
+      `${processEnv.back}request-products/edit/${selectDataRequest?._id}`,
       {
         state: state,
       },
@@ -62,7 +62,7 @@ export default function Product() {
     );
   };
   const fnGetAllDataRoutes = async () => {
-    await getAllFetchDataValues(`http://localhost:3000/api/v1/rutas/`).then(
+    await getAllFetchDataValues(`${processEnv.back}rutas/`).then(
       (rec) => {
         setAllDataRoutes(rec.message);
       }
@@ -107,8 +107,8 @@ export default function Product() {
           </div>
           <div className="flex flex-col">
             {allDataRequest && allDataRoutes &&
-              allDataRequest.map((requestProd) => (
-                <div
+              allDataRequest.map((requestProd, index) => (
+                <div key={"dataReq-"+index}
                   onClick={() => setSelectDataRequest(requestProd)}
                   className={`${
                     requestProd == selectDataRequest ? "bg-slate-100" : ""
@@ -175,8 +175,8 @@ export default function Product() {
             </div>
 
             <div className="flex flex-col gap-5">
-              {selectDataRequest.products.map((pr_product) => (
-                <div className="flex w-full justify-center items-center gap-3">
+              {selectDataRequest.products.map((pr_product, index) => (
+                <div className="flex w-full justify-center items-center gap-3" key={"dataselect-"+index}>
                   {/* <button>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
