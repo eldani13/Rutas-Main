@@ -199,7 +199,8 @@ export default function Sales({ params }) {
         );
         return {
           ...obj,
-          productAmount: objetoEnSegundoArray?.amount || 0,
+          amount: objetoEnSegundoArray?.amount || 0,
+          amountCurrent: objetoEnSegundoArray?.amountCurrent || 0,
         };
       });
     setProducts(dataReturn)
@@ -232,7 +233,7 @@ export default function Sales({ params }) {
   console.log(products);
   // }, []);
 
-  function saleProduct(productSale: MessageProduct | null | undefined) {
+  async function saleProduct(productSale: MessageProduct | null | undefined) {
     if (!productSale) {
       Swal.fire({
         icon: "error",
@@ -247,8 +248,18 @@ export default function Sales({ params }) {
         showConfirmButton: false,
       });
     } else {
+
+      // await patchEditVal(
+      //   `http://localhost:3000/api/v1/request-products/edit/${rutaId}`,
+      //   {
+      //     state: state,
+      //   },
+      //   () => {},
+      //   "requisito"
+      // );
+
       patchSaleProduct(
-        `https://route-provider-system-co1z.onrender.com/api/v1/products/edit/${productSale._id}`,
+        `http://localhost:3000/api/v1/api/v1/products/edit/${productSale._id}`,
         {
           ...productSale,
           productIsSold: true,
@@ -258,7 +269,7 @@ export default function Sales({ params }) {
           const amountNew =
             (routeCurrent?.amountOfMerchandise || 0) + productSale.productPrice;
           await patchEditVal(
-            `https://route-provider-system-co1z.onrender.com/api/v1/rutas/edit/${routeCurrent?._id}`,
+            `http://localhost:3000/api/v1/api/v1/rutas/edit/${routeCurrent?._id}`,
             {
               amountOfMerchandise: amountNew,
               LastMinuteSale: dateCurrent,

@@ -10,5 +10,6 @@ export interface MessageRequestProducts {
 interface Product {
   product: string;
   amount: number;
+  amountCurrent: number;
   _id: string;
 }

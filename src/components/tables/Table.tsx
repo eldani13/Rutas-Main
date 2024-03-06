@@ -31,13 +31,13 @@ export function Table({
             products?.map((data: MessageProduct, index: number) => (
               <div
                 onClick={() => {
-                  if (!data.productIsSold) {
+                  if ((data.amountCurrent > 0)) {
                     setClickInProduct(clickInProduct != null ? null : data);
                   }
                 }}
                 className={`
             relative my-2 justify-center  py-6 md:py-2 justify-content rounded-xl flex flex-col px-5 gap-1 font-semibold ${
-              data.productIsSold
+              (data.amountCurrent <= 0)
                 ? "bg-red-200"
                 : "hover:bg-slate-200 cursor-pointer bg-[linear-gradient(225deg,_#a1c4fd_10%,_#c2e9fb_90%)] "
             }  ${
@@ -76,7 +76,8 @@ export function Table({
                 <td className="flex gap-1 ">
                   {" "}
                   <span className="md:hidden font-black">Cantidad actual</span>
-                  {data.productAmount}
+                  {data.amount}/
+                  {data.amountCurrent}
                 </td>
               </div>
             ))
