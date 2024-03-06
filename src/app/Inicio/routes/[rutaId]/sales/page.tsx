@@ -22,8 +22,11 @@ import Link from "next/link";
 export default function Sales({ params }) {
   const { rutaId } = params;
 
+  const [allProducts, setAllProducts] = useState<MessageProduct[]>();
   const [products, setProducts] = useState<MessageProduct[]>();
-  const [clickInProduct, setClickInProduct] = useState<null | MessageProduct>(null);
+  const [clickInProduct, setClickInProduct] = useState<null | MessageProduct>(
+    null
+  );
   const [search, setSearch] = useState("");
   const [_scannerIsRunning, set_scannerIsRunning] = useState(false);
   const [actualProductSearchScanner, set_actualProductSearchScanner] =
@@ -53,7 +56,7 @@ export default function Sales({ params }) {
     const productsget = await getAllFetchDataValues(
       `http://localhost:3000/api/v1/view-products`
     );
-    setProducts(productsget.details);
+    setAllProducts(productsget.details);
   };
   function startScanner() {
     Quagga.init(
@@ -182,6 +185,29 @@ export default function Sales({ params }) {
     getDataRoute();
   }, []);
 
+  useEffect(() => {
+ 
+    const dataReturn = allProducts
+      ?.filter((prod) => {
+        return requestCurrentIfExist?.products.some(
+          (item) => item.product === prod._id
+        );
+      })
+      .map((obj) => {
+        const objetoEnSegundoArray = requestCurrentIfExist?.products.find(
+          (item) => obj._id === item.product
+        );
+        return {
+          ...obj,
+          productAmount: objetoEnSegundoArray?.amount || 0,
+        };
+      });
+    setProducts(dataReturn)
+
+
+    console.log(dataReturn);
+  }, [allProducts]);
+
   const handleClickOnOffScanner = (value: boolean) => {
     console.log("lol");
     if (!value) {
@@ -275,17 +301,17 @@ export default function Sales({ params }) {
   };
 
   const getIfProductSelect = async () => {
-    await getCookie(processEnv.jtIdentity).then(async (jwt_get) => {
-      const jwt_decode = jwt.decode(jwt_get + "");
-
+    try {
       await getAllFetchDataValues(
-        //@ts-ignore
-        `http://localhost:3000/api/v1/request-product/user/${jwt_decode?._id}`
-      ).then((rec: RootProduct) => {
+        `http://localhost:3000/api/v1/request-product/route/${rutaId}`
+      ).then((rec) => {
+        console.log(rec);
         // @ts-ignore
         setRequestCurrentIfExist(rec.details);
       });
-    });
+    } catch (err) {
+      console.log(err);
+    }
   };
   console.log(requestCurrentIfExist);
 
@@ -329,7 +355,7 @@ export default function Sales({ params }) {
         </div>
       </div>
 
-      {requestCurrentIfExist && (
+      {requestCurrentIfExist && requestCurrentIfExist.state === "aprobado" && (
         <div
           className="flex flex-col pl-3  max-h-[100vh] h-full "
           style={{ alignSelf: "flex-start" }}
@@ -353,12 +379,48 @@ export default function Sales({ params }) {
           )}
         </div>
       )}
+      {requestCurrentIfExist && requestCurrentIfExist.state !== "aprobado" && (
+        <div
+          className="flex flex-col pl-3  max-h-[100vh] h-full items-center justify-center"
+          style={{ alignSelf: "flex-start" }}
+        >
+          <p className="text-xl font-bold mb-1">
+            Revisa la sección de requisitos, el estado de tu requisito es:
+          </p>
+          <p
+            className={`${
+              requestCurrentIfExist.state === "pendiente"
+                ? "text-yellow-500"
+                : requestCurrentIfExist.state === "rechazado"
+                ? "text-orange-500"
+                : requestCurrentIfExist.state === "aprobado"
+                ? "text-lime-500"
+                : ""
+            } text-center text-xl font-bold mb-10`}
+          >
+            {requestCurrentIfExist.state}
+          </p>
+
+          <Link href="/Inicio/request">
+            <button
+              type="button"
+              className="inline-block rounded border-2 hover:scale-105
+                border-info px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-info transition duration-150 ease-in-out hover:border-info-600 hover:bg-info-50/50 hover:text-info-600 focus:border-info-600 focus:bg-info-50/50 focus:text-info-600 focus:outline-none focus:ring-0 active:border-info-700 active:text-info-700 motion-reduce:transition-none "
+              data-twe-ripple-init
+            >
+              Ir a sección
+            </button>
+          </Link>
+        </div>
+      )}
       {!requestCurrentIfExist && (
         <div
           className="flex flex-col pl-3  max-h-[100vh] h-full items-center justify-center"
           style={{ alignSelf: "flex-start" }}
         >
-          <p className="text-xl font-bold mb-10">No tienes productos asignados</p>
+          <p className="text-xl font-bold mb-10">
+            No tienes productos asignados
+          </p>
 
           <Link href="/Inicio/request">
             <button

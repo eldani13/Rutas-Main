@@ -68,10 +68,7 @@ export default function Product() {
     updateTable();
   }, []);
 
-  useEffect(() => {
-    if (!routeSelect) return;
-    getIfProductSelect();
-  }, [routeSelect]);
+ 
 
   const handleUpdateProductSelect = (index: number, newNumber: number) => {
     setProductsSelect((prev) => {
@@ -102,13 +99,14 @@ export default function Product() {
     );
   };
 
-  const getIfProductSelect = async () => {
-    await getAllFetchDataValues(
-      `http://localhost:3000/api/v1/request-product/route/${routeSelect?._id}`
-    ).then((rec: RootProduct) => {
-      //@ts-ignore
-      setRequestCurrentIfExist(rec.details);
-    });
+  const getIfProductSelect = async (routeSelection: MessageRoute) => {
+    const getDta = await getAllFetchDataValues(
+      `http://localhost:3000/api/v1/request-product/route/${routeSelection?._id}`
+    );
+
+
+    //@ts-ignore
+    setRequestCurrentIfExist(getDta.details);
   };
 
   const dateFormater = (fecha: Date) => {
@@ -143,7 +141,11 @@ export default function Product() {
             {allDataRoutes &&
               allDataRoutes.map((requestRoute) => (
                 <div
-                  onClick={() => setRouteSelect(requestRoute)}
+                  onClick={() => {
+                    console.log(requestRoute);
+                    setRouteSelect(requestRoute);
+                    getIfProductSelect(requestRoute);
+                  }}
                   className={`${
                     requestRoute == routeSelect ? "bg-slate-100" : ""
                   } flex flex-col py-2 text-[#000] items-start overflow-auto gap-2 hover:bg-slate-200 cursor-pointer `}

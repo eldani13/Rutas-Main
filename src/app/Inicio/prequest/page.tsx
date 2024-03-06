@@ -3,7 +3,9 @@
 import { MessageEmployees, RootEmployees } from "@/types/employees";
 import { MessageProduct, RootProduct } from "@/types/product";
 import { MessageRequestProducts } from "@/types/requestProducts";
+import { MessageRoute } from "@/types/routes";
 import { getAllFetchDataValues, patchEditVal } from "@/utils/api";
+import { getCookie, processEnv } from "@/utils/cookies";
 import { useEffect, useState } from "react";
 
 export default function Product() {
@@ -18,6 +20,10 @@ export default function Product() {
   const [allDataEmployees, setAllDataEmployees] = useState<
     null | MessageEmployees[]
   >(null);
+
+  const [allDataRoutes, setAllDataRoutes] = useState<null | MessageRoute[]>(
+    null
+  );
 
   const getAllProducts = async () => {
     await getAllFetchDataValues(
@@ -45,17 +51,23 @@ export default function Product() {
     );
   };
 
-  const updateTable = async(state:string)=>{
+  const updateTable = async (state: string) => {
     await patchEditVal(
       `http://localhost:3000/api/v1/request-products/edit/${selectDataRequest?._id}`,
       {
-        state: state
+        state: state,
       },
-      () => {
-      },
+      () => {},
       "requisito"
     );
-  }
+  };
+  const fnGetAllDataRoutes = async () => {
+    await getAllFetchDataValues(`http://localhost:3000/api/v1/rutas/`).then(
+      (rec) => {
+        setAllDataRoutes(rec.message);
+      }
+    );
+  };
 
   const dateFormater = (fecha: Date) => {
     const year = fecha.getFullYear();
@@ -76,6 +88,7 @@ export default function Product() {
 
   useEffect(() => {
     getAllProducts();
+    fnGetAllDataRoutes();
     getAllDataEmployees();
     getAllRequest();
   }, []);
@@ -93,36 +106,49 @@ export default function Product() {
             <h1 className="text-[#000] text-2xl font-bold mb-1">Pendientes</h1>
           </div>
           <div className="flex flex-col">
-            {allDataRequest &&
-              allDataRequest
-                .map((requestProd) => (
-                  <div
-                    onClick={() => setSelectDataRequest(requestProd)}
-                    className={`${
-                      requestProd == selectDataRequest ? "bg-slate-100" : ""
-                    } flex flex-col text-[#000] items-start overflow-auto gap-2 hover:bg-slate-200 cursor-pointer`}
-                  >
-                    <div className=" px-2 min-w-60">
-                      <p className="text-base font-semibold mb-2">
-                        {
-                          // @ts-ignore
-                          allDataEmployees?.find(
-                            (pr) => pr._id == requestProd.employee
-                          ).username
-                        }
-                      </p>
-                      {/* <p className="text-sm">Carro: {allDataEmployees?.filter(pr=>pr._id==requestProd.employee)[0].username}</p> */}
+            {allDataRequest && allDataRoutes &&
+              allDataRequest.map((requestProd) => (
+                <div
+                  onClick={() => setSelectDataRequest(requestProd)}
+                  className={`${
+                    requestProd == selectDataRequest ? "bg-slate-100" : ""
+                  } flex flex-col text-[#000] items-start overflow-auto gap-2 hover:bg-slate-200 cursor-pointer`}
+                >
+                  <div className=" px-2 min-w-60">
+                    <p className="text-base font-semibold mb-2">
+                      {
+                        // @ts-ignore
+                        allDataEmployees?.find(
+                          (pr) =>
+                            pr._id ==
+                            allDataRoutes?.find(
+                              (pr) => pr._id == requestProd.route
+                            )?.empleado
+                        ).username
+                      }
+                    </p>
+                    {/* <p className="text-sm">Carro: {allDataEmployees?.filter(pr=>pr._id==requestProd.employee)[0].username}</p> */}
 
-                      <p className="text-xs font-semibold text-right">
-                        {dateFormater(new Date(requestProd.dateTime))}
-                      </p>
-                      <p className={`${requestProd.state==="pendiente"?"text-yellow-500":requestProd.state==="rechazado"?"text-orange-500":requestProd.state==="aprobado"?"text-lime-500":""} 
-                          text-sm font-semibold text-right`}>
-                        {requestProd.state}
-                      </p>
-                    </div>
+                    <p className="text-xs font-semibold text-right">
+                      {dateFormater(new Date(requestProd.dateTime))}
+                    </p>
+                    <p
+                      className={`${
+                        requestProd.state === "pendiente"
+                          ? "text-yellow-500"
+                          : requestProd.state === "rechazado"
+                          ? "text-orange-500"
+                          : requestProd.state === "aprobado"
+                          ? "text-lime-500"
+                          : ""
+                      } 
+                          text-sm font-semibold text-right`}
+                    >
+                      {requestProd.state}
+                    </p>
                   </div>
-                ))}
+                </div>
+              ))}
           </div>
         </div>
       </div>
@@ -134,11 +160,16 @@ export default function Product() {
               Requisito de productos
             </h1>
             <div className="flex justify-between px-4 pb-3">
-              <button onClick={()=>updateTable("rechazado")}
-                className="bg-red-300 w-fit px-3 py-1 rounded-full text-sm font-semibold hover:scale-105 duration-100">
+              <button
+                onClick={() => updateTable("rechazado")}
+                className="bg-red-300 w-fit px-3 py-1 rounded-full text-sm font-semibold hover:scale-105 duration-100"
+              >
                 Rechazar pedido
               </button>
-              <button  onClick={()=>updateTable("aprobado")} className="bg-lime-300 w-fit px-3 py-1 rounded-full text-sm font-semibold hover:scale-105 duration-100">
+              <button
+                onClick={() => updateTable("aprobado")}
+                className="bg-lime-300 w-fit px-3 py-1 rounded-full text-sm font-semibold hover:scale-105 duration-100"
+              >
                 Aceptar pedido
               </button>
             </div>

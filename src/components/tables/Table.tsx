@@ -17,12 +17,13 @@ export function Table({
       <div className="">
         <div
           className=" hidden md:grid items-center bg-neutral-300 py-2 font-bold gap-2 px-3 mb-2 rounded-full text-center"
-          style={{ gridTemplateColumns: "50px 1fr 1fr 1fr " }}
+          style={{ gridTemplateColumns: "50px 1fr 1fr 1fr 1fr" }}
         >
           <p>ID</p>
           <p>Nombre</p>
           <p>Descripcion</p>
           <p>Precio</p>
+          <p>Cantidad/actual</p>
         </div>
         {
           // @ts-ignore
@@ -45,7 +46,7 @@ export function Table({
                     : " md:bg-none"
                 }
             md:grid  justify-items-center md:rounded-full overflow-hidden text-center`}
-                style={{ gridTemplateColumns: "50px 1fr 1fr 1fr" }}
+                style={{ gridTemplateColumns: "50px 1fr 1fr 1fr 1fr" }}
                 key={index}
               >
                 <td className=" mt-5 md:m-0 flex gap-1 ">
@@ -71,6 +72,11 @@ export function Table({
                   <p className="w-full uppercase text-2xl mt-2 font-bold md:font-normal">
                     producto
                   </p>
+                </td>
+                <td className="flex gap-1 ">
+                  {" "}
+                  <span className="md:hidden font-black">Cantidad actual</span>
+                  {data.productAmount}
                 </td>
               </div>
             ))
