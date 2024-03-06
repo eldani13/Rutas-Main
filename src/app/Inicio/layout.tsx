@@ -57,6 +57,8 @@ export default function RootLayout({
     "/Inicio/vehicle",
     "/Inicio/court",
     "/Inicio/product",
+    "/Inicio/request",
+    "/Inicio/prequest",
     // "/Inicio/sales",
   ].indexOf(pathBusqueda);
 
@@ -116,7 +118,7 @@ export default function RootLayout({
           </Link>
 
           {/* Empleados */}
-          {roleUser !== "empleado" && (
+          {roleUser === "administrador" && (
             <Link href="/Inicio/employees">
               <div>
                 <svg
@@ -136,7 +138,7 @@ export default function RootLayout({
           )}
 
           {/* Unidades/Vehículos */}
-          {roleUser !== "empleado" && (
+          {roleUser === "administrador" && (
             <Link href="/Inicio/vehicle">
               <div>
                 <svg
@@ -156,7 +158,7 @@ export default function RootLayout({
           )}
 
           {/* Sistema de Corte */}
-          {roleUser !== "empleado" && (
+          {roleUser === "administrador" && (
             <Link href="/Inicio/court">
               <div>
                 <svg
@@ -177,7 +179,7 @@ export default function RootLayout({
           )}
 
           {/* Productos */}
-          {roleUser !== "empleado" && (
+          {roleUser === "administrador" && (
             <Link href="/Inicio/product">
               <div>
                 <svg
@@ -195,6 +197,62 @@ export default function RootLayout({
                     fill={sectionactual === 5 ? "#000" : "#9c9c9c"}
                   />
                 </svg>
+              </div>
+            </Link>
+          )}
+          {roleUser === "empleado" && (
+            <Link href="/Inicio/request">
+              <div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={`text-[${sectionactual === 6 ? "#000" : "#9c9c9c"}]`}
+                  style={sectionactual === 6 ? styleselectbuttom : {}}
+                  width="30"
+                  height="30"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                >
+                  <g
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  >
+                    <circle cx="12.5" cy="12.5" r="1.75" />
+                    <circle cx="3.5" cy="12.5" r="1.75" />
+                    <circle cx="3.5" cy="3.5" r="1.75" />
+                    <path d="m9.25 1.75l-1.5 2l1.5 2m3 4.5v-5c0-1-.5-1.5-1.5-1.5h-2m-5 2v4.5" />
+                  </g>
+                </svg>
+                
+              </div>
+            </Link>
+          )}
+          {roleUser === "administrador" && (
+            <Link href="/Inicio/prequest">
+              <div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={`text-[${sectionactual === 7 ? "#000" : "#9c9c9c"}]`}
+                  style={sectionactual === 7 ? styleselectbuttom : {}}
+                  width="30"
+                  height="30"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                >
+                  <g
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  >
+                    <circle cx="12.5" cy="12.5" r="1.75" />
+                    <circle cx="3.5" cy="12.5" r="1.75" />
+                    <circle cx="3.5" cy="3.5" r="1.75" />
+                    <path d="m9.25 1.75l-1.5 2l1.5 2m3 4.5v-5c0-1-.5-1.5-1.5-1.5h-2m-5 2v4.5" />
+                  </g>
+                </svg>
+                
               </div>
             </Link>
           )}

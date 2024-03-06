@@ -10,5 +10,7 @@ export interface MessageProduct {
     productPrice: number
     productIsSold: boolean,
     productIdScan: number,
+    amount: number,
+    amountCurrent: number,
     __v: number
 }

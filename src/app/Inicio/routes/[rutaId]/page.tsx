@@ -16,6 +16,7 @@ import { Map, LoadingMap } from "@/components";
 import { DirectionsResponse } from "@/types/RouteResponseApi";
 import { routeResponse } from "@/temp/TempResponseDirections";
 import { ButtonCrud } from "@/components/buttons/ButtonCrud";
+import { processEnv } from "@/utils/cookies";
 
 import './style.css';
 
@@ -41,7 +42,7 @@ export default function Route({ params }) {
     if (routeCurrent == modifyRoute.route) return;
 
     await patchEditVal(
-      `https://route-provider-system-co1z.onrender.com/api/v1/rutas/edit/${modifyRoute?.route?._id}`,
+      `${processEnv.back}rutas/edit/${modifyRoute?.route?._id}`,
       {
         start: modifyRoute.route?.start,
         end: modifyRoute.route?.end,
@@ -72,7 +73,7 @@ export default function Route({ params }) {
 
   const getDataRoute = async () => {
     const dataValues = await getAllFetchDataValues(
-      `https://route-provider-system-co1z.onrender.com/api/v1/rutas/${rutaId}`
+      `${processEnv.back}rutas/${rutaId}`
     )
       .then((rec) => {
         const messList: MessageRoute = rec.message;
@@ -88,7 +89,7 @@ export default function Route({ params }) {
   };
   const getDataEmploye = async () => {
     await getAllFetchDataValues(
-      `https://route-provider-system-co1z.onrender.com/api/v1/employee/${
+      `${processEnv.back}employee/${
         routeCurrent && routeCurrent.empleado
       }`
     )
@@ -103,7 +104,7 @@ export default function Route({ params }) {
   };
   const getDataCars = async () => {
     await getAllFetchDataValues(
-      `https://route-provider-system-co1z.onrender.com/api/v1/cars-units`
+      `${processEnv.back}cars-units`
     ).then((rec: RootVehicle) => {
       const messList: MessageVehicle[] = rec.message;
       if (Array.isArray(messList) && messList.length > 0) {
@@ -130,7 +131,7 @@ export default function Route({ params }) {
 
   const removeDairectionHandle = async () => {
     await deleteRemoveData(
-      `https://route-provider-system-co1z.onrender.com/api/v1/rutas/delete/${routeCurrent?._id}`,
+      `${processEnv.back}rutas/delete/${routeCurrent?._id}`,
       () => {
         window.location.href = "/Inicio/routes";
       },
