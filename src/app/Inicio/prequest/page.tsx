@@ -26,20 +26,20 @@ export default function Product() {
   );
 
   const getAllProducts = async () => {
-    await getAllFetchDataValues(
-      `${processEnv.back}view-products`
-    ).then((rec: RootProduct) => {
-      // @ts-ignore
-      setAllDataProducts(rec.details);
-    });
+    await getAllFetchDataValues(`${processEnv.back}view-products`).then(
+      (rec: RootProduct) => {
+        // @ts-ignore
+        setAllDataProducts(rec.details);
+      }
+    );
   };
   const getAllRequest = async () => {
-    await getAllFetchDataValues(
-      `${processEnv.back}request-products`
-    ).then((rec) => {
-      // @ts-ignore
-      setAllDataRequest(rec.details);
-    });
+    await getAllFetchDataValues(`${processEnv.back}request-products`).then(
+      (rec) => {
+        // @ts-ignore
+        setAllDataRequest(rec.details);
+      }
+    );
   };
 
   const getAllDataEmployees = async () => {
@@ -62,11 +62,9 @@ export default function Product() {
     );
   };
   const fnGetAllDataRoutes = async () => {
-    await getAllFetchDataValues(`${processEnv.back}rutas/`).then(
-      (rec) => {
-        setAllDataRoutes(rec.message);
-      }
-    );
+    await getAllFetchDataValues(`${processEnv.back}rutas/`).then((rec) => {
+      setAllDataRoutes(rec.message);
+    });
   };
 
   const dateFormater = (fecha: Date) => {
@@ -106,49 +104,53 @@ export default function Product() {
             <h1 className="text-[#000] text-2xl font-bold mb-1">Pendientes</h1>
           </div>
           <div className="flex flex-col">
-            {allDataRequest && allDataRoutes &&
-              allDataRequest.map((requestProd, index) => (
-                <div key={"dataReq-"+index}
-                  onClick={() => setSelectDataRequest(requestProd)}
-                  className={`${
-                    requestProd == selectDataRequest ? "bg-slate-100" : ""
-                  } flex flex-col text-[#000] items-start overflow-auto gap-2 hover:bg-slate-200 cursor-pointer`}
-                >
-                  <div className=" px-2 min-w-60">
-                    <p className="text-base font-semibold mb-2">
-                      {
-                        // @ts-ignore
-                        allDataEmployees?.find(
-                          (pr) =>
-                            pr._id ==
-                            allDataRoutes?.find(
-                              (pr) => pr._id == requestProd.route
-                            )?.empleado
-                        ).username
-                      }
-                    </p>
-                    {/* <p className="text-sm">Carro: {allDataEmployees?.filter(pr=>pr._id==requestProd.employee)[0].username}</p> */}
+            {allDataRequest &&
+              allDataRoutes &&
+              allDataRequest.map((requestProd, index) => {
+                const routeD = allDataRoutes?.find(
+                  (pr) => pr._id == requestProd.route
+                );
+                if (!routeD) return;
+                const employeeD = allDataEmployees?.find(
+                  (pr) => pr._id == routeD?.empleado
+                );
+                if (!employeeD) return;
 
-                    <p className="text-xs font-semibold text-right">
-                      {dateFormater(new Date(requestProd.dateTime))}
-                    </p>
-                    <p
-                      className={`${
-                        requestProd.state === "pendiente"
-                          ? "text-yellow-500"
-                          : requestProd.state === "rechazado"
-                          ? "text-orange-500"
-                          : requestProd.state === "aprobado"
-                          ? "text-lime-500"
-                          : ""
-                      } 
+                return (
+                  <div
+                    key={"dataReq-" + index}
+                    onClick={() => setSelectDataRequest(requestProd)}
+                    className={`${
+                      requestProd == selectDataRequest ? "bg-slate-100" : ""
+                    } flex flex-col text-[#000] items-start overflow-auto gap-2 hover:bg-slate-200 cursor-pointer`}
+                  >
+                    <div className=" px-2 min-w-60">
+                      <p className="text-base font-semibold mb-2">
+                        {employeeD?.username}
+                      </p>
+                      {/* <p className="text-sm">Carro: {allDataEmployees?.filter(pr=>pr._id==requestProd.employee)[0].username}</p> */}
+
+                      <p className="text-xs font-semibold text-right">
+                        {dateFormater(new Date(requestProd.dateTime))}
+                      </p>
+                      <p
+                        className={`${
+                          requestProd.state === "pendiente"
+                            ? "text-yellow-500"
+                            : requestProd.state === "rechazado"
+                            ? "text-orange-500"
+                            : requestProd.state === "aprobado"
+                            ? "text-lime-500"
+                            : ""
+                        } 
                           text-sm font-semibold text-right`}
-                    >
-                      {requestProd.state}
-                    </p>
+                      >
+                        {requestProd.state}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
           </div>
         </div>
       </div>
@@ -176,7 +178,10 @@ export default function Product() {
 
             <div className="flex flex-col gap-5">
               {selectDataRequest.products.map((pr_product, index) => (
-                <div className="flex w-full justify-center items-center gap-3" key={"dataselect-"+index}>
+                <div
+                  className="flex w-full justify-center items-center gap-3"
+                  key={"dataselect-" + index}
+                >
                   {/* <button>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
