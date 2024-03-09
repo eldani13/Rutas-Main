@@ -186,7 +186,6 @@ export default function Sales({ params }) {
   }, []);
 
   useEffect(() => {
- 
     const dataReturn = allProducts
       ?.filter((prod) => {
         return requestCurrentIfExist?.products.some(
@@ -203,8 +202,7 @@ export default function Sales({ params }) {
           amountCurrent: objetoEnSegundoArray?.amountCurrent || 0,
         };
       });
-    setProducts(dataReturn)
-
+    setProducts(dataReturn);
 
     console.log(dataReturn);
   }, [allProducts]);
@@ -248,21 +246,10 @@ export default function Sales({ params }) {
         showConfirmButton: false,
       });
     } else {
-
-      // await patchEditVal(
-      //   `${processEnv.back}request-products/edit/${rutaId}`,
-      //   {
-      //     state: state,
-      //   },
-      //   () => {},
-      //   "requisito"
-      // );
-
-      patchSaleProduct(
-        `${processEnv.back}api/v1/products/edit/${productSale._id}`,
+      await patchEditVal(
+        `${processEnv.back}request-products/edit/${requestCurrentIfExist?._id}/${productSale._id}`,
         {
-          ...productSale,
-          productIsSold: true,
+          amountCurrent: productSale.amountCurrent - 1,
         },
         async () => {
           const dateCurrent = new Date().toISOString();
@@ -285,12 +272,43 @@ export default function Sales({ params }) {
             },
             "Ruta"
           );
-
-          setClickInProduct(null);
-          set_actualProductSearchScanner(null);
-          getProducts();
-        }
+        },
+        "requisito"
       );
+
+      // patchSaleProduct(
+      //   `${processEnv.back}api/v1/products/edit/${productSale._id}`,
+      //   {
+      //     ...productSale,
+      //     productIsSold: true,
+      //   },
+      //   async () => {
+      //     const dateCurrent = new Date().toISOString();
+      //     const amountNew =
+      //       (routeCurrent?.amountOfMerchandise || 0) + productSale.productPrice;
+      //     await patchEditVal(
+      //       `${processEnv.back}api/v1/rutas/edit/${routeCurrent?._id}`,
+      //       {
+      //         amountOfMerchandise: amountNew,
+      //         LastMinuteSale: dateCurrent,
+      //       },
+      //       () => {
+      //         // event.currentTarget.reset();
+      //         //@ts-ignore
+      //         setRouteCurrent((prev) => ({
+      //           ...prev,
+      //           LastMinuteSale: dateCurrent,
+      //           amountOfMerchandise: amountNew,
+      //         }));
+      //       },
+      //       "Ruta"
+      //     );
+
+      //     setClickInProduct(null);
+      //     set_actualProductSearchScanner(null);
+      //     getProducts();
+      //   }
+      // );
     }
   }
 
