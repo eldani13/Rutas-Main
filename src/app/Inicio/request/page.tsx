@@ -46,20 +46,18 @@ export default function Product() {
     });
   };
   const fnGetAllDataVehicle = async () => {
-    await getAllFetchDataValues(
-      `${processEnv.back}cars-units/`
-    ).then((rec) => {
+    await getAllFetchDataValues(`${processEnv.back}cars-units/`).then((rec) => {
       setAllDataVehicle(rec.message);
     });
   };
 
   const updateTable = async () => {
-    await getAllFetchDataValues(
-      `${processEnv.back}view-products`
-    ).then((rec: RootProduct) => {
-      // @ts-ignore
-      setAllDataProducts(rec.details);
-    });
+    await getAllFetchDataValues(`${processEnv.back}view-products`).then(
+      (rec: RootProduct) => {
+        // @ts-ignore
+        setAllDataProducts(rec.details);
+      }
+    );
   };
 
   useEffect(() => {
@@ -67,8 +65,6 @@ export default function Product() {
     fnGetAllDataRoutes();
     updateTable();
   }, []);
-
- 
 
   const handleUpdateProductSelect = (index: number, newNumber: number) => {
     setProductsSelect((prev) => {
@@ -100,13 +96,14 @@ export default function Product() {
   };
 
   const getIfProductSelect = async (routeSelection: MessageRoute) => {
+    // @ts-ignore
     const getDta = await getAllFetchDataValues(
       `${processEnv.back}request-product/route/${routeSelection?._id}`
     );
 
-
+    console.log(getDta.details)
     //@ts-ignore
-    setRequestCurrentIfExist(getDta.details);
+    setRequestCurrentIfExist(getDta.details.length>0?getDta.details:null);
   };
 
   const dateFormater = (fecha: Date) => {
@@ -140,7 +137,8 @@ export default function Product() {
           <div className="flex flex-col pt-5 gap-3">
             {allDataRoutes &&
               allDataRoutes.map((requestRoute, index) => (
-                <div key={"route-"+index}
+                <div
+                  key={"route-" + index}
                   onClick={() => {
                     console.log(requestRoute);
                     setRouteSelect(requestRoute);
@@ -211,8 +209,15 @@ export default function Product() {
         <hr className="mb-10 border-[1px]" />
         {routeSelect && (
           <div className="pb-28">
-            {!requestCurrentIfExist ? (
+            {!requestCurrentIfExist ||
+            requestCurrentIfExist.state === "aprobado" ? (
               <>
+                {requestCurrentIfExist &&
+                  requestCurrentIfExist.state === "aprobado" && (
+                    <div>
+                      <h1 className="text-sm font-semibold">Número de petición: {1}</h1>
+                    </div>
+                  )}
                 <form className="rounded-xl w-full md:w-1/2 m-auto flex gap-1">
                   <input
                     value={getInputData}
@@ -300,7 +305,10 @@ export default function Product() {
                 <div className="w-full pt-5 flex flex-col gap-6">
                   {getProductsSelect &&
                     getProductsSelect.map((product, index) => (
-                      <div className="flex w-full justify-center items-center gap-3" key={"select-prod-"+index}>
+                      <div
+                        className="flex w-full justify-center items-center gap-3"
+                        key={"select-prod-" + index}
+                      >
                         <button
                           onClick={() => {
                             const newData = getProductsSelect.filter(

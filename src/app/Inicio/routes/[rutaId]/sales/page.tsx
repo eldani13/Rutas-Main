@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 import {
   getAllFetchDataValues,
   patchEditVal,
@@ -22,6 +22,9 @@ import Link from "next/link";
 export default function Sales({ params }) {
   const { rutaId } = params;
 
+  const [indexCurrentRequest, setIndexCurrentRequest] = useState<number>(0);
+  const [ammountSaleInp, setAmmountSaleInp] = useState<number>(1);
+
   const [allProducts, setAllProducts] = useState<MessageProduct[]>();
   const [products, setProducts] = useState<MessageProduct[]>();
   const [clickInProduct, setClickInProduct] = useState<null | MessageProduct>(
@@ -34,6 +37,9 @@ export default function Sales({ params }) {
 
   const [routeCurrent, setRouteCurrent] = useState<null | MessageRoute>(null);
 
+  const [requestProductsAll, setRequestProductsAll] = useState<
+    null | MessageRequestProducts[]
+  >(null);
   const [requestCurrentIfExist, setRequestCurrentIfExist] =
     useState<null | MessageRequestProducts>(null);
 
@@ -200,8 +206,11 @@ export default function Sales({ params }) {
           ...obj,
           amount: objetoEnSegundoArray?.amount || 0,
           amountCurrent: objetoEnSegundoArray?.amountCurrent || 0,
+          _idInRequest: objetoEnSegundoArray?._id || "",
         };
       });
+    // @ts-ignore
+    //ADDMER
     setProducts(dataReturn);
 
     console.log(dataReturn);
@@ -231,7 +240,10 @@ export default function Sales({ params }) {
   console.log(products);
   // }, []);
 
-  async function saleProduct(productSale: MessageProduct | null | undefined) {
+  async function saleProduct(
+    productSale: MessageProduct | null | undefined,
+    ammountSale: number
+  ) {
     if (!productSale) {
       Swal.fire({
         icon: "error",
@@ -247,16 +259,19 @@ export default function Sales({ params }) {
       });
     } else {
       await patchEditVal(
-        `${processEnv.back}request-products/edit/${requestCurrentIfExist?._id}/${productSale._id}`,
+        `${processEnv.back}request-products/edit/${requestCurrentIfExist?._id}/${productSale._idInRequest}`,
         {
-          amountCurrent: productSale.amountCurrent - 1,
+          amount: productSale.amount,
+          amountCurrent: productSale.amountCurrent - ammountSale,
         },
         async () => {
           const dateCurrent = new Date().toISOString();
           const amountNew =
-            (routeCurrent?.amountOfMerchandise || 0) + productSale.productPrice;
+            (routeCurrent?.amountOfMerchandise || 0) +
+            productSale.productPrice * ammountSale;
+
           await patchEditVal(
-            `${processEnv.back}api/v1/rutas/edit/${routeCurrent?._id}`,
+            `${processEnv.back}rutas/edit/${routeCurrent?._id}`,
             {
               amountOfMerchandise: amountNew,
               LastMinuteSale: dateCurrent,
@@ -336,13 +351,23 @@ export default function Sales({ params }) {
       ).then((rec) => {
         console.log(rec);
         // @ts-ignore
-        setRequestCurrentIfExist(rec.details);
+        setRequestProductsAll(rec.details);
+        if (rec.details.length > 0) {
+          setRequestCurrentIfExist(rec.details[0]);
+        }
       });
     } catch (err) {
       console.log(err);
     }
   };
   console.log(requestCurrentIfExist);
+
+  const handleFormSale = (e: FormEvent) => {
+    e.preventDefault();
+    var form = e.target;
+    // @ts-ignore
+    saleProduct(clickInProduct, form.elements("inpAmmount").value || 1);
+  };
 
   return (
     <>
@@ -362,12 +387,25 @@ export default function Sales({ params }) {
             </div>
             {clockLastMinuteSale()}
           </div>
-          <div className="md:static flex flex-col items-start justify-center pb-10 md:min-w-60">
+          <form
+            onSubmit={handleFormSale}
+            className="md:static flex flex-col items-start justify-center pb-10 md:min-w-60"
+          >
+            <input
+              type="number"
+              name="inpAmmount"
+              value={ammountSaleInp}
+              onChange={(e) => setAmmountSaleInp(parseInt(e.target.value))}
+              id=""
+              max={clickInProduct?.amountCurrent}
+              min={1}
+            />
             <ButtonCrud
               isHidden={clickInProduct === null}
               text="Vender Producto"
               color="bg-blue-500"
-              onclickHandle={() => saleProduct(clickInProduct)}
+              // onclickHandle={() => saleProduct(clickInProduct, 1)}
+              onclickHandle={() => {}}
             >
               <svg
                 className="w-6 h-6"
@@ -380,7 +418,7 @@ export default function Sales({ params }) {
                 />
               </svg>
             </ButtonCrud>
-          </div>
+          </form>
         </div>
       </div>
 
@@ -389,6 +427,66 @@ export default function Sales({ params }) {
           className="flex flex-col pl-3  max-h-[100vh] h-full "
           style={{ alignSelf: "flex-start" }}
         >
+          <div className="pt-4 flex items-center gap-2">
+            <label>Petición: </label>
+            <button
+              onClick={() =>
+                setRequestCurrentIfExist(
+                  // @ts-ignore
+                  requestProductsAll[indexCurrentRequest]
+                )
+              }
+              className={`${indexCurrentRequest == 0 && "text-slate-400"}`}
+              disabled={indexCurrentRequest == 0}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="2em"
+                height="2em"
+                viewBox="0 0 32 32"
+              >
+                <path
+                  fill="currentColor"
+                  d="M16 2a14 14 0 1 0 14 14A14 14 0 0 0 16 2m8 15H11.85l5.58 5.573L16 24l-8-8l8-8l1.43 1.393L11.85 15H24Z"
+                />
+                <path
+                  fill="none"
+                  d="m16 8l1.43 1.393L11.85 15H24v2H11.85l5.58 5.573L16 24l-8-8z"
+                />
+              </svg>
+            </button>
+            <p className="font-semibold">{indexCurrentRequest + 1}</p>
+            <button
+              className={`${
+                indexCurrentRequest + 1 == requestProductsAll?.length &&
+                "text-slate-400"
+              }`}
+              disabled={indexCurrentRequest + 1 == requestProductsAll?.length}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="2em"
+                height="2em"
+                viewBox="0 0 32 32"
+              >
+                <path
+                  fill="currentColor"
+                  d="M2 16A14 14 0 1 0 16 2A14 14 0 0 0 2 16m6-1h12.15l-5.58-5.607L16 8l8 8l-8 8l-1.43-1.427L20.15 17H8Z"
+                />
+                <path
+                  fill="none"
+                  d="m16 8l-1.43 1.393L20.15 15H8v2h12.15l-5.58 5.573L16 24l8-8z"
+                />
+              </svg>
+            </button>
+
+            {/* <select name="" id="" className="w-fit px-4" onChange={e=>{setRequestCurrentIfExist(e.target.value)}}>
+              {requestProductsAll?.map((ex, index) => (
+                <option value={index}>{index + 1}</option>
+              ))}
+            </select> */}
+          </div>
+
           <SearchInput
             label="Buscar Producto"
             value={search}
@@ -521,7 +619,9 @@ export default function Sales({ params }) {
                   isHidden={actualProductSearchScanner.productIsSold}
                   text="Vender Producto"
                   color="bg-blue-500"
-                  onclickHandle={() => saleProduct(actualProductSearchScanner)}
+                  onclickHandle={() =>
+                    saleProduct(actualProductSearchScanner, 1)
+                  }
                 >
                   <svg
                     className="w-6 h-6"

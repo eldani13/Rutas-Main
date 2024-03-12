@@ -12,5 +12,6 @@ export interface MessageProduct {
     productIdScan: number,
     amount: number,
     amountCurrent: number,
+    _idInRequest: number,
     __v: number
 }
