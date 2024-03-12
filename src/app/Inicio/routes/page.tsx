@@ -3,46 +3,60 @@ import { RootEmployees } from "@/types/employees";
 import { MessageRoute, RootRoute } from "@/types/routes";
 import { RootVehicle } from "@/types/vehicles";
 import { getAllFetchDataValues, postInsertData } from "@/utils/api";
-import { processEnv } from "@/utils/cookies";
+import { processEnv, getCookie } from "@/utils/cookies";
+import jwt from "jsonwebtoken";
 import Link from "next/link";
 import React, { SyntheticEvent, useEffect, useState } from "react";
 // import Home from "./HomeSection";
-
 
 export default function Route() {
   const [routes, setRoutes] = useState<null | RootRoute>(null);
   const [employees, setEmployees] = useState<null | RootEmployees>(null);
   const [vehicles, setVehicles] = useState<null | RootVehicle>(null);
   const [addRoute, setAddRoute] = useState(false);
+  const [role, setRole] = useState("");
+
+  const fetchName = async () => {
+    try {
+      // Obtener el token JWT de las cookies
+      const getData = await getCookie(processEnv.jtIdentity);
+      const decodedToken = jwt.decode(getData as string);
+      if (decodedToken && typeof decodedToken !== "string")
+        setRole(decodedToken?.role as string);
+    } catch (error) {
+      console.error("Error al obtener datos del token:", error);
+    }
+  };
 
   const getAllData = async () => {
-    await getAllFetchDataValues(
-      `${processEnv.back}rutas/`
-    ).then((rec: RootRoute) => {
-      setRoutes(rec);
-    });
+    await getAllFetchDataValues(`${processEnv.back}rutas/`).then(
+      (rec: RootRoute) => {
+        setRoutes(rec);
+      }
+    );
   };
 
   const getAllEmployess = async () => {
-    await getAllFetchDataValues(
-      `${processEnv.back}employees`
-    ).then((rec: RootEmployees) => {
-      setEmployees(rec);
-    });
+    await getAllFetchDataValues(`${processEnv.back}employees`).then(
+      (rec: RootEmployees) => {
+        setEmployees(rec);
+      }
+    );
   };
 
   const getAllVehicles = async () => {
-    await getAllFetchDataValues(
-      `${processEnv.back}cars-units`
-    ).then((rec: RootVehicle) => {
-      setVehicles(rec);
-    });
+    await getAllFetchDataValues(`${processEnv.back}cars-units`).then(
+      (rec: RootVehicle) => {
+        setVehicles(rec);
+      }
+    );
   };
 
   useEffect(() => {
     getAllEmployess();
     getAllVehicles();
     getAllData();
+    fetchName();
   }, []);
 
   const onHandleform_EditRoute = async (e: SyntheticEvent) => {
@@ -143,7 +157,11 @@ export default function Route() {
         </div>
 
         <button
-          className="absolute right-10 bottom-10 hover:scale-110 "
+          className={`${
+            role === "empleado"
+              ? "hidden"
+              : "absolute right-10 bottom-10 hover:scale-110"
+          }`}
           onClick={() => setAddRoute(true)}
         >
           <svg

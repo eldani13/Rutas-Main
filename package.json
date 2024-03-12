@@ -32,6 +32,7 @@
     "react-dom": "^18",
     "react-router-dom": "^5.3.4",
     "sweetalert2": "^11.10.2",
+    "swr": "^2.2.5",
     "zxing-typescript": "^0.1.2"
   },
   "devDependencies": {

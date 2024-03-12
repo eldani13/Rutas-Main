@@ -7,16 +7,13 @@ import { MessageRoute } from "@/types/routes";
 import { getAllFetchDataValues, patchEditVal } from "@/utils/api";
 import { getCookie, processEnv } from "@/utils/cookies";
 import { useEffect, useState } from "react";
+import { useViewProducts } from "@/hooks/useViewProducts";
+import { useRequestProducts } from "@/hooks/useRequestProducts";
 
 export default function Product() {
-  const [allDataRequest, setAllDataRequest] = useState<
-    null | MessageRequestProducts[]
-  >(null);
   const [selectDataRequest, setSelectDataRequest] =
     useState<null | MessageRequestProducts>(null);
-  const [allDataProducts, setAllDataProducts] = useState<
-    null | MessageProduct[]
-  >(null);
+
   const [allDataEmployees, setAllDataEmployees] = useState<
     null | MessageEmployees[]
   >(null);
@@ -24,23 +21,12 @@ export default function Product() {
   const [allDataRoutes, setAllDataRoutes] = useState<null | MessageRoute[]>(
     null
   );
-
-  const getAllProducts = async () => {
-    await getAllFetchDataValues(`${processEnv.back}view-products`).then(
-      (rec: RootProduct) => {
-        // @ts-ignore
-        setAllDataProducts(rec.details);
-      }
-    );
-  };
-  const getAllRequest = async () => {
-    await getAllFetchDataValues(`${processEnv.back}request-products`).then(
-      (rec) => {
-        // @ts-ignore
-        setAllDataRequest(rec.details);
-      }
-    );
-  };
+  const { products: allDataProducts, isLoading, isError } = useViewProducts();
+  const {
+    requests: allDataRequest,
+    isLoading: isLoadingRequestProducts,
+    isError: isErrorRequestProducts,
+  } = useRequestProducts();
 
   const getAllDataEmployees = async () => {
     await getAllFetchDataValues(`${processEnv.back}employees`).then(
@@ -85,10 +71,8 @@ export default function Product() {
   };
 
   useEffect(() => {
-    getAllProducts();
     fnGetAllDataRoutes();
     getAllDataEmployees();
-    getAllRequest();
   }, []);
 
   // console.log(allDataEmployees?.filter(pr=>pr._id==allDataRequest[0].employee)[0].username)
@@ -106,51 +90,53 @@ export default function Product() {
           <div className="flex flex-col">
             {allDataRequest &&
               allDataRoutes &&
-              allDataRequest.map((requestProd, index) => {
-                const routeD = allDataRoutes?.find(
-                  (pr) => pr._id == requestProd.route
-                );
-                if (!routeD) return;
-                const employeeD = allDataEmployees?.find(
-                  (pr) => pr._id == routeD?.empleado
-                );
-                if (!employeeD) return;
+              allDataRequest.map(
+                (requestProd: MessageRequestProducts, index: number) => {
+                  const routeD = allDataRoutes?.find(
+                    (pr) => pr._id == requestProd.route
+                  );
+                  if (!routeD) return;
+                  const employeeD = allDataEmployees?.find(
+                    (pr) => pr._id == routeD?.empleado
+                  );
+                  if (!employeeD) return;
 
-                return (
-                  <div
-                    key={"dataReq-" + index}
-                    onClick={() => setSelectDataRequest(requestProd)}
-                    className={`${
-                      requestProd == selectDataRequest ? "bg-slate-100" : ""
-                    } flex flex-col text-[#000] items-start overflow-auto gap-2 hover:bg-slate-200 cursor-pointer`}
-                  >
-                    <div className=" px-2 min-w-60">
-                      <p className="text-base font-semibold mb-2">
-                        {employeeD?.username}
-                      </p>
-                      {/* <p className="text-sm">Carro: {allDataEmployees?.filter(pr=>pr._id==requestProd.employee)[0].username}</p> */}
+                  return (
+                    <div
+                      key={"dataReq-" + index}
+                      onClick={() => setSelectDataRequest(requestProd)}
+                      className={`${
+                        requestProd == selectDataRequest ? "bg-slate-100" : ""
+                      } flex flex-col text-[#000] items-start overflow-auto gap-2 hover:bg-slate-200 cursor-pointer`}
+                    >
+                      <div className=" px-2 min-w-60">
+                        <p className="text-base font-semibold mb-2">
+                          {employeeD?.username}
+                        </p>
+                        {/* <p className="text-sm">Carro: {allDataEmployees?.filter(pr=>pr._id==requestProd.employee)[0].username}</p> */}
 
-                      <p className="text-xs font-semibold text-right">
-                        {dateFormater(new Date(requestProd.dateTime))}
-                      </p>
-                      <p
-                        className={`${
-                          requestProd.state === "pendiente"
-                            ? "text-yellow-500"
-                            : requestProd.state === "rechazado"
-                            ? "text-orange-500"
-                            : requestProd.state === "aprobado"
-                            ? "text-lime-500"
-                            : ""
-                        } 
+                        <p className="text-xs font-semibold text-right">
+                          {dateFormater(new Date(requestProd.dateTime))}
+                        </p>
+                        <p
+                          className={`${
+                            requestProd.state === "pendiente"
+                              ? "text-yellow-500"
+                              : requestProd.state === "rechazado"
+                              ? "text-orange-500"
+                              : requestProd.state === "aprobado"
+                              ? "text-lime-500"
+                              : ""
+                          } 
                           text-sm font-semibold text-right`}
-                      >
-                        {requestProd.state}
-                      </p>
+                        >
+                          {requestProd.state}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                }
+              )}
           </div>
         </div>
       </div>
@@ -162,17 +148,26 @@ export default function Product() {
               Requisito de productos
             </h1>
             <div className="flex justify-between px-4 pb-3">
-              <button
-                onClick={() => updateTable("rechazado")}
-                className="bg-red-300 w-fit px-3 py-1 rounded-full text-sm font-semibold hover:scale-105 duration-100"
-              >
-                Rechazar pedido
-              </button>
+              {selectDataRequest.state === "pendiente" && (
+                <button
+                  onClick={() => updateTable("rechazado")}
+                  className="bg-red-300 w-fit px-3 py-1 rounded-full text-sm font-semibold hover:scale-105 duration-100"
+                >
+                  Rechazar pedido
+                </button>
+              )}
               <button
                 onClick={() => updateTable("aprobado")}
-                className="bg-lime-300 w-fit px-3 py-1 rounded-full text-sm font-semibold hover:scale-105 duration-100"
+                disabled={selectDataRequest.state === "aprobado"}
+                className={`bg-lime-300 w-fit px-3 py-1 rounded-full text-sm font-semibold hover:scale-105 duration-100 ${
+                  selectDataRequest.state === "aprobado"
+                    ? "disabled:opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
               >
-                Aceptar pedido
+                {selectDataRequest.state !== "aprobado"
+                  ? "Aceptar pedido"
+                  : "Pedido Aprobado"}
               </button>
             </div>
 
@@ -202,14 +197,14 @@ export default function Product() {
                     <p className="text-center font-semibold">
                       {
                         allDataProducts?.find(
-                          (u) => u._id == pr_product.product
+                          (u: MessageProduct) => u._id == pr_product.product
                         )?.productName
                       }
                     </p>
                     <p className="text-base mt-2 text-slate-700 ">
                       {
                         allDataProducts?.find(
-                          (u) => u._id == pr_product.product
+                          (u: MessageProduct) => u._id == pr_product.product
                         )?.productDescription
                       }
                     </p>
@@ -220,7 +215,7 @@ export default function Product() {
                       {/* {product.productPrice}  */}
                       {
                         allDataProducts?.find(
-                          (u) => u._id == pr_product.product
+                          (u: MessageProduct) => u._id == pr_product.product
                         )?.productPrice
                       }
                       <span className="text-xs ps-1">MXN</span>

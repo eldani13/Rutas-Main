@@ -85,6 +85,7 @@ export default function UserPage() {
             <form
               className="max-w-sm mx-auto pt-10  w-full px-5 md:px-0 z-30"
               onSubmit={formUpdate}
+              
             >
               <div className="mb-5">
                 <label
@@ -107,6 +108,7 @@ export default function UserPage() {
                   }
                   value={dataCamb?.user || ""}
                   required
+                  disabled={dataInitial?.role==="empleado"}
                 />
               </div>
               <div className="mb-5">
@@ -130,6 +132,7 @@ export default function UserPage() {
                   }
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                   required
+                  disabled={dataInitial?.role==="empleado"}
                 />
               </div>
               <div className="mb-5">
@@ -153,6 +156,7 @@ export default function UserPage() {
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                   placeholder="Juanito"
                   required
+                  disabled={dataInitial?.role==="empleado"}
                 />
               </div>
               <div className="mb-5">
@@ -176,6 +180,7 @@ export default function UserPage() {
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                   placeholder="Ba..."
                   required
+                  disabled={dataInitial?.role==="empleado"}
                 />
               </div>
               <div className="mb-5">
@@ -196,6 +201,7 @@ export default function UserPage() {
                     }))
                   }
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                  disabled={dataInitial?.role==="empleado"}
                 >
                   <option value="empleado">Empleado</option>
                   <option value="administrador">Administrador</option>
@@ -207,13 +213,17 @@ export default function UserPage() {
                   onClick={() => {
                     setDataCamb(dataInitial);
                   }}
-                  className="text-white bg-green-400 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center "
+                  className={`text-white px-5 py-2.5 text-center rounded-lg text-sm w-full sm:w-auto focus:ring-4 focus:outline-none focus:ring-blue-300 
+                  ${dataInitial?.role === "empleado" ? "bg-green-300 cursor-not-allowed" : "bg-green-400 hover:bg-green-700"}`}
+                  disabled={dataInitial?.role === "empleado"}
                 >
                   Reiniciar
                 </button>
                 <button
                   type="submit"
-                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center "
+                  className={`text-white px-5 py-2.5 text-center rounded-lg text-sm w-full sm:w-auto focus:ring-4 focus:outline-none focus:ring-blue-300 
+                  ${dataInitial?.role === "empleado" ? "bg-blue-300 cursor-not-allowed" : "bg-blue-700 hover:bg-blue-800"}`}
+                  disabled={dataInitial?.role==="empleado"}
                 >
                   Actualizar
                 </button>
