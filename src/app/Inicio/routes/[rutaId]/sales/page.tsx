@@ -362,12 +362,7 @@ export default function Sales({ params }) {
   };
   console.log(requestCurrentIfExist);
 
-  const handleFormSale = (e: FormEvent) => {
-    e.preventDefault();
-    var form = e.target;
-    // @ts-ignore
-    saleProduct(clickInProduct, form.elements("inpAmmount").value || 1);
-  };
+ 
 
   return (
     <>
@@ -387,25 +382,38 @@ export default function Sales({ params }) {
             </div>
             {clockLastMinuteSale()}
           </div>
-          <form
-            onSubmit={handleFormSale}
+          <div
             className="md:static flex flex-col items-start justify-center pb-10 md:min-w-60"
           >
-            <input
-              type="number"
-              name="inpAmmount"
-              value={ammountSaleInp}
-              onChange={(e) => setAmmountSaleInp(parseInt(e.target.value))}
-              id=""
-              max={clickInProduct?.amountCurrent}
-              min={1}
-            />
+            <div
+              className={`${
+                clickInProduct === null ? "hidden" : "flex"
+              } gap-2 items-center justify-center w-full mb-2 bg-slate-50 rounded-md p-2`}
+            >
+              <label className="text-sm ">Cantidad: </label>
+              <input
+                className="border rounded-md px-2 py-1 font-bold"
+                type="number"
+                name="inpAmmount"
+                value={ammountSaleInp}
+                onChange={(e) =>
+                  setAmmountSaleInp(
+                    // @ts-ignore
+                    parseInt(e.target.value) > clickInProduct?.amountCurrent
+                      ? clickInProduct?.amountCurrent
+                      : parseInt(e.target.value)
+                  )
+                }
+                max={clickInProduct?.amountCurrent}
+                min={1}
+              />
+            </div>
+
             <ButtonCrud
               isHidden={clickInProduct === null}
               text="Vender Producto"
               color="bg-blue-500"
-              // onclickHandle={() => saleProduct(clickInProduct, 1)}
-              onclickHandle={() => {}}
+              onclickHandle={() => saleProduct(clickInProduct, ammountSaleInp)}
             >
               <svg
                 className="w-6 h-6"
@@ -418,7 +426,7 @@ export default function Sales({ params }) {
                 />
               </svg>
             </ButtonCrud>
-          </form>
+          </div>
         </div>
       </div>
 
@@ -575,9 +583,35 @@ export default function Sales({ params }) {
             {actualProductSearchScanner && (
               <div>
                 <div
+                  className={`flex gap-2 items-center justify-center w-full mb-2 bg-slate-50 rounded-md p-2`}
+                >
+                  <label className="text-sm ">Cantidad: </label>
+                  <input
+                    className="border rounded-md px-2 py-1 font-bold"
+                    type="number"
+                    name="inpAmmount"
+                    value={ammountSaleInp}
+                    onChange={(e) =>
+                      setAmmountSaleInp(
+                        // @ts-ignore
+                        parseInt(e.target.value) >
+                          actualProductSearchScanner?.amountCurrent
+                          ? actualProductSearchScanner?.amountCurrent
+                          : parseInt(e.target.value)
+                      )
+                    }
+                    max={actualProductSearchScanner?.amountCurrent}
+                    min={1}
+                  />
+                </div>
+                <div
                   // bg-[linear-gradient(225deg,_#a1c4fd_10%,_#c2e9fb_90%)]
                   className={` 
-            relative my-2 justify-center  py-6  justify-content rounded-xl flex flex-col px-5 gap-1 font-semibold hover:bg-slate-200  bg-[linear-gradient(225deg,_#acfca2_10%,_#c0faea_90%)]
+            relative my-2 justify-center  py-6  justify-content rounded-xl flex flex-col px-5 gap-1 font-semibold hover:bg-slate-200  
+            ${actualProductSearchScanner.amountCurrent === 0
+              ? "bg-red-100"
+              : "bg-[linear-gradient(225deg,_#acfca2_10%,_#c0faea_90%)]"}
+            
             `}
                   style={{ gridTemplateColumns: "50px 1fr 1fr 1fr" }}
                 >
@@ -597,9 +631,14 @@ export default function Sales({ params }) {
                     <span className=" font-black">Precio: $</span>
                     {actualProductSearchScanner.productPrice}
                   </td>
+                  <td className="flex gap-1 ">
+                    <span className=" font-black">Cantidad / Actual: </span>
+                    {actualProductSearchScanner.amount}{" "}/{" "}
+                    {actualProductSearchScanner.amountCurrent}
+                  </td>
                   <td className="text-center flex absolute left-0 top-0 w-full">
                     <p className="w-full uppercase text-xl mt-2 font-bold ">
-                      {actualProductSearchScanner.productIsSold
+                      {actualProductSearchScanner.amountCurrent === 0
                         ? "X Producto vendido X"
                         : "Producto"}
                     </p>
@@ -620,7 +659,7 @@ export default function Sales({ params }) {
                   text="Vender Producto"
                   color="bg-blue-500"
                   onclickHandle={() =>
-                    saleProduct(actualProductSearchScanner, 1)
+                    saleProduct(actualProductSearchScanner, ammountSaleInp)
                   }
                 >
                   <svg
