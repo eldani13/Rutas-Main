@@ -33,6 +33,10 @@ export default function Product() {
 
   const [requestCurrentIfExist, setRequestCurrentIfExist] =
     useState<null | MessageRequestProducts>(null);
+  const [indexCurrentRequest, setIndexCurrentRequest] = useState<number>(0);
+  const [allPetitionInRequest, setAllPetitionInRequest] = useState<
+    MessageRequestProducts[] | null
+  >(null);
 
   const fnGetAllDataRoutes = async () => {
     await getCookie(processEnv.jtIdentity).then(async (jwt_get) => {
@@ -46,20 +50,18 @@ export default function Product() {
     });
   };
   const fnGetAllDataVehicle = async () => {
-    await getAllFetchDataValues(
-      `${processEnv.back}cars-units/`
-    ).then((rec) => {
+    await getAllFetchDataValues(`${processEnv.back}cars-units/`).then((rec) => {
       setAllDataVehicle(rec.message);
     });
   };
 
   const updateTable = async () => {
-    await getAllFetchDataValues(
-      `${processEnv.back}view-products`
-    ).then((rec: RootProduct) => {
-      // @ts-ignore
-      setAllDataProducts(rec.details);
-    });
+    await getAllFetchDataValues(`${processEnv.back}view-products`).then(
+      (rec: RootProduct) => {
+        // @ts-ignore
+        setAllDataProducts(rec.details);
+      }
+    );
   };
 
   useEffect(() => {
@@ -67,8 +69,6 @@ export default function Product() {
     fnGetAllDataRoutes();
     updateTable();
   }, []);
-
- 
 
   const handleUpdateProductSelect = (index: number, newNumber: number) => {
     setProductsSelect((prev) => {
@@ -94,19 +94,25 @@ export default function Product() {
       data,
       () => {
         setRouteSelect(null);
+        fnGetAllDataRoutes();
+        // updateTable();
       },
       "pedido"
     );
   };
 
   const getIfProductSelect = async (routeSelection: MessageRoute) => {
+    // @ts-ignore
     const getDta = await getAllFetchDataValues(
       `${processEnv.back}request-product/route/${routeSelection?._id}`
     );
 
+    console.log(getDta.details);
 
-    //@ts-ignore
-    setRequestCurrentIfExist(getDta.details);
+    setAllPetitionInRequest(getDta.details.length > 0 ? getDta.details : null);
+    setRequestCurrentIfExist(
+      getDta.details.length > 0 ? getDta.details[indexCurrentRequest] : null
+    );
   };
 
   const dateFormater = (fecha: Date) => {
@@ -140,11 +146,13 @@ export default function Product() {
           <div className="flex flex-col pt-5 gap-3">
             {allDataRoutes &&
               allDataRoutes.map((requestRoute, index) => (
-                <div key={"route-"+index}
+                <div
+                  key={"route-" + index}
                   onClick={() => {
                     console.log(requestRoute);
                     setRouteSelect(requestRoute);
                     getIfProductSelect(requestRoute);
+                    setIndexCurrentRequest(0);
                   }}
                   className={`${
                     requestRoute == routeSelect ? "bg-slate-100" : ""
@@ -207,12 +215,102 @@ export default function Product() {
       </div>
 
       <div className="max-h-[100vh] h-full pt-14 flex flex-col overflow-y-auto p-5 ">
+        <div className="pt-4 flex items-center gap-2">
+          <label>Petición: </label>
+          <button
+            onClick={() => {
+              setRequestCurrentIfExist(
+                // @ts-ignore
+                allPetitionInRequest[indexCurrentRequest - 1]
+              );
+              setIndexCurrentRequest(indexCurrentRequest - 1);
+            }}
+            className={`${indexCurrentRequest == 0 && "text-slate-400"}`}
+            disabled={indexCurrentRequest == 0}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="2em"
+              height="2em"
+              viewBox="0 0 32 32"
+            >
+              <path
+                fill="currentColor"
+                d="M16 2a14 14 0 1 0 14 14A14 14 0 0 0 16 2m8 15H11.85l5.58 5.573L16 24l-8-8l8-8l1.43 1.393L11.85 15H24Z"
+              />
+              <path
+                fill="none"
+                d="m16 8l1.43 1.393L11.85 15H24v2H11.85l5.58 5.573L16 24l-8-8z"
+              />
+            </svg>
+          </button>
+          <p className="font-semibold">{indexCurrentRequest + 1}</p>
+          <button
+            onClick={() => {
+              setRequestCurrentIfExist(
+                // @ts-ignore
+                allPetitionInRequest[indexCurrentRequest + 1]
+              );
+
+              console.log(
+                indexCurrentRequest + 1 >=
+                  (allPetitionInRequest?.length || 0) - 1
+                  ? // @ts-ignore
+                    allPetitionInRequest[indexCurrentRequest + 1]
+                  : null
+              );
+              // @ts-ignore
+              console.log(allPetitionInRequest[indexCurrentRequest + 1]);
+
+              setIndexCurrentRequest(indexCurrentRequest + 1);
+            }}
+            className={`${
+              indexCurrentRequest +1  >
+                (allPetitionInRequest?.length || 0)  && "text-slate-400"
+            }`}
+            disabled={
+              indexCurrentRequest +1 > (allPetitionInRequest?.length || 0) 
+            }
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="2em"
+              height="2em"
+              viewBox="0 0 32 32"
+            >
+              <path
+                fill="currentColor"
+                d="M2 16A14 14 0 1 0 16 2A14 14 0 0 0 2 16m6-1h12.15l-5.58-5.607L16 8l8 8l-8 8l-1.43-1.427L20.15 17H8Z"
+              />
+              <path
+                fill="none"
+                d="m16 8l-1.43 1.393L20.15 15H8v2h12.15l-5.58 5.573L16 24l8-8z"
+              />
+            </svg>
+          </button>
+
+          {/* <select name="" id="" className="w-fit px-4" onChange={e=>{setRequestCurrentIfExist(e.target.value)}}>
+              {requestProductsAll?.map((ex, index) => (
+                <option value={index}>{index + 1}</option>
+              ))}
+            </select> */}
+        </div>
+
         {/* Informacion */}
         <hr className="mb-10 border-[1px]" />
         {routeSelect && (
           <div className="pb-28">
             {!requestCurrentIfExist ? (
               <>
+                {requestCurrentIfExist &&
+                  // @ts-ignore
+                  requestCurrentIfExist.state === "aprobado" && (
+                    <div>
+                      <h1 className="text-sm font-semibold">
+                        {/* Número de petición: {1} */}
+                      </h1>
+                    </div>
+                  )}
                 <form className="rounded-xl w-full md:w-1/2 m-auto flex gap-1">
                   <input
                     value={getInputData}
@@ -300,7 +398,10 @@ export default function Product() {
                 <div className="w-full pt-5 flex flex-col gap-6">
                   {getProductsSelect &&
                     getProductsSelect.map((product, index) => (
-                      <div className="flex w-full justify-center items-center gap-3" key={"select-prod-"+index}>
+                      <div
+                        className="flex w-full justify-center items-center gap-3"
+                        key={"select-prod-" + index}
+                      >
                         <button
                           onClick={() => {
                             const newData = getProductsSelect.filter(
