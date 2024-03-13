@@ -307,7 +307,7 @@ export default function Product() {
                   requestCurrentIfExist.state === "aprobado" && (
                     <div>
                       <h1 className="text-sm font-semibold">
-                        Número de petición: {1}
+                        {/* Número de petición: {1} */}
                       </h1>
                     </div>
                   )}

@@ -363,8 +363,6 @@ export default function Sales({ params }) {
   };
   console.log(requestCurrentIfExist);
 
- 
-
   return (
     <>
       <div className=" h-[100vh] ">
@@ -383,9 +381,7 @@ export default function Sales({ params }) {
             </div>
             {clockLastMinuteSale()}
           </div>
-          <div
-            className="md:static flex flex-col items-start justify-center pb-10 md:min-w-60"
-          >
+          <div className="md:static flex flex-col items-start justify-center pb-10 md:min-w-60">
             <div
               className={`${
                 clickInProduct === null ? "hidden" : "flex"
@@ -430,146 +426,170 @@ export default function Sales({ params }) {
           </div>
         </div>
       </div>
-
-      {requestCurrentIfExist && requestCurrentIfExist.state === "aprobado" && (
-        <div
-          className="flex flex-col pl-3  max-h-[100vh] h-full "
-          style={{ alignSelf: "flex-start" }}
-        >
-          <div className="pt-4 flex items-center gap-2">
-            <label>Petición: </label>
-            <button
-              onClick={() =>
-                setRequestCurrentIfExist(
-                  // @ts-ignore
-                  requestProductsAll[indexCurrentRequest]
-                )
-              }
-              className={`${indexCurrentRequest == 0 && "text-slate-400"}`}
-              disabled={indexCurrentRequest == 0}
+      <div className="flex flex-col h-full w-full ">
+        <div className="ps-4 pt-2 flex items-center gap-2">
+          <label>Petición: </label>
+          <button
+            onClick={() => {
+              setRequestCurrentIfExist(
+                // @ts-ignore
+                requestProductsAll[indexCurrentRequest - 1]
+              );
+              setIndexCurrentRequest(indexCurrentRequest - 1);
+            }}
+            className={`${indexCurrentRequest == 0 && "text-slate-400"}`}
+            disabled={indexCurrentRequest == 0}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="2em"
+              height="2em"
+              viewBox="0 0 32 32"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="2em"
-                height="2em"
-                viewBox="0 0 32 32"
-              >
-                <path
-                  fill="currentColor"
-                  d="M16 2a14 14 0 1 0 14 14A14 14 0 0 0 16 2m8 15H11.85l5.58 5.573L16 24l-8-8l8-8l1.43 1.393L11.85 15H24Z"
-                />
-                <path
-                  fill="none"
-                  d="m16 8l1.43 1.393L11.85 15H24v2H11.85l5.58 5.573L16 24l-8-8z"
-                />
-              </svg>
-            </button>
-            <p className="font-semibold">{indexCurrentRequest + 1}</p>
-            <button
-              className={`${
-                indexCurrentRequest + 1 == requestProductsAll?.length &&
-                "text-slate-400"
-              }`}
-              disabled={indexCurrentRequest + 1 == requestProductsAll?.length}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="2em"
-                height="2em"
-                viewBox="0 0 32 32"
-              >
-                <path
-                  fill="currentColor"
-                  d="M2 16A14 14 0 1 0 16 2A14 14 0 0 0 2 16m6-1h12.15l-5.58-5.607L16 8l8 8l-8 8l-1.43-1.427L20.15 17H8Z"
-                />
-                <path
-                  fill="none"
-                  d="m16 8l-1.43 1.393L20.15 15H8v2h12.15l-5.58 5.573L16 24l8-8z"
-                />
-              </svg>
-            </button>
+              <path
+                fill="currentColor"
+                d="M16 2a14 14 0 1 0 14 14A14 14 0 0 0 16 2m8 15H11.85l5.58 5.573L16 24l-8-8l8-8l1.43 1.393L11.85 15H24Z"
+              />
+              <path
+                fill="none"
+                d="m16 8l1.43 1.393L11.85 15H24v2H11.85l5.58 5.573L16 24l-8-8z"
+              />
+            </svg>
+          </button>
+          <p className="font-semibold">{indexCurrentRequest + 1}</p>
+          <button
+            onClick={() => {
+              setRequestCurrentIfExist(
+                // @ts-ignore
+                requestProductsAll[indexCurrentRequest + 1]
+              );
 
-            {/* <select name="" id="" className="w-fit px-4" onChange={e=>{setRequestCurrentIfExist(e.target.value)}}>
+              console.log(
+                indexCurrentRequest + 1 >=
+                  (requestProductsAll?.length || 0) - 1
+                  ? // @ts-ignore
+                  requestProductsAll[indexCurrentRequest + 1]
+                  : null
+              );
+              // @ts-ignore
+              console.log(requestProductsAll[indexCurrentRequest + 1]);
+
+              setIndexCurrentRequest(indexCurrentRequest + 1);
+            }}
+            className={`${
+              indexCurrentRequest + 1 > (requestProductsAll?.length || 0)-1 &&
+              "text-slate-400"
+            }`}
+            disabled={
+              indexCurrentRequest + 1 > (requestProductsAll?.length || 0)-1
+            }
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="2em"
+              height="2em"
+              viewBox="0 0 32 32"
+            >
+              <path
+                fill="currentColor"
+                d="M2 16A14 14 0 1 0 16 2A14 14 0 0 0 2 16m6-1h12.15l-5.58-5.607L16 8l8 8l-8 8l-1.43-1.427L20.15 17H8Z"
+              />
+              <path
+                fill="none"
+                d="m16 8l-1.43 1.393L20.15 15H8v2h12.15l-5.58 5.573L16 24l8-8z"
+              />
+            </svg>
+          </button>
+
+          {/* <select name="" id="" className="w-fit px-4" onChange={e=>{setRequestCurrentIfExist(e.target.value)}}>
               {requestProductsAll?.map((ex, index) => (
                 <option value={index}>{index + 1}</option>
               ))}
             </select> */}
-          </div>
+        </div>
 
-          <SearchInput
-            label="Buscar Producto"
-            value={search}
-            setValue={setSearch}
-            handleClickOnOffScanner={handleClickOnOffScanner}
-          />
+        {requestCurrentIfExist &&
+          requestCurrentIfExist.state === "aprobado" && (
+            <div
+              className="flex flex-col pl-3  max-h-[100vh] h-full "
+              style={{ alignSelf: "flex-start" }}
+            >
+              <SearchInput
+                label="Buscar Producto"
+                value={search}
+                setValue={setSearch}
+                handleClickOnOffScanner={handleClickOnOffScanner}
+              />
 
-          {filteredProducts && (
-            <Table
-              products={filteredProducts.sort(
-                (a, b) =>
-                  (a.productIsSold ? 1 : -1) - (b.productIsSold ? 1 : -1)
+              {filteredProducts && (
+                <Table
+                  products={filteredProducts.sort(
+                    (a, b) =>
+                      (a.productIsSold ? 1 : -1) - (b.productIsSold ? 1 : -1)
+                  )}
+                  clickInProduct={clickInProduct}
+                  setClickInProduct={setClickInProduct}
+                />
               )}
-              clickInProduct={clickInProduct}
-              setClickInProduct={setClickInProduct}
-            />
+            </div>
           )}
-        </div>
-      )}
-      {requestCurrentIfExist && requestCurrentIfExist.state !== "aprobado" && (
-        <div
-          className="flex flex-col pl-3  max-h-[100vh] h-full items-center justify-center"
-          style={{ alignSelf: "flex-start" }}
-        >
-          <p className="text-xl font-bold mb-1">
-            Revisa la sección de requisitos, el estado de tu requisito es:
-          </p>
-          <p
-            className={`${
-              requestCurrentIfExist.state === "pendiente"
-                ? "text-yellow-500"
-                : requestCurrentIfExist.state === "rechazado"
-                ? "text-orange-500"
-                : requestCurrentIfExist.state === "aprobado"
-                ? "text-lime-500"
-                : ""
-            } text-center text-xl font-bold mb-10`}
+        {requestCurrentIfExist &&
+          requestCurrentIfExist.state !== "aprobado" && (
+            <div
+              className="flex flex-col pl-3  max-h-[100vh] w-full h-full items-center justify-center"
+              style={{ alignSelf: "flex-start" }}
+            >
+              <p className="text-xl font-bold mb-1">
+                Revisa la sección de requisitos, el estado de tu requisito es:
+              </p>
+              <p
+                className={`${
+                  requestCurrentIfExist.state === "pendiente"
+                    ? "text-yellow-500"
+                    : requestCurrentIfExist.state === "rechazado"
+                    ? "text-orange-500"
+                    : requestCurrentIfExist.state === "aprobado"
+                    ? "text-lime-500"
+                    : ""
+                } text-center text-xl font-bold mb-10`}
+              >
+                {requestCurrentIfExist.state}
+              </p>
+
+              <Link href="/Inicio/request">
+                <button
+                  type="button"
+                  className="inline-block rounded border-2 hover:scale-105
+                border-info px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-info transition duration-150 ease-in-out hover:border-info-600 hover:bg-info-50/50 hover:text-info-600 focus:border-info-600 focus:bg-info-50/50 focus:text-info-600 focus:outline-none focus:ring-0 active:border-info-700 active:text-info-700 motion-reduce:transition-none "
+                  data-twe-ripple-init
+                >
+                  Ir a sección
+                </button>
+              </Link>
+            </div>
+          )}
+        {!requestCurrentIfExist && (
+          <div
+            className="flex flex-col pl-3  max-h-[100vh] h-full items-center justify-center"
+            style={{ alignSelf: "flex-start" }}
           >
-            {requestCurrentIfExist.state}
-          </p>
+            <p className="text-xl font-bold mb-10">
+              No tienes productos asignados
+            </p>
 
-          <Link href="/Inicio/request">
-            <button
-              type="button"
-              className="inline-block rounded border-2 hover:scale-105
+            <Link href="/Inicio/request">
+              <button
+                type="button"
+                className="inline-block rounded border-2 hover:scale-105
                 border-info px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-info transition duration-150 ease-in-out hover:border-info-600 hover:bg-info-50/50 hover:text-info-600 focus:border-info-600 focus:bg-info-50/50 focus:text-info-600 focus:outline-none focus:ring-0 active:border-info-700 active:text-info-700 motion-reduce:transition-none "
-              data-twe-ripple-init
-            >
-              Ir a sección
-            </button>
-          </Link>
-        </div>
-      )}
-      {!requestCurrentIfExist && (
-        <div
-          className="flex flex-col pl-3  max-h-[100vh] h-full items-center justify-center"
-          style={{ alignSelf: "flex-start" }}
-        >
-          <p className="text-xl font-bold mb-10">
-            No tienes productos asignados
-          </p>
-
-          <Link href="/Inicio/request">
-            <button
-              type="button"
-              className="inline-block rounded border-2 hover:scale-105
-                border-info px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-info transition duration-150 ease-in-out hover:border-info-600 hover:bg-info-50/50 hover:text-info-600 focus:border-info-600 focus:bg-info-50/50 focus:text-info-600 focus:outline-none focus:ring-0 active:border-info-700 active:text-info-700 motion-reduce:transition-none "
-              data-twe-ripple-init
-            >
-              Realizar un requisito de productos
-            </button>
-          </Link>
-        </div>
-      )}
+                data-twe-ripple-init
+              >
+                Realizar un requisito de productos
+              </button>
+            </Link>
+          </div>
+        )}
+      </div>
 
       <div
         className={`${
@@ -609,9 +629,11 @@ export default function Sales({ params }) {
                   // bg-[linear-gradient(225deg,_#a1c4fd_10%,_#c2e9fb_90%)]
                   className={` 
             relative my-2 justify-center  py-6  justify-content rounded-xl flex flex-col px-5 gap-1 font-semibold hover:bg-slate-200  
-            ${actualProductSearchScanner.amountCurrent === 0
-              ? "bg-red-100"
-              : "bg-[linear-gradient(225deg,_#acfca2_10%,_#c0faea_90%)]"}
+            ${
+              actualProductSearchScanner.amountCurrent === 0
+                ? "bg-red-100"
+                : "bg-[linear-gradient(225deg,_#acfca2_10%,_#c0faea_90%)]"
+            }
             
             `}
                   style={{ gridTemplateColumns: "50px 1fr 1fr 1fr" }}
@@ -634,7 +656,7 @@ export default function Sales({ params }) {
                   </td>
                   <td className="flex gap-1 ">
                     <span className=" font-black">Cantidad / Actual: </span>
-                    {actualProductSearchScanner.amount}{" "}/{" "}
+                    {actualProductSearchScanner.amount} /{" "}
                     {actualProductSearchScanner.amountCurrent}
                   </td>
                   <td className="text-center flex absolute left-0 top-0 w-full">
