@@ -17,6 +17,7 @@ export default function Home() {
     employees: 0,
     products: 0,
     routes: 0,
+    role:"",
   });
 
   const fetchName = async () => {
@@ -27,6 +28,7 @@ export default function Home() {
         setDataView((prevState) => ({
           ...prevState,
           nameUser: decodedToken?.username as string,
+          role: decodedToken?.role as string,
         }));
     } catch {}
   };
@@ -50,27 +52,28 @@ export default function Home() {
 
   return (
     <>
-      <div className="h-[100%]">
-        <div className="hidden xl:flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 px-4 h-[100%]">
-          <div className="flex flex-col items-start justify-center">
-            <h1 className="text-[#000] text-2xl font-bold mb-1">
-              Pagina Principal
-            </h1>
-          </div>
-          <div className="flex flex-col text-[#000] items-start">
-            <span className="">Pagina principal</span>
-          </div>
+    <div className="h-[100%]">
+      <div className="hidden xl:flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 px-4 h-[100%]">
+        <div className="flex flex-col items-start justify-center">
+          <h1 className="text-[#000] text-2xl font-bold mb-1">
+            Pagina Principal
+          </h1>
+        </div>
+        <div className="flex flex-col text-[#000] items-start">
+          <span className="">Pagina principal</span>
         </div>
       </div>
-      <div className="text-black flex flex-col items-center gap-20  w-full">
-        <h1 className="text-3xl md:text-7xl font-semibold ">¡Bienvenido!</h1>
-        <span className="text-center text-lg md:text-xl px-3">
-          ¿Qué deseas revisar el día de hoy?
-        </span>
+    </div>
+    <div className="text-black flex flex-col items-center gap-20  w-full">
+      <h1 className="text-3xl md:text-7xl font-semibold ">¡Bienvenido!</h1>
+      <span className="text-center text-lg md:text-xl px-3">
+        ¿Qué deseas revisar el día de hoy?
+      </span>
 
-        <div className="flex flex-col ">
-          <div className="grid px-4 grid-cols-1 lg:grid-cols-2 justify-center items-center gap-x-10 gap-y-2">
-            {/* Administrador */}
+      <div className="flex flex-col ">
+        <div className="grid px-4 grid-cols-1 lg:grid-cols-2 justify-center items-center gap-x-10 gap-y-2">
+          {/* Administrador */}
+          {dataView.role === "administrador" ? (
             <Link href="/Inicio/profile">
               <ViewOnlyGetComponent
                 title="Administrador"
@@ -85,8 +88,25 @@ export default function Home() {
                 </svg>
               </ViewOnlyGetComponent>
             </Link>
+          ):(
+            <Link href="/Inicio/profile">
+            <ViewOnlyGetComponent
+              title="Empleado"
+              description={`Sesión iniciada como ${dataView.nameUser}`}
+            >
+              <svg
+                className=" overflow-visible w-full h-8 md:w-11 md:h-11 flex items-center justify-center "
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 448 512"
+              >
+                <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+              </svg>
+            </ViewOnlyGetComponent>
+          </Link>
+          )}
 
-            {/* Empleados */}
+          {/* Empleados */}
+          {dataView.role == "administrador" && (
             <Link href="/Inicio/employees">
               <ViewOnlyGetComponent
                 title="Empleados"
@@ -104,48 +124,53 @@ export default function Home() {
                 </svg>
               </ViewOnlyGetComponent>
             </Link>
+          )}
 
-            {/* Rutas */}
+          {/* Rutas */}
+         {dataView.role == "administrador" && (
             <Link href="/Inicio/routes">
-              <ViewOnlyGetComponent
-                title="Rutas"
-                description={`Cuentas con ${dataView.routes} Rutas`}
+            <ViewOnlyGetComponent
+              title="Rutas"
+              description={`Cuentas con ${dataView.routes} Rutas`}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-8 h-8 md:w-11 md:h-11"
+                viewBox="0 0 576 512"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-8 h-8 md:w-11 md:h-11"
-                  viewBox="0 0 576 512"
-                >
-                  <path
-                    fill="black"
-                    d="M408 120c0 54.6-73.1 151.9-105.2 192c-7.7 9.6-22 9.6-29.6 0C241.1 271.9 168 174.6 168 120C168 53.7 221.7 0 288 0s120 53.7 120 120m8 80.4c3.5-6.9 6.7-13.8 9.6-20.6c.5-1.2 1-2.5 1.5-3.7l116-46.4c15.8-6.3 32.9 5.3 32.9 22.3v270.8c0 9.8-6 18.6-15.1 22.3L416 503zm-278.4-62.1c2.4 14.1 7.2 28.3 12.8 41.5c2.9 6.8 6.1 13.7 9.6 20.6v251.4L32.9 502.7C17.1 509 0 497.4 0 480.4V209.6c0-9.8 6-18.6 15.1-22.3l122.6-49zM327.8 332c13.9-17.4 35.7-45.7 56.2-77v249.3l-192-54.9V255c20.5 31.3 42.3 59.6 56.2 77c20.5 25.6 59.1 25.6 79.6 0M288 152a40 40 0 1 0 0-80a40 40 0 1 0 0 80"
-                  />
-                </svg>
-              </ViewOnlyGetComponent>
-            </Link>
+                <path
+                  fill="black"
+                  d="M408 120c0 54.6-73.1 151.9-105.2 192c-7.7 9.6-22 9.6-29.6 0C241.1 271.9 168 174.6 168 120C168 53.7 221.7 0 288 0s120 53.7 120 120m8 80.4c3.5-6.9 6.7-13.8 9.6-20.6c.5-1.2 1-2.5 1.5-3.7l116-46.4c15.8-6.3 32.9 5.3 32.9 22.3v270.8c0 9.8-6 18.6-15.1 22.3L416 503zm-278.4-62.1c2.4 14.1 7.2 28.3 12.8 41.5c2.9 6.8 6.1 13.7 9.6 20.6v251.4L32.9 502.7C17.1 509 0 497.4 0 480.4V209.6c0-9.8 6-18.6 15.1-22.3l122.6-49zM327.8 332c13.9-17.4 35.7-45.7 56.2-77v249.3l-192-54.9V255c20.5 31.3 42.3 59.6 56.2 77c20.5 25.6 59.1 25.6 79.6 0M288 152a40 40 0 1 0 0-80a40 40 0 1 0 0 80"
+                />
+              </svg>
+            </ViewOnlyGetComponent>
+          </Link>
+         )}
 
-            {/* Productos */}
+          {/* Productos */}
+          {dataView.role == "administrador" && (
             <Link href="/Inicio/product">
-              <ViewOnlyGetComponent
-                title="Productos"
-                description={`Actualmente tienes ${dataView.products} productos registrados`}
+            <ViewOnlyGetComponent
+              title="Productos"
+              description={`Actualmente tienes ${dataView.products} productos registrados`}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                className="w-8 h-8 md:w-11 md:h-11"
+                viewBox="0 0 16 16"
               >
-                <svg
-                  xmlns=" http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  className="w-8 h-8 md:w-11 md:h-11"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M15.528 2.973a.75.75 0 0 1 .472.696v8.662a.75.75 0 0 1-.472.696l-7.25 2.9a.75.75 0 0 1-.557 0l-7.25-2.9A.75.75 0 0 1 0 12.331V3.669a.75.75 0 0 1 .471-.696L7.443.184l.004-.001.274-.11a.75.75 0 0 1 .558 0l.274.11.004.001zm-1.374.527L8 5.962 1.846 3.5 1 3.839v.4l6.5 2.6v7.922l.5.2.5-.2V6.84l6.5-2.6v-.4l-.846-.339Z"
-                  />
-                </svg>
-              </ViewOnlyGetComponent>
-            </Link>
-          </div>
+                <path
+                  fill-rule="evenodd"
+                  d="M15.528 2.973a.75.75 0 0 1 .472.696v8.662a.75.75 0 0 1-.472.696l-7.25 2.9a.75.75 0 0 1-.557 0l-7.25-2.9A.75.75 0 0 1 0 12.331V3.669a.75.75 0 0 1 .471-.696L7.443.184l.004-.001.274-.11a.75.75 0 0 1 .558 0l.274.11.004.001zm-1.374.527L8 5.962 1.846 3.5 1 3.839v.4l6.5 2.6v7.922l.5.2.5-.2V6.84l6.5-2.6v-.4l-.846-.339Z"
+                />
+              </svg>
+            </ViewOnlyGetComponent>
+          </Link>
+          )}
         </div>
       </div>
-    </>
+    </div>
+  </>
   );
 }
