@@ -94,6 +94,8 @@ export default function Product() {
       data,
       () => {
         setRouteSelect(null);
+        fnGetAllDataRoutes();
+        // updateTable();
       },
       "pedido"
     );
@@ -216,14 +218,13 @@ export default function Product() {
         <div className="pt-4 flex items-center gap-2">
           <label>Petición: </label>
           <button
-            onClick={() =>{
+            onClick={() => {
               setRequestCurrentIfExist(
                 // @ts-ignore
-                allPetitionInRequest[indexCurrentRequest-1]
-              )
-              setIndexCurrentRequest(indexCurrentRequest-1);
-            }
-            }
+                allPetitionInRequest[indexCurrentRequest - 1]
+              );
+              setIndexCurrentRequest(indexCurrentRequest - 1);
+            }}
             className={`${indexCurrentRequest == 0 && "text-slate-400"}`}
             disabled={indexCurrentRequest == 0}
           >
@@ -247,18 +248,29 @@ export default function Product() {
           <button
             onClick={() => {
               setRequestCurrentIfExist(
-                indexCurrentRequest+1 >= (allPetitionInRequest?.length || 0)
+                // @ts-ignore
+                allPetitionInRequest[indexCurrentRequest + 1]
+              );
+
+              console.log(
+                indexCurrentRequest + 1 >=
+                  (allPetitionInRequest?.length || 0) - 1
                   ? // @ts-ignore
-                    allPetitionInRequest[indexCurrentRequest+1]
+                    allPetitionInRequest[indexCurrentRequest + 1]
                   : null
               );
-              setIndexCurrentRequest(indexCurrentRequest+1);
+              // @ts-ignore
+              console.log(allPetitionInRequest[indexCurrentRequest + 1]);
+
+              setIndexCurrentRequest(indexCurrentRequest + 1);
             }}
             className={`${
-              indexCurrentRequest >= (allPetitionInRequest?.length || 0) &&
-              "text-slate-400"
+              indexCurrentRequest +1  >
+                (allPetitionInRequest?.length || 0)  && "text-slate-400"
             }`}
-            disabled={indexCurrentRequest >= (allPetitionInRequest?.length || 0)}
+            disabled={
+              indexCurrentRequest +1 > (allPetitionInRequest?.length || 0) 
+            }
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
