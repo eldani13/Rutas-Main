@@ -269,7 +269,8 @@ export default function Sales({ params }) {
           const amountNew =
             (routeCurrent?.amountOfMerchandise || 0) +
             productSale.productPrice * ammountSale;
-
+          // setRequestCurrentIfExist(prev=>({...prev, products:[...prev.products, {}]}))
+          await getIfProductSelect();
           await patchEditVal(
             `${processEnv.back}rutas/edit/${routeCurrent?._id}`,
             {
