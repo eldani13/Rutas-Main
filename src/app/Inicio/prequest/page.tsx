@@ -83,7 +83,7 @@ export default function Product() {
   return (
     <>
       <div className="h-[100%]">
-        <div className="hidden xl:flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 h-[100%]">
+        <div className="hidden md:flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 h-[100%]">
           <div className="flex flex-col items-start justify-center">
             <h1 className="text-[#000] text-2xl font-bold mb-1">Pendientes</h1>
           </div>
