@@ -265,11 +265,11 @@ export default function Product() {
               setIndexCurrentRequest(indexCurrentRequest + 1);
             }}
             className={`${
-              indexCurrentRequest +1  >
-                (allPetitionInRequest?.length || 0)  && "text-slate-400"
+              indexCurrentRequest + 1 > (allPetitionInRequest?.length || 0) &&
+              "text-slate-400"
             }`}
             disabled={
-              indexCurrentRequest +1 > (allPetitionInRequest?.length || 0) 
+              indexCurrentRequest + 1 > (allPetitionInRequest?.length || 0)
             }
           >
             <svg
@@ -346,7 +346,9 @@ export default function Product() {
                             u.productName +
                             u.productDescription +
                             u.productPrice
-                          ).includes(getInputData) &&
+                          )
+                            .toLowerCase()
+                            .includes(getInputData.toLowerCase()) &&
                           !getProductsSelect?.includes(u)
                       )
                       .map((product, index) => (
