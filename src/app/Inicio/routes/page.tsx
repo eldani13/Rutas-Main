@@ -29,11 +29,29 @@ export default function Route() {
   };
 
   const getAllData = async () => {
-    await getAllFetchDataValues(`${processEnv.back}rutas/`).then(
-      (rec: RootRoute) => {
-        setRoutes(rec);
+    await getCookie(processEnv.jtIdentity).then(async (jwt_get) => {
+      const jwt_decode = jwt.decode(jwt_get + "") as {
+        username: string;
+        role: "administrador" | "empleado";
+        exp: number;
+        iat: number;
+      } | null;
+
+      if (jwt_decode?.role === "administrador") {
+        return await getAllFetchDataValues(`${processEnv.back}rutas/`).then(
+          (rec: RootRoute) => {
+            setRoutes(rec);
+          }
+        );
       }
-    );
+
+      await getAllFetchDataValues(
+        //@ts-ignore
+        `${processEnv.back}rutas/employee/${jwt_decode?._id}`
+      ).then((rec) => {
+        setRoutes(rec);
+      });
+    });
   };
 
   const getAllEmployess = async () => {
@@ -89,7 +107,7 @@ export default function Route() {
       "ruta"
     );
   };
-
+  console.log(routes)
   return (
     <>
       <div className="h-[100%]">
@@ -106,7 +124,7 @@ export default function Route() {
       <div className="relative text-[#000] flex flex-col justify-center items-center gap-20 overflow-y-auto h-full max-h-[100vh]">
         <div className="flex flex-col ">
           <div className="flex flex-wrap max-w-full justify-around px-4 gap-x-10 gap-y-5 py-4  w-full">
-            {routes &&
+            {routes && routes.message.length > 0 ? (
               routes.message.map((routeName: MessageRoute, index: number) => (
                 <Link
                   key={"ruta_" + index}
@@ -152,7 +170,10 @@ export default function Route() {
                     />
                   </svg>
                 </Link>
-              ))}
+              ))
+            ) : (
+              <h1 className="text-center font-semibold text-slate-900 text-xl">No hay rutas para mostrar</h1>
+            )}
           </div>
         </div>
 

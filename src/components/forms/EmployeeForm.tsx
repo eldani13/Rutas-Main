@@ -121,28 +121,29 @@ export default function EmployeeForm({
           >
             <div className="mb-5">
               <label
-                htmlFor="email"
+                htmlFor="user"
                 className="block mb-2 text-sm font-medium text-gray-900 "
               >
-                Tu usuario
+                Nombres
               </label>
               <input
                 type="text"
-                id="text"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                placeholder="name@flowbite.com"
+                id="user"
+                value={dataCamb?.username}
                 onChange={(e) =>
                   //@ts-ignore
                   setDataCamb((prev) => ({
                     ...(prev || {}),
-                    user: e.target.value,
+                    username: e.target.value,
                   }))
                 }
-                value={dataCamb?.user || ""}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                placeholder="Juanito"
                 required
                 disabled={roleActualUser === "empleado"}
               />
             </div>
+
             <div className="mb-5">
               <label
                 htmlFor="password"
@@ -169,28 +170,29 @@ export default function EmployeeForm({
             </div>
             <div className="mb-5">
               <label
-                htmlFor="user"
+                htmlFor="email"
                 className="block mb-2 text-sm font-medium text-gray-900 "
               >
-                Nombres
+                Tu usuario
               </label>
               <input
                 type="text"
-                id="user"
-                value={dataCamb?.username}
+                id="text"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                placeholder="name@flowbite.com"
                 onChange={(e) =>
                   //@ts-ignore
                   setDataCamb((prev) => ({
                     ...(prev || {}),
-                    username: e.target.value,
+                    user: e.target.value,
                   }))
                 }
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                placeholder="Juanito"
+                value={dataCamb?.user || ""}
                 required
                 disabled={roleActualUser === "empleado"}
               />
             </div>
+
             <div className="mb-5">
               <label
                 htmlFor="inp_apellidos"
@@ -287,7 +289,7 @@ export default function EmployeeForm({
                   }`}
                 disabled={roleActualUser === "empleado"}
               >
-                {type==="edit"?"Actualizar":"Insertar"}
+                {type === "edit" ? "Actualizar" : "Insertar"}
               </button>
             </div>
           </form>

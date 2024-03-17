@@ -278,11 +278,11 @@ export default function Employees() {
                           </td>
                           <td className="text-center flex gap-2">
                             <span className="block md:hidden">Usuario: </span>{" "}
-                            {data.user}
+                            {data.username}
                           </td>
                           <td className="text-center flex gap-2">
                             <span className="block md:hidden">Nombres: </span>{" "}
-                            {data.username}
+                            {data.user}
                           </td>
                           <td className="text-center flex gap-2">
                             <span className="block md:hidden">Apellidos: </span>{" "}
