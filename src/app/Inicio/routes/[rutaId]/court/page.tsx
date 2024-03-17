@@ -20,6 +20,7 @@ import { MessageProduct } from "@/types/product";
 import Quagga from "@ericblade/quagga2";
 import { MessageRequestProducts } from "@/types/requestProducts";
 import Swal from "sweetalert2";
+import Link from "next/link";
 
 // @ts-ignore
 export default function Court({ params }) {
@@ -567,18 +568,22 @@ export default function Court({ params }) {
         className="flex flex-col justify-between px-3  max-h-[100vh] h-full overflow-y-auto"
         style={{ alignSelf: "flex-start" }}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="my-3"
-          fill="#ccc"
-          height="20"
-          width="18"
-          viewBox="0 0 448 512"
-        >
-          <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
-        </svg>
+        <div className="">
+          <Link href="/Inicio/routes/${rutaId}">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="my-3"
+              fill="#ccc"
+              height="20"
+              width="18"
+              viewBox="0 0 448 512"
+            >
+              <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+            </svg>
+          </Link>
 
-        <hr className="mb-10 border-[1px]" />
+          <hr className="mb-10 border-[1px]" />
+        </div>
 
         {showPDF ? (
           <PDFViewer className="w-full h-[100vh]" showToolbar>
@@ -610,7 +615,7 @@ export default function Court({ params }) {
 
             {/* Primer div */}
 
-            <div className="flex flex-col text-black px-3 xl:col-span-1 col-span-3 col-start-1 row-start-1 h-[20vh] ">
+            <div className="flex flex-col text-black px-3 xl:col-span-1 col-span-3 col-start-1 row-start-1 h-[35vh] overflow-y-auto">
               <h1 className="flex justify-center text-2xl font-bold">Vendidos</h1>
               <table className="h-full w-full border-collapse">
                 <thead>
@@ -626,16 +631,16 @@ export default function Court({ params }) {
                       key={"productoVendido-" + index}
                       className="grid grid-cols-3 py-2.5 text-center"
                     >
-                      <td>{}</td>
-                      <td>{}</td>
-                      <td>{}</td>
+                      <td>{product.nombre}</td>
+                      <td>{product.cantidad}</td>
+                      <td>{product.precio}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
 
-            <div className="flex flex-col text-black px-3 xl:col-span-1 col-span-3 col-start-1 row-start-1 h-[20vh] ">
+            <div className="flex flex-col text-black px-3 xl:col-span-1 col-span-3 col-start-1 row-start-1 h-[35vh] overflow-y-auto">
               <h1 className="flex justify-center text-2xl font-bold">No Vendidos</h1>
               <table className="h-full w-full border-collapse">
                 <thead>
@@ -651,9 +656,9 @@ export default function Court({ params }) {
                       key={"productoVendido-" + index}
                       className="grid grid-cols-3 py-2.5 text-center"
                     >
-                      <td>{}</td>
-                      <td>{}</td>
-                      <td>{}</td>
+                      <td>{product.nombre}</td>
+                      <td>{product.cantidad}</td>
+                      <td>{product.precio}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -661,7 +666,7 @@ export default function Court({ params }) {
             </div>
             {/* Tercer div */}
 
-            <div className="flex  flex-col justify-items-center text-black px-3  pb-5 row-span-2  xl:col-span-2 col-span-3 xl:col-start-3 xl:row-start-1 col-start-1 row-start-3  xl:justify-start">
+            <div className="flex  flex-col justify-items-center text-black px-3  pb-5 row-span-2  xl:col-span-2 col-span-3 xl:col-start-3 xl:row-start-1 col-start-1 row-start-3  xl:justify-start h-[35vh] overflow-y-auto mb-10">
               <h1 className="flex justify-center text-2xl font-bold">Devoluciones</h1>
               <table className="h-full w-full border-collapse">
                 <thead>
@@ -673,20 +678,20 @@ export default function Court({ params }) {
                 </thead>
 
                 <tbody>
-                  {actualProductSearchScanner && (
+                {currentCourt.productosVendidos.map((product, index) => (
                     <tr
-                      // key={"productoNoVendido-"+ index}
+                      key={"productoVendido-" + index}
                       className="grid grid-cols-3 py-2.5 text-center"
                     >
-                      <td>{actualProductSearchScanner.productName}</td>
-                      <td>{actualProductSearchScanner.productIsSold}</td>
-                      <td>{actualProductSearchScanner.productPrice}</td>
+                      <td>{product.nombre}</td>
+                      <td>{product.cantidad}</td>
+                      <td>{product.precio}</td>
                     </tr>
-                  )}
+                  ))}
                 </tbody>
               </table>
             </div>
-            <div className="flex flex-col text-black px-3 xl:col-span-1 xl:col-start-1 col-span-3 row-start-2 h-[20vh]">
+            <div className="flex flex-col text-black px-3 xl:col-span-1 xl:col-start-1 col-span-3 row-start-2 h-[30vh]">
               {/* Primer elemento */}
               <div className="text-[#000]  flex flex-col items-center w-full h-fit bg-[#ccc] py-2 rounded-full mb-8">
                 <p className="font-bold text-[20px] text-center">ESTIMADOS</p>
@@ -724,7 +729,7 @@ export default function Court({ params }) {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col text-black px-3 xl:col-span-1 xl:col-start-2 col-span-3 row-start-2 h-[20vh]">
+            <div className="flex flex-col text-black px-3 xl:col-span-1 xl:col-start-2 col-span-3 row-start-2 h-[25vh]">
               {/* Primer elemento */}
               <div className="text-[#000]  flex flex-col items-center w-full h-fit bg-[#ccc] py-2 rounded-full mb-8">
                 <p className="font-bold text-[20px] text-center">
@@ -773,7 +778,7 @@ export default function Court({ params }) {
                 className="w-full  gap-5 rounded-xl text-center py-5"
                 style={{ boxShadow: "0px 6px 13.7px 0px rgba(0, 0, 0, 0.10)" }}
               >
-                <p className="font-bold text-lg">LA DIFERENCIA ES DE:</p>
+                <p className="font-bold text-lg">DIFERENCIA TOTAL ES DE:</p>
                 <p className="font-normal text-xl text-red-500 relative">
                   $ {}
                   <span className=" ps-3 text-sm font-bold absolute top-[-3px]">
@@ -787,7 +792,7 @@ export default function Court({ params }) {
                 className="w-full  gap-5 rounded-xl text-center py-5"
                 style={{ boxShadow: "0px 6px 13.7px 0px rgba(0, 0, 0, 0.10)" }}
               >
-                <p className="font-bold text-lg">LA DIFERENCIA ES DE:</p>
+                <p className="font-bold text-lg">DIFERENCIA DEVOLUCION ES DE:</p>
                 <p className="font-normal text-xl text-red-500 relative">
                   $ {}
                   <span className=" ps-3 text-sm font-bold absolute top-[-3px]">
