@@ -356,9 +356,9 @@ export default function Route({ params }) {
                 <path
                   fill="none"
                   stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
                   d="M3 5h8m-8 7h13M3 19h18"
                 />
               </svg>
