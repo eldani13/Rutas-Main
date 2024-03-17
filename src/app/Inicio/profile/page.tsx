@@ -37,7 +37,7 @@ export default function UserPage() {
   return (
     <>
       <span></span>
-      <EmployeeForm dataInitial={dataInitial} setDataInitial={setDataInitial} type="edit"/>
+      <EmployeeForm dataInitial={dataInitial} setDataInitial={setDataInitial} type="edit" roleActualUser={dataInitial.role}/>
     </>
   );
 }

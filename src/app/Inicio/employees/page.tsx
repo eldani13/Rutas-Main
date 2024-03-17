@@ -1,184 +1,325 @@
-"use client"
+"use client";
 import { ButtonCrud } from "@/components/buttons/ButtonCrud";
+import EmployeeForm from "@/components/forms/EmployeeForm";
 import { MessageEmployees, RootEmployees } from "@/types/employees";
-import { deleteRemoveData, getAllFetchDataValues, patchEditVal, postInsertData } from "@/utils/api";
-import { processEnv } from "@/utils/cookies";
+import jwt from "jsonwebtoken";
+import {
+  deleteRemoveData,
+  getAllFetchDataValues,
+  patchEditVal,
+  postInsertData,
+} from "@/utils/api";
+import { getCookie, processEnv } from "@/utils/cookies";
 import Link from "next/link";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 
-
 export default function Employees() {
+  const [dataEmployees, setDataEmployees] = useState<null | RootEmployees>(
+    null
+  );
+  const [clickInEmployees, setclickEmployees] =
+    useState<null | MessageEmployees>(null);
+  const [viewAddEmployees, setviewAddEmployees] = useState<
+    [boolean, "insert" | "edit"]
+  >([false, "insert"]);
+  const [roleUser, setRoleUser] = useState<
+    "administrador" | "empleado" | null
+  >();
 
-    const [dataEmployees, setDataEmployees] = useState<null | RootEmployees>(null);
-    const [clickInEmployees, setclickEmployees] = useState<null | MessageEmployees>(null);
-    const [viewAddEmployees, setviewAddEmployees] = useState<[boolean, string]>([false, 'insert']);
+  const updateTable = async () => {
+    await getAllFetchDataValues(`${processEnv.back}employees`).then(
+      (rec: RootEmployees) => {
+        setDataEmployees(rec);
+        console.log(rec);
+      }
+    );
+  };
 
-    const formRef = useRef<HTMLFormElement>(null);
-    const input_user = useRef<HTMLInputElement>(null);
-    const input_username = useRef<HTMLInputElement>(null);
-    const input_lastnames = useRef<HTMLInputElement>(null);
-    const select_role = useRef<HTMLSelectElement>(null);
-    const input_password = useRef<HTMLInputElement>(null);
+  const [passwordVisibility, setPasswordVisibility] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const handleTogglePassword = (id: string) => {
+    setPasswordVisibility((prevState) => ({
+      ...prevState,
+      [id]: !prevState[id] || false,
+    }));
+  };
 
-    const updateTable = async () => {
-        await getAllFetchDataValues(`${processEnv.back}employees`)
-            .then((rec: RootEmployees) => {
-                // @ts-ignore
-                setDataEmployees(rec)
-                console.log(rec)
+  const getUserType = async () => {
+    const ck = await getCookie(processEnv.jtIdentity);
+    // @ts-ignore
+    const { role } = jwt.decode(ck) as {
+      username: string;
+      role: string;
+      exp: number;
+      iat: number;
+    } | null;
+    setRoleUser(role || null);
+  };
 
-            })
-    }
+  useEffect(() => {
+    getUserType();
+    fetch(`${processEnv.back}employees`)
+      .then((env) => env.json())
+      .then((rec) => {
+        // @ts-ignore
+        setDataEmployees(rec);
+      });
+  }, []);
 
-    const [passwordVisibility, setPasswordVisibility] = useState<{ [key: string]: boolean }>({});
-    const handleTogglePassword = (id: string) => {
-        setPasswordVisibility(prevState => ({
-            ...prevState,
-            [id]: !prevState[id] || false,
-        }));
-    };;
+  //   useEffect(() => {
+  //     if (viewAddEmployees[1] == "edit" && clickInEmployees != null) {
+  //       input_user.current &&
+  //         (input_user.current.value = clickInEmployees?.user || "");
+  //       input_username.current &&
+  //         (input_username.current.value =
+  //           clickInEmployees?.username.toString() || "");
+  //       input_lastnames.current &&
+  //         (input_lastnames.current.value =
+  //           clickInEmployees?.lastnames.toString() || "");
+  //       select_role.current &&
+  //         (select_role.current.value = clickInEmployees?.role.toString() || "");
+  //       input_password.current &&
+  //         (input_password.current.value =
+  //           clickInEmployees?.password.toString() || "");
+  //     }
+  //   }, [viewAddEmployees]);
 
-    useEffect(() => {
-        fetch(`${processEnv.back}employees`)
-            .then((env) => env.json())
-            .then((rec) => {
-                // @ts-ignore
-                setDataEmployees(rec)
-            })
-    }, [])
-
-
-    useEffect(() => {
-        if (viewAddEmployees[1] == "edit" && clickInEmployees != null) {
-            input_user.current && (input_user.current.value = clickInEmployees?.user || "");
-            input_username.current && (input_username.current.value = clickInEmployees?.username.toString() || "");
-            input_lastnames.current && (input_lastnames.current.value = clickInEmployees?.lastnames.toString() || "");
-            select_role.current && (select_role.current.value = clickInEmployees?.role.toString() || "");
-            input_password.current && (input_password.current.value = clickInEmployees?.password.toString() || "");
-        }
-    }, [viewAddEmployees])
-
-
-    const onHandleform_addEmployees = async (e: FormEvent) => {
-        e.preventDefault();
-        if (viewAddEmployees[1] == "insert") {
-            await insertEmployeesFunction()
-        }
-        else if (viewAddEmployees[1] == "edit") {
-            await editEmployeesFunction()
-        }
-
-    }
-    const editEmployeesFunction = async () => {
-        await patchEditVal(`${processEnv.back}employee/edit/${clickInEmployees?._id}`,
-            {
-                "user": input_user.current?.value,
-                "username": input_username.current?.value,
-                "lastnames": input_lastnames.current?.value,
-                "role": select_role.current?.value,
-                "password": input_password.current?.value
-            }, () => {
-                setviewAddEmployees([false, 'insert']);
-                updateTable();
-                formRef.current?.reset();
-            }, "empleado"
-        )
-    }
-    const insertEmployeesFunction = async () => {
-        await postInsertData(`${processEnv.back}employee/new/`, {
-            "user": input_user.current?.value,
-            "username": input_username.current?.value,
-            "lastnames": input_lastnames.current?.value,
-            "role": select_role.current?.value,
-            "password": input_password.current?.value
-        }, () => {
-            setviewAddEmployees([false, 'insert']);
-            updateTable();
-            formRef.current?.reset();
-        }, "empleado"
-        )
-
-    }
-    const removeEmployeesHandle = async () => {
-        await deleteRemoveData(`${processEnv.back}employee/delete/${clickInEmployees?._id}`,
-            () => {
-                setviewAddEmployees([false, 'insert']);
-                updateTable();
-                formRef.current?.reset();
-            }, "empleado", `Quieres eliminar a: \n ${clickInEmployees?.username} \n ${clickInEmployees?.lastnames}`)
-
-    }
-    return (
+  //   const onHandleform_addEmployees = async (e: FormEvent) => {
+  //     e.preventDefault();
+  //     if (viewAddEmployees[1] == "insert") {
+  //       await insertEmployeesFunction();
+  //     } else if (viewAddEmployees[1] == "edit") {
+  //     //   await editEmployeesFunction();
+  //     }
+  //   };
+  //   const editEmployeesFunction = async () => {
+  //     await patchEditVal(
+  //       `${processEnv.back}employee/edit/${clickInEmployees?._id}`,
+  //       {
+  //         user: input_user.current?.value,
+  //         username: input_username.current?.value,
+  //         lastnames: input_lastnames.current?.value,
+  //         role: select_role.current?.value,
+  //         password: input_password.current?.value,
+  //       },
+  //       () => {
+  //         setviewAddEmployees([false, "insert"]);
+  //         updateTable();
+  //         formRef.current?.reset();
+  //       },
+  //       "empleado"
+  //     );
+  //   };
+  //   const insertEmployeesFunction = async () => {
+  //     await postInsertData(
+  //       `${processEnv.back}employee/new/`,
+  //       {
+  //         user: input_user.current?.value,
+  //         username: input_username.current?.value,
+  //         lastnames: input_lastnames.current?.value,
+  //         role: select_role.current?.value,
+  //         password: input_password.current?.value,
+  //       },
+  //       () => {
+  //         setviewAddEmployees([false, "insert"]);
+  //         updateTable();
+  //         formRef.current?.reset();
+  //       },
+  //       "empleado"
+  //     );
+  //   };
+  const removeEmployeesHandle = async () => {
+    await deleteRemoveData(
+      `${processEnv.back}employee/delete/${clickInEmployees?._id}`,
+      () => {
+        setviewAddEmployees([false, "insert"]);
+        updateTable();
+        // formRef.current?.reset();
+      },
+      "empleado",
+      `Quieres eliminar a: \n ${clickInEmployees?.username} \n ${clickInEmployees?.lastnames}`
+    );
+  };
+  return (
+    <>
+      {!viewAddEmployees[0] ? (
         <>
-            <div className="h-[100%] ">
-                <div className="z-10 rigth-0 bottom-0 h-fit absolute xl:static xl:flex flex-col items-start xl:border-r-2 xl:border-[#bbbcbc] md:pt-14 px-4 xl:h-[100%] justify-between">
-                    <div className="hidden xl:visible xl:flex flex-col items-start justify-center">
-                        <h1 className="text-[#000] text-2xl font-bold mb-1">Empleados</h1>
-                        <span className="">Listado de empleados <br /> contratados</span>
-                    </div>
+          <div className="h-[100%] ">
+            <div className="z-10 rigth-0 bottom-0 h-fit absolute xl:static xl:flex flex-col items-start xl:border-r-2 xl:border-[#bbbcbc] md:pt-14 px-4 xl:h-[100%] justify-between">
+              <div className="hidden xl:visible xl:flex flex-col items-start justify-center">
+                <h1 className="text-[#000] text-2xl font-bold mb-1">
+                  Empleados
+                </h1>
+                <span className="">
+                  Listado de empleados <br /> contratados
+                </span>
+              </div>
 
-                    {/* Botones */}
-                    <div className="pb-10 flex gap-2 gap-y-5 flex-row-reverse xl:flex-col items-baseline justify-center">
-                        <ButtonCrud isHidden={clickInEmployees === null} text="Editar" color="bg-blue-500" onclickHandle={() => setviewAddEmployees([true, 'edit'])} >
-                            <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path fill="#bcbdbf" d="M8.807 52.42c1.607-2.01 3.654-.324 5.996 1.545c2.34 1.863 4.085 3.192 2.479 5.208c-1.607 2.02-8.01 6.161-10.349 4.299c-2.339-1.866.263-9.03 1.874-11.05" /><path fill="#a7a8ac" d="M16.834 55.701c1.089 1.093 1.517 2.129.447 3.472c-1.607 2.02-8.01 6.161-10.349 4.299c-.354-.283-.583-.7-.731-1.187c4.28-1.2 9.48-2.942 10.633-6.584" /><path fill="#59595c" d="m9.409 50.685l9.808 7.815l35.681-40.166L40.56 6.917z" /><g fill="#424143"><path d="m16.195 56.09l3.02 2.41l35.681-40.17l-5.28-4.204zm-3.771-3l-3.01-2.405l31.15-43.768l5.286 4.211z" /><path d="M40.706 4.875c-1.639 2.053-1.237 5.106.897 6.803l8.418 6.708c2.135 1.697 5.198 1.407 6.842-.649c1.637-2.057 1.231-5.106-.901-6.803l-8.424-6.708c-2.133-1.703-5.192-1.414-6.832.649" /><path d="M47.13 13.384c2.318 1.844 5.21 2.076 6.455.516l4.913-6.171c1.245-1.566.373-4.328-1.943-6.177c-2.314-1.85-5.212-2.076-6.457-.512l-4.913 6.17c-1.244 1.561-.375 4.325 1.945 6.174" /></g><path fill="#bcbdbf" d="M33.99 33.29c1.117 1 2.821.903 3.824-.213L51.682 17.59a2.699 2.699 0 0 0-.203-3.824a2.708 2.708 0 0 0-3.824.217l-13.87 15.485c-1 1.113-.91 2.824.205 3.822" /></svg>
-                        </ButtonCrud>
-                        <ButtonCrud isHidden={clickInEmployees === null} text="Eliminar" color="bg-red-400" onclickHandle={removeEmployeesHandle} >
-                            <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048"><path fill="black" d="M1086 91L281 896h999v960q0 40-15 75t-41 61t-61 41t-75 15H320q-40 0-75-15t-61-41t-41-61t-15-75v-807l-37 37l-91-90l272-272l-91-90q-18-18-27-41t-10-50q0-51 37-90l271-272q18-18 41-27t50-10q26 0 49 9t42 28l90 91L996 0zm66 1765v-832H256v832q0 26 19 45t45 19h768q26 0 45-19t19-45M543 272L272 543l90 91l272-272zm1377-16h128v512h-512V640h292q-77-60-167-91t-188-31q-115 0-219 43t-185 124l-90-90q100-100 226-152t268-53q123 0 238 41t209 119zm-896 896v640H896v-640zm-256 0v640H640v-640zm-256 0v640H384v-640z" /></svg>
-                        </ButtonCrud>
-                        <ButtonCrud isHidden={false} text="Agregar" color="bg-green-500" onclickHandle={() => setviewAddEmployees([true, 'insert'])} >
-                            <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="black" d="M12 4a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2h-6v6a1 1 0 1 1-2 0v-6H5a1 1 0 1 1 0-2h6V5a1 1 0 0 1 1-1" /></svg>
-                        </ButtonCrud>
-
-                    </div>
-                </div>
+              {/* Botones */}
+              <div className="pb-10 flex gap-2 gap-y-5 flex-row-reverse xl:flex-col items-baseline justify-center">
+                <ButtonCrud
+                  isHidden={clickInEmployees === null}
+                  text="Editar"
+                  color="bg-blue-500"
+                  onclickHandle={() => setviewAddEmployees([true, "edit"])}
+                >
+                  <svg
+                    className="w-6 h-6"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 64 64"
+                  >
+                    <path
+                      fill="#bcbdbf"
+                      d="M8.807 52.42c1.607-2.01 3.654-.324 5.996 1.545c2.34 1.863 4.085 3.192 2.479 5.208c-1.607 2.02-8.01 6.161-10.349 4.299c-2.339-1.866.263-9.03 1.874-11.05"
+                    />
+                    <path
+                      fill="#a7a8ac"
+                      d="M16.834 55.701c1.089 1.093 1.517 2.129.447 3.472c-1.607 2.02-8.01 6.161-10.349 4.299c-.354-.283-.583-.7-.731-1.187c4.28-1.2 9.48-2.942 10.633-6.584"
+                    />
+                    <path
+                      fill="#59595c"
+                      d="m9.409 50.685l9.808 7.815l35.681-40.166L40.56 6.917z"
+                    />
+                    <g fill="#424143">
+                      <path d="m16.195 56.09l3.02 2.41l35.681-40.17l-5.28-4.204zm-3.771-3l-3.01-2.405l31.15-43.768l5.286 4.211z" />
+                      <path d="M40.706 4.875c-1.639 2.053-1.237 5.106.897 6.803l8.418 6.708c2.135 1.697 5.198 1.407 6.842-.649c1.637-2.057 1.231-5.106-.901-6.803l-8.424-6.708c-2.133-1.703-5.192-1.414-6.832.649" />
+                      <path d="M47.13 13.384c2.318 1.844 5.21 2.076 6.455.516l4.913-6.171c1.245-1.566.373-4.328-1.943-6.177c-2.314-1.85-5.212-2.076-6.457-.512l-4.913 6.17c-1.244 1.561-.375 4.325 1.945 6.174" />
+                    </g>
+                    <path
+                      fill="#bcbdbf"
+                      d="M33.99 33.29c1.117 1 2.821.903 3.824-.213L51.682 17.59a2.699 2.699 0 0 0-.203-3.824a2.708 2.708 0 0 0-3.824.217l-13.87 15.485c-1 1.113-.91 2.824.205 3.822"
+                    />
+                  </svg>
+                </ButtonCrud>
+                <ButtonCrud
+                  isHidden={clickInEmployees === null}
+                  text="Eliminar"
+                  color="bg-red-400"
+                  onclickHandle={removeEmployeesHandle}
+                >
+                  <svg
+                    className="w-6 h-6"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 2048 2048"
+                  >
+                    <path
+                      fill="black"
+                      d="M1086 91L281 896h999v960q0 40-15 75t-41 61t-61 41t-75 15H320q-40 0-75-15t-61-41t-41-61t-15-75v-807l-37 37l-91-90l272-272l-91-90q-18-18-27-41t-10-50q0-51 37-90l271-272q18-18 41-27t50-10q26 0 49 9t42 28l90 91L996 0zm66 1765v-832H256v832q0 26 19 45t45 19h768q26 0 45-19t19-45M543 272L272 543l90 91l272-272zm1377-16h128v512h-512V640h292q-77-60-167-91t-188-31q-115 0-219 43t-185 124l-90-90q100-100 226-152t268-53q123 0 238 41t209 119zm-896 896v640H896v-640zm-256 0v640H640v-640zm-256 0v640H384v-640z"
+                    />
+                  </svg>
+                </ButtonCrud>
+                <ButtonCrud
+                  isHidden={false}
+                  text="Agregar"
+                  color="bg-green-500"
+                  onclickHandle={() => {
+                    setclickEmployees(null);
+                    setviewAddEmployees([true, "insert"]);
+                }}
+                >
+                  <svg
+                    className="w-6 h-6"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="black"
+                      d="M12 4a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2h-6v6a1 1 0 1 1-2 0v-6H5a1 1 0 1 1 0-2h6V5a1 1 0 0 1 1-1"
+                    />
+                  </svg>
+                </ButtonCrud>
+              </div>
             </div>
+          </div>
+          <div className=" max-h-[100vh] h-full  ">
+            <div className="z-20 max-h-[100vh] h-full pt-14 flex flex-col overflow-y-auto p-5 ">
+              {/* Informacion */}
+              <hr className="mb-10 border-[1px]" />
 
-            <div className=" max-h-[100vh] h-full  ">
-                <div className="z-20 max-h-[100vh] h-full pt-14 flex flex-col overflow-y-auto p-5 ">
-                    {/* Informacion */}
-                    <hr className="mb-10 border-[1px]" />
-
-
-                    <div className="pb-28" >
-                        <div className="hidden md:grid bg-neutral-300 py-3 font-bold px-3 mb-2 rounded-full" style={{ gridTemplateColumns: "50px 1fr 1fr 1fr 1fr 1fr" }}>
-                            <p className="text-center">ID</p>
-                            <p className="text-center">Usuario</p>
-                            <p className="text-center">Nombre</p>
-                            <p className="text-center">Apellidos</p>
-                            <p className="text-center">Puesto</p>
-                            <p className="text-center">Contraseña</p>
-                        </div>
-
-                        {
-                            // @ts-ignore
-                            dataEmployees && dataEmployees?.message.map((data: Message, index: number) => (
-                                <div key={data._id} onClick={() => setclickEmployees(clickInEmployees != null ? null : data)}
-                                    className={`bg-[linear-gradient(225deg,_#a1c4fd_10%,_#c2e9fb_90%)] 
-                                        relative my-2 py-6 md:py-2 rounded-xl flex flex-col px-3 gap-2 font-semibold hover:bg-slate-200 cursor-pointer ${clickInEmployees?._id == data._id ? "bg-[linear-gradient(225deg,_#acfca2_10%,_#c0faea_90%)]" : " md:bg-none"}
-                                        md:grid  justify-items-center md:rounded-full overflow-hidden text-center`} 
-                                        style={{ gridTemplateColumns: "50px 1fr 1fr 1fr 1fr 1fr"}}>
-                                    <td className="text-center hidden md:block">{index}</td>
-                                    <td className="text-center flex gap-2"><span className="block md:hidden">Usuario: </span> {data.user}</td>
-                                    <td className="text-center flex gap-2"><span className="block md:hidden">Nombres: </span> {data.username}</td>
-                                    <td className="text-center flex gap-2"><span className="block md:hidden">Apellidos: </span> {data.lastnames}</td>
-                                    <td className="text-center flex absolute md:static top-0 w-full"><p className="w-full uppercase font-bold md:font-normal">{data.role}</p></td>
-                                    <td className="text-center max-w-52 md:max-w-7xl overflow-hidden flex flex-col justify-center ">
-                                        <button className="m-auto" onClick={() => handleTogglePassword(data._id)}>
-                                            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="18" viewBox="0 0 576 512">
-                                                <path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z" />
-                                            </svg>
-                                        </button>
-                                        {passwordVisibility[data._id] && (
-                                            <span className="pl-4 contents break-words ">{data.password}</span>
-                                        )}
-                                    </td>
-                                </div>
-                            ))
-                        }
-                    </div>
+              <div className="pb-28">
+                <div
+                  className="hidden md:grid bg-neutral-300 py-3 font-bold px-3 mb-2 rounded-full"
+                  style={{ gridTemplateColumns: "50px 1fr 1fr 1fr 1fr 1fr" }}
+                >
+                  <p className="text-center">ID</p>
+                  <p className="text-center">Usuario</p>
+                  <p className="text-center">Nombre</p>
+                  <p className="text-center">Apellidos</p>
+                  <p className="text-center">Puesto</p>
+                  <p className="text-center">Contraseña</p>
                 </div>
 
-                <div className={`z-20 bg-[#1d1b1b6e] absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${viewAddEmployees[0] ? 'visible' : 'hidden'}`}>
+                {
+                  // @ts-ignore
+                  dataEmployees &&
+                    dataEmployees?.message.map(
+                      (data: MessageEmployees, index: number) => (
+                        <div
+                          key={data._id}
+                          onClick={() =>
+                            setclickEmployees(
+                              clickInEmployees != null ? null : data
+                            )
+                          }
+                          className={`bg-[linear-gradient(225deg,_#a1c4fd_10%,_#c2e9fb_90%)] 
+                                        relative my-2 py-6 md:py-2 rounded-xl flex flex-col px-3 gap-2 font-semibold hover:bg-slate-200 cursor-pointer ${
+                                          clickInEmployees?._id == data._id
+                                            ? "bg-[linear-gradient(225deg,_#acfca2_10%,_#c0faea_90%)]"
+                                            : " md:bg-none"
+                                        }
+                                        md:grid  justify-items-center md:rounded-full overflow-hidden text-center`}
+                          style={{
+                            gridTemplateColumns: "50px 1fr 1fr 1fr 1fr 1fr",
+                          }}
+                        >
+                          <td className="text-center hidden md:block">
+                            {index}
+                          </td>
+                          <td className="text-center flex gap-2">
+                            <span className="block md:hidden">Usuario: </span>{" "}
+                            {data.user}
+                          </td>
+                          <td className="text-center flex gap-2">
+                            <span className="block md:hidden">Nombres: </span>{" "}
+                            {data.username}
+                          </td>
+                          <td className="text-center flex gap-2">
+                            <span className="block md:hidden">Apellidos: </span>{" "}
+                            {data.lastnames}
+                          </td>
+                          <td className="text-center flex absolute md:static top-0 w-full">
+                            <p className="w-full uppercase font-bold md:font-normal">
+                              {data.role}
+                            </p>
+                          </td>
+                          <td className="text-center max-w-52 md:max-w-7xl overflow-hidden flex flex-col justify-center ">
+                            <button
+                              className="m-auto"
+                              onClick={() => handleTogglePassword(data._id)}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                height="16"
+                                width="18"
+                                viewBox="0 0 576 512"
+                              >
+                                <path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z" />
+                              </svg>
+                            </button>
+                            {passwordVisibility[data._id] && (
+                              <span className="pl-4 contents break-words ">
+                                {data.password}
+                              </span>
+                            )}
+                          </td>
+                        </div>
+                      )
+                    )
+                }
+              </div>
+            </div>
+            {/* <div className={`z-20 bg-[#1d1b1b6e] absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${viewAddEmployees[0] ? 'visible' : 'hidden'}`}>
                     <form ref={formRef} onSubmit={onHandleform_addEmployees} action="" className="relative bg-slate-50 flex p-8 pt-16 md:p-20 flex-col rounded-xl ">
                         <div className="w-full flex absolute justify-center top-[0] -translate-y-[50%] left-0 right-0 ">
                             <div className={`${viewAddEmployees[1] == 'insert' ? "bg-teal-300" : "bg-sky-400"} w-20 h-20 flex rounded-full items-center justify-center shadow-lg shadow-emerald-800`}>
@@ -190,7 +331,6 @@ export default function Employees() {
                         <h1 className="text-slate-900 font-semibold text-xl text-center">{viewAddEmployees[1] == "insert" ? "Insertar" : "Editar"} Empleado</h1>
                         <div className="flex flex-col gap-3 mb-16 ">
 
-                            {/* user */}
                             <div >
                                 <label htmlFor="">Usuario:</label>
                                 <div className="ms-2 border-[1px] border-gray-500 flex flex-row overflow-hidden rounded-md">
@@ -203,7 +343,6 @@ export default function Employees() {
                                 </div>
                             </div>
 
-                            {/* username */}
                             <div >
                                 <label htmlFor="">Nombre:</label>
                                 <div className="ms-2 border-[1px] border-gray-500 flex flex-row overflow-hidden rounded-md">
@@ -217,7 +356,6 @@ export default function Employees() {
                                 </div>
                             </div>
 
-                            {/* lastnames */}
                             <div >
                                 <label htmlFor="">Apellidos:</label>
                                 <div className="ms-2 border-[1px] border-gray-500 flex flex-row overflow-hidden rounded-md">
@@ -231,7 +369,6 @@ export default function Employees() {
                                 </div>
                             </div>
 
-                            {/* role */}
                             <div >
                                 <label htmlFor="">Puesto:</label>
                                 <div className="ms-2 border-[1px] border-gray-500 flex flex-row overflow-hidden rounded-md">
@@ -247,7 +384,6 @@ export default function Employees() {
                                 </div>
                             </div>
 
-                            {/* password */}
                             <div >
                                 <label htmlFor="">Contraseña:</label>
                                 <div className="ms-2 border-[1px] border-gray-500 flex flex-row overflow-hidden rounded-md">
@@ -262,16 +398,33 @@ export default function Employees() {
                             </div>
                         </div>
 
-                        {/* Botones */}
                         <div className="flex justify-between w-full gap-8">
                             <button type="submit" className="bg-blue-500 text-slate-50 px-6 py-2 rounded-full hover:scale-[1.1]">Guardar</button>
                             <button type="reset" onClick={() => setviewAddEmployees([false, 'insert'])} className="bg-red-500 text-slate-50 px-6 py-2 rounded-full hover:scale-[1.1]">Cancelar</button>
                         </div>
                     </form>
-                </div>
-            </div>
-
+                </div> */}
+          </div>
         </>
-
-    );
+      ) : (
+        roleUser && (
+          <>
+            <span></span>
+            <EmployeeForm
+              dataInitial={clickInEmployees}
+              setDataInitial={setclickEmployees}
+              type={viewAddEmployees[1]}
+              roleActualUser={roleUser}
+              handleCancel={() => setviewAddEmployees([false, "insert"])}
+              handleSuccesForm={async () => {
+                setviewAddEmployees([false, "insert"]);
+                setclickEmployees(null);
+                await updateTable();
+              }}
+            />
+          </>
+        )
+      )}
+    </>
+  );
 }

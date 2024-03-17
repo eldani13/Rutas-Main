@@ -1,5 +1,5 @@
 import { MessageEmployees } from "@/types/employees";
-import { patchEditVal } from "@/utils/api";
+import { patchEditVal, postInsertData } from "@/utils/api";
 import { processEnv } from "@/utils/cookies";
 import Image from "next/image";
 import {
@@ -13,43 +13,82 @@ import {
 export default function EmployeeForm({
   dataInitial,
   setDataInitial,
+  roleActualUser,
   type,
+  handleCancel,
+  handleSuccesForm,
 }: {
   setDataInitial: Dispatch<SetStateAction<MessageEmployees | null>>;
   dataInitial: MessageEmployees | null;
+  roleActualUser: "administrador" | "empleado";
   type: "insert" | "edit";
+  handleCancel?: () => void;
+  handleSuccesForm?: () => void;
 }) {
   const [dataCamb, setDataCamb] = useState<MessageEmployees | null>(null);
 
   const formUpdate = async (e: FormEvent) => {
     e.preventDefault();
     if (dataInitial == dataCamb) return;
+    if (roleActualUser === "empleado") return;
 
-    if(type === "edit"){
-        await editEmployee();
+    if (type === "edit") {
+      await editEmployee();
+    } else if (type === "insert") {
+      await insertEmployee();
     }
-   
   };
 
-  const editEmployee = async () =>{
+  const editEmployee = async () => {
     await patchEditVal(
-        `${processEnv.back}employee/edit/${dataCamb?._id}`,
-        {
-          user: dataCamb?.user,
-          username: dataCamb?.username,
-          lastnames: dataCamb?.lastnames,
-          role: dataCamb?.role,
-          password: dataCamb?.password,
-        },
-        () => {
-          setDataInitial(dataCamb);
-        },
-        "usuario"
-      );
-  }
+      `${processEnv.back}employee/edit/${dataCamb?._id}`,
+      {
+        user: dataCamb?.user,
+        username: dataCamb?.username,
+        lastnames: dataCamb?.lastnames,
+        role: dataCamb?.role,
+        password: dataCamb?.password,
+      },
+      () => {
+        setDataInitial(dataCamb);
+        if (handleSuccesForm) {
+          handleSuccesForm();
+        }
+      },
+      "usuario"
+    );
+  };
+  const insertEmployee = async () => {
+    await postInsertData(
+      `${processEnv.back}employee/new/`,
+      {
+        user: dataCamb?.user,
+        username: dataCamb?.username,
+        lastnames: dataCamb?.lastnames,
+        role: dataCamb?.role,
+        password: dataCamb?.password,
+      },
+      () => {
+        if (handleSuccesForm) {
+          handleSuccesForm();
+        }
+      },
+      "empleado"
+    );
+  };
 
   useEffect(() => {
-    setDataCamb(dataInitial);
+    setDataCamb(
+      dataInitial ?? {
+        _id: "",
+        user: "",
+        username: "",
+        lastnames: "",
+        role: "empleado",
+        password: "",
+        __v: 0,
+      }
+    );
   }, []);
 
   return (
@@ -76,7 +115,6 @@ export default function EmployeeForm({
               </svg>
             </div>
           </div>
-          {/* @ts-ignore */}
           <form
             className="max-w-sm mx-auto pt-10  w-full px-5 md:px-0 z-30"
             onSubmit={formUpdate}
@@ -102,7 +140,7 @@ export default function EmployeeForm({
                 }
                 value={dataCamb?.user || ""}
                 required
-                disabled={dataInitial?.role === "empleado"}
+                disabled={roleActualUser === "empleado"}
               />
             </div>
             <div className="mb-5">
@@ -126,7 +164,7 @@ export default function EmployeeForm({
                 }
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                 required
-                disabled={dataInitial?.role === "empleado"}
+                disabled={roleActualUser === "empleado"}
               />
             </div>
             <div className="mb-5">
@@ -150,7 +188,7 @@ export default function EmployeeForm({
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                 placeholder="Juanito"
                 required
-                disabled={dataInitial?.role === "empleado"}
+                disabled={roleActualUser === "empleado"}
               />
             </div>
             <div className="mb-5">
@@ -174,7 +212,7 @@ export default function EmployeeForm({
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                 placeholder="Ba..."
                 required
-                disabled={dataInitial?.role === "empleado"}
+                disabled={roleActualUser === "empleado"}
               />
             </div>
             <div className="mb-5">
@@ -195,25 +233,47 @@ export default function EmployeeForm({
                   }))
                 }
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                disabled={dataInitial?.role === "empleado"}
+                disabled={roleActualUser === "empleado"}
               >
                 <option value="empleado">Empleado</option>
                 <option value="administrador">Administrador</option>
               </select>
             </div>
             <div className="flex justify-center gap-10">
+              {handleCancel && (
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  // onClick={() => {
+                  //   setDataCamb(dataInitial);
+                  // }}
+                  className={`text-white px-5 py-2.5 text-center rounded-lg text-sm w-full sm:w-auto focus:ring-4 focus:outline-none focus:ring-blue-300 bg-red-400 hover:bg-red-700`}
+                >
+                  Cancelar
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => {
-                  setDataCamb(dataInitial);
+                  setDataCamb(
+                    dataInitial ?? {
+                      _id: "",
+                      user: "",
+                      username: "",
+                      lastnames: "",
+                      role: "empleado",
+                      password: "",
+                      __v: 0,
+                    }
+                  );
                 }}
                 className={`text-white px-5 py-2.5 text-center rounded-lg text-sm w-full sm:w-auto focus:ring-4 focus:outline-none focus:ring-blue-300 
                   ${
-                    dataInitial?.role === "empleado"
+                    roleActualUser === "empleado"
                       ? "bg-green-300 cursor-not-allowed"
                       : "bg-green-400 hover:bg-green-700"
                   }`}
-                disabled={dataInitial?.role === "empleado"}
+                disabled={roleActualUser === "empleado"}
               >
                 Reiniciar
               </button>
@@ -221,13 +281,13 @@ export default function EmployeeForm({
                 type="submit"
                 className={`text-white px-5 py-2.5 text-center rounded-lg text-sm w-full sm:w-auto focus:ring-4 focus:outline-none focus:ring-blue-300 
                   ${
-                    dataInitial?.role === "empleado"
+                    roleActualUser === "empleado"
                       ? "bg-blue-300 cursor-not-allowed"
                       : "bg-blue-700 hover:bg-blue-800"
                   }`}
-                disabled={dataInitial?.role === "empleado"}
+                disabled={roleActualUser === "empleado"}
               >
-                Actualizar
+                {type==="edit"?"Actualizar":"Insertar"}
               </button>
             </div>
           </form>

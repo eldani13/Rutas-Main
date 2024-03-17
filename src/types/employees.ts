@@ -3,7 +3,7 @@ export interface MessageEmployees {
     user: string
     username: string
     lastnames: string
-    role: string
+    role: "administrador" | "empleado" 
     password: string
     __v: number
 }
