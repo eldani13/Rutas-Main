@@ -157,7 +157,7 @@ export default function RootLayout({
             </Link>
           )}
 
-          {/* Sistema de Corte */}
+          {/* Sistema de Corte
           {roleUser === "administrador" && (
             <Link href="/Inicio/store">
               <div>
@@ -175,7 +175,7 @@ export default function RootLayout({
                 </svg>
               </div>
             </Link>
-          )}
+          )} */}
 
           {/* Productos */}
           {roleUser === "administrador" && (
