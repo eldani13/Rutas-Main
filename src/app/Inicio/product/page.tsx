@@ -44,7 +44,7 @@ export default function Product() {
         productName: input_nombre.current?.value,
         productDescription: input_descripcion.current?.value,
         productPrice: parseFloat(input_precio.current?.value || "0"),
-        productIsSold: input_productIsSold.current?.checked,
+        // productIsSold: input_productIsSold.current?.checked,
       },
       () => {
         setviewAddProduct([false, "insert"]);
@@ -62,7 +62,7 @@ export default function Product() {
         productName: input_nombre.current?.value,
         productDescription: input_descripcion.current?.value,
         productPrice: parseFloat(input_precio.current?.value || "0"),
-        productIsSold: input_productIsSold.current?.checked,
+        // productIsSold: input_productIsSold.current?.checked,
       },
       () => {
         setviewAddProduct([false, "insert"]);
@@ -212,7 +212,7 @@ export default function Product() {
             <p>ID</p>
             <p>Nombre</p>
             <p>Descripcion</p>
-            <p>Precio</p>
+            <p>Precio base</p>
           </div>
           {
             // @ts-ignore
@@ -248,7 +248,7 @@ export default function Product() {
                   </td>
                   <td className="flex gap-1 ">
                     {" "}
-                    <span className="md:hidden font-black">Precio: $</span>
+                    <span className="md:hidden font-black">Precio base: $</span>
                     {data.productPrice}
                   </td>
                   <td className="md:hidden text-center flex absolute   md:static top-0 w-full">
@@ -336,7 +336,7 @@ export default function Product() {
                 </div>
               </div>
               <div>
-                <label htmlFor="">Precio:</label>
+                <label htmlFor="">Precio base:</label>
                 <div className="ms-2 border-[1px] border-gray-500 flex flex-row overflow-hidden rounded-md">
                   <div className="bg-slate-200 flex items-center justify-center color-slate-500 p-2 border-r-2 border-gray-500">
                     <svg
@@ -356,7 +356,7 @@ export default function Product() {
                   />
                 </div>
               </div>
-              <div>
+              {/* <div>
                 <label htmlFor="">Vendido:</label>
                 <div className="ms-2 border-[1px] border-gray-500 flex flex-row overflow-hidden rounded-md">
                   <div className="bg-slate-200 flex items-center justify-center color-slate-500 p-2 border-r-2 border-gray-500">
@@ -376,7 +376,7 @@ export default function Product() {
                     className="flex w-full h-auto px-3"
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className="flex justify-between w-full gap-8">
               <button

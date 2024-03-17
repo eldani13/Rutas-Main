@@ -1,19 +1,59 @@
-import { Dispatch, SetStateAction } from "react";
+import { postInsertData } from "@/utils/api";
+import { processEnv } from "@/utils/cookies";
+import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 
 export default function StoreForm({
   view = false,
   setReturnView = null,
+  handleSuccesForm,
 }: {
   view?: boolean;
   setReturnView?: Dispatch<SetStateAction<boolean>> | null;
+  handleSuccesForm?: () => void;
 }) {
+  const [dataFormCurrent, setDataFormCurrent] = useState({
+    name: "",
+    coordinator: "", //falta por el backend
+    address: "",
+    coordinates: "", //falta por el backend
+  });
+
+  const handleSendForm = async (e: FormEvent) => {
+    e.preventDefault();
+    await addStore();
+  };
+
+  const addStore = async () => {
+    await postInsertData(
+      `${processEnv.back}tienda/new`,
+      {
+        nombre: dataFormCurrent.name,
+        // coordinator: dataFormCurrent.coordinator, //falta por el backend
+        direccion: dataFormCurrent.address,
+        // coordinates: "" //falta por el backend
+      },
+      () => {
+        setDataFormCurrent({
+          name: "",
+          coordinator: "", //falta por el backend
+          address: "",
+          coordinates: "", //falta por el backend
+        });
+        if (handleSuccesForm) {
+          handleSuccesForm();
+        }
+      },
+      "tienda"
+    );
+  };
+
   return (
     <div
       className={`${
         view ? "flex" : "hidden"
       } h-full w-full absolute z-20 bg-white/80  items-center justify-center`}
     >
-      <form action="" className="max-w-sm w-full">
+      <form onSubmit={handleSendForm} className="max-w-sm w-full">
         <div className="flex justify-center mb-3">
           <div className="p-3 bg-slate-200 rounded-full ">
             <svg
@@ -40,6 +80,10 @@ export default function StoreForm({
             id="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
             placeholder="Slate"
+            onChange={(e) =>
+              setDataFormCurrent((prev) => ({ ...prev, name: e.target.value }))
+            }
+            value={dataFormCurrent.name}
           />
         </div>
         <div className="mb-5">
@@ -54,6 +98,13 @@ export default function StoreForm({
             id="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
             placeholder="Hir..."
+            onChange={(e) =>
+              setDataFormCurrent((prev) => ({
+                ...prev,
+                coordinator: e.target.value,
+              }))
+            }
+            value={dataFormCurrent.coordinator}
           />
         </div>
         <div className="mb-5">
@@ -68,6 +119,13 @@ export default function StoreForm({
             id="text"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
             placeholder="Jr. al..."
+            onChange={(e) =>
+              setDataFormCurrent((prev) => ({
+                ...prev,
+                address: e.target.value,
+              }))
+            }
+            value={dataFormCurrent.address}
           />
         </div>
         <div className="mb-5">
@@ -84,6 +142,13 @@ export default function StoreForm({
             pattern="-?\d+(\.\d+)?,\s?-?\d+(\.\d+)?"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
             placeholder="Jr. al..."
+            onChange={(e) =>
+              setDataFormCurrent((prev) => ({
+                ...prev,
+                coordinates: e.target.value,
+              }))
+            }
+            value={dataFormCurrent.coordinates}
           />
         </div>
         <div className="flex justify-center gap-10 pt-10">

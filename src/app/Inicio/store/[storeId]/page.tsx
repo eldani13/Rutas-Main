@@ -5,10 +5,28 @@ import { processEnv } from "@/utils/cookies";
 import { useEffect, useState } from "react";
 import ViewAllProducts from "../../../../components/views/ViewAllProducts";
 import ViewProductsSelect from "../../../../components/views/ViewProductsSelect";
+import { MessageStores, RootStores } from "@/types/stores";
 
-export default function Products() {
+export default function Products({ params }: { params: { storeId: string } }) {
+  const { storeId } = params;
+
   const [searchData, setSearchData] = useState("");
   const [selectData, setSelectData] = useState<MessageProduct[] | null>(null);
+  const [storeCurrent, setStoreCurrent] = useState<MessageStores[] | null>(
+    null
+  );
+
+  const getStoreCurrent = async () => {
+    await getAllFetchDataValues(`${processEnv.back}tienda/${storeId}`).then(
+      (resp) => {
+        console.log(resp);
+        // setStoreCurrent(resp.message);
+      }
+    );
+  };
+  useEffect(() => {
+    getStoreCurrent();
+  }, []);
   return (
     <>
       {/* <div className="h-[100%]">
