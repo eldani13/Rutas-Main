@@ -609,7 +609,9 @@ export default function Court({ params }) {
             {/*gridTemplateAreas: " 'productSold productSold summary' 'productNotSold productNotSold summary'*/}
 
             {/* Primer div */}
-            <div className="flex text-black px-3 xl:col-span-1 col-span-3 col-start-1 row-start-1 h-[20vh] ">
+
+            <div className="flex flex-col text-black px-3 xl:col-span-1 col-span-3 col-start-1 row-start-1 h-[20vh] ">
+              <h1 className="flex justify-center text-2xl font-bold">Vendidos</h1>
               <table className="h-full w-full border-collapse">
                 <thead>
                   <tr className="bg-[#ccc] rounded-full grid grid-cols-3 py-2.5">
@@ -624,15 +626,17 @@ export default function Court({ params }) {
                       key={"productoVendido-" + index}
                       className="grid grid-cols-3 py-2.5 text-center"
                     >
-                      <td>{product.nombre}</td>
-                      <td>{product.cantidad}</td>
-                      <td>{product.precio}</td>
+                      <td>{}</td>
+                      <td>{}</td>
+                      <td>{}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            <div className="flex text-black px-3 xl:col-span-1 col-span-3 col-start-1 row-start-1 h-[20vh] ">
+
+            <div className="flex flex-col text-black px-3 xl:col-span-1 col-span-3 col-start-1 row-start-1 h-[20vh] ">
+              <h1 className="flex justify-center text-2xl font-bold">No Vendidos</h1>
               <table className="h-full w-full border-collapse">
                 <thead>
                   <tr className="bg-[#ccc] rounded-full grid grid-cols-3 py-2.5">
@@ -647,9 +651,9 @@ export default function Court({ params }) {
                       key={"productoVendido-" + index}
                       className="grid grid-cols-3 py-2.5 text-center"
                     >
-                      <td>{product.nombre}</td>
-                      <td>{product.cantidad}</td>
-                      <td>{product.precio}</td>
+                      <td>{}</td>
+                      <td>{}</td>
+                      <td>{}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -658,6 +662,7 @@ export default function Court({ params }) {
             {/* Tercer div */}
 
             <div className="flex  flex-col justify-items-center text-black px-3  pb-5 row-span-2  xl:col-span-2 col-span-3 xl:col-start-3 xl:row-start-1 col-start-1 row-start-3  xl:justify-start">
+              <h1 className="flex justify-center text-2xl font-bold">Devoluciones</h1>
               <table className="h-full w-full border-collapse">
                 <thead>
                   <tr className="bg-[#ccc] rounded-full grid grid-cols-3 py-2">
@@ -690,28 +695,28 @@ export default function Court({ params }) {
                 <div className="flex justify-between  ">
                   <td className="justify-self-start">Salio con</td>
                   <td className="relative">
-                    {currentCourt.estimados.salio}
+                    {}
                     <span className=" ps-3 text-sm font-bold top-0">MXN</span>
                   </td>
                 </div>
                 <div className="flex justify-between  ">
                   <td>Vendio</td>
                   <td className="relative">
-                    {currentCourt.estimados.vendio}
+                    {}
                     <span className=" ps-3 text-sm font-bold top-0">MXN</span>
                   </td>
                 </div>
                 <div className="flex justify-between ">
                   <td>Entrego en Efectivo</td>
                   <td className="relative">
-                    {currentCourt.estimados.efectivo}
+                    {}
                     <span className=" ps-3 text-sm font-bold top-0">MXN</span>
                   </td>
                 </div>
                 <div className="flex justify-between  ">
                   <td>Entrego en mercancia</td>
                   <td className="relative">
-                    {currentCourt.estimados.mercancia}
+                    {}
                     <span className=" ps-3 text-sm font-bold   top-[-3]">
                       MXN
                     </span>
@@ -730,28 +735,28 @@ export default function Court({ params }) {
                 <div className="flex justify-between  ">
                   <td className="justify-self-start">Salio con</td>
                   <td className="relative">
-                    {currentCourt.estimados.salio}
+                    {}
                     <span className=" ps-3 text-sm font-bold top-0">MXN</span>
                   </td>
                 </div>
                 <div className="flex justify-between  ">
                   <td>Vendio</td>
                   <td className="relative">
-                    {currentCourt.estimados.vendio}
+                    {}
                     <span className=" ps-3 text-sm font-bold top-0">MXN</span>
                   </td>
                 </div>
                 <div className="flex justify-between ">
                   <td>Entrego en Efectivo</td>
                   <td className="relative">
-                    {currentCourt.estimados.efectivo}
+                    {}
                     <span className=" ps-3 text-sm font-bold top-0">MXN</span>
                   </td>
                 </div>
                 <div className="flex justify-between  ">
                   <td>Entrego en mercancia</td>
                   <td className="relative">
-                    {currentCourt.estimados.mercancia}
+                    {}
                     <span className=" ps-3 text-sm font-bold   top-[-3]">
                       MXN
                     </span>
@@ -770,7 +775,7 @@ export default function Court({ params }) {
               >
                 <p className="font-bold text-lg">LA DIFERENCIA ES DE:</p>
                 <p className="font-normal text-xl text-red-500 relative">
-                  $ {currentCourt.estimados.diferencia}
+                  $ {}
                   <span className=" ps-3 text-sm font-bold absolute top-[-3px]">
                     MXN
                   </span>
@@ -784,7 +789,7 @@ export default function Court({ params }) {
               >
                 <p className="font-bold text-lg">LA DIFERENCIA ES DE:</p>
                 <p className="font-normal text-xl text-red-500 relative">
-                  $ {currentCourt.estimados.diferencia}
+                  $ {}
                   <span className=" ps-3 text-sm font-bold absolute top-[-3px]">
                     MXN
                   </span>
