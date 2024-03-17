@@ -31,7 +31,6 @@ export default function HomePage() {
       });
 
       if (response.ok) {
-        setLoadPetition(false);
         const data = await response.json();
         setCookie(processEnv.jtIdentity, data.token);
         window.location.href = "/Inicio";

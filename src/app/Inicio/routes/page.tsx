@@ -151,7 +151,7 @@ export default function Route() {
                           return (
                             <>
                               <span className="font-bold text-xl lg:text-2xl">
-                                {empl?.user}
+                                {empl?.username}
                               </span>
 
                               <p className="text-[#bbbcbc] text-sm lg:text-base">
@@ -164,7 +164,7 @@ export default function Route() {
                                   })()}
                               </p>
                               <span className="text-[#bbbcbc] text-sm text-right">
-                                {empl?.username} {empl?.lastnames}
+                                {empl?.user} {empl?.lastnames}
                               </span>
                             </>
                           );
