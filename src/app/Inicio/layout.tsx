@@ -55,7 +55,7 @@ export default function RootLayout({
     "/Inicio/routes",
     "/Inicio/employees",
     "/Inicio/vehicle",
-    "/Inicio/court",
+    // "/Inicio/court",
     "/Inicio/product",
     "/Inicio/request",
     "/Inicio/prequest",
@@ -157,7 +157,7 @@ export default function RootLayout({
             </Link>
           )}
 
-          {/* Sistema de Corte */}
+          {/* Sistema de Corte
           {roleUser === "administrador" && (
             <Link href="/Inicio/court">
               <div>
@@ -176,7 +176,7 @@ export default function RootLayout({
                 </svg>
               </div>
             </Link>
-          )}
+          )} */}
 
           {/* Productos */}
           {roleUser === "administrador" && (

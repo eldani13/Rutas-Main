@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     backgroundColor: '#ccc',
+    borderRadius: '25px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',

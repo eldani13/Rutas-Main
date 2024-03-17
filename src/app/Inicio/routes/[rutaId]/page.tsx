@@ -420,6 +420,9 @@ export default function Route({ params }) {
             <div className="card2 flex flex-col items-center text-black gap-10">
               <span className="font-bold">Última hora de venta.</span>
               <div
+              onClick={() => {
+                window.location.href = `/Inicio/routes/${rutaId}/court`;
+              }}
                 className="flex flex-row p-4"
                 style={{
                   boxShadow: "0px 6px 13.7px 0px rgba(0, 0, 0, 0.10)",
