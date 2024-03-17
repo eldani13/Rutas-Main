@@ -29,11 +29,29 @@ export default function Route() {
   };
 
   const getAllData = async () => {
-    await getAllFetchDataValues(`${processEnv.back}rutas/`).then(
-      (rec: RootRoute) => {
-        setRoutes(rec);
+    await getCookie(processEnv.jtIdentity).then(async (jwt_get) => {
+      const jwt_decode = jwt.decode(jwt_get + "") as {
+        username: string;
+        role: "administrador" | "empleado";
+        exp: number;
+        iat: number;
+      } | null;
+
+      if (jwt_decode?.role === "administrador") {
+        return await getAllFetchDataValues(`${processEnv.back}rutas/`).then(
+          (rec: RootRoute) => {
+            setRoutes(rec);
+          }
+        );
       }
-    );
+
+      await getAllFetchDataValues(
+        //@ts-ignore
+        `${processEnv.back}rutas/employee/${jwt_decode?._id}`
+      ).then((rec) => {
+        setRoutes(rec);
+      });
+    });
   };
 
   const getAllEmployess = async () => {
@@ -89,7 +107,7 @@ export default function Route() {
       "ruta"
     );
   };
-
+  console.log(routes);
   return (
     <>
       <div className="h-[100%]">
@@ -106,7 +124,7 @@ export default function Route() {
       <div className="relative text-[#000] flex flex-col justify-center items-center gap-20 overflow-y-auto h-full max-h-[100vh]">
         <div className="flex flex-col ">
           <div className="flex flex-wrap max-w-full justify-around px-4 gap-x-10 gap-y-5 py-4  w-full">
-            {routes &&
+            {routes && routes.message.length > 0 ? (
               routes.message.map((routeName: MessageRoute, index: number) => (
                 <Link
                   key={"ruta_" + index}
@@ -123,19 +141,34 @@ export default function Route() {
                         <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
                       </svg>
                     </div>
-                    <div className="text-[#000] flex flex-col gap-3  md:min-w-60">
-                      <span className="font-bold text-xl lg:text-2xl">
-                        {employees &&
-                          employees.message.find(
+                    <div className="text-[#000] flex flex-col gap-1  md:min-w-60">
+                      {employees &&
+                        (() => {
+                          const empl = employees.message.find(
                             (u) => u._id === routeName.empleado
-                          )?.username}
-                      </span>
-                      <p className="text-[#bbbcbc] text-sm lg:text-base">
-                        {vehicles &&
-                          vehicles.message.find(
-                            (u) => u._id === routeName.vehicle
-                          )?.marca}
-                      </p>
+                          );
+
+                          return (
+                            <>
+                              <span className="font-bold text-xl lg:text-2xl">
+                                {empl?.user}
+                              </span>
+
+                              <p className="text-[#bbbcbc] text-sm lg:text-base">
+                                {vehicles &&
+                                  (() => {
+                                    const veh = vehicles.message.find(
+                                      (u) => u._id === routeName.vehicle
+                                    );
+                                    return veh?.marca + " - " + veh?.modelo;
+                                  })()}
+                              </p>
+                              <span className="text-[#bbbcbc] text-sm text-right">
+                                {empl?.username} {empl?.lastnames}
+                              </span>
+                            </>
+                          );
+                        })()}
                     </div>
                   </div>
                   <svg
@@ -152,7 +185,12 @@ export default function Route() {
                     />
                   </svg>
                 </Link>
-              ))}
+              ))
+            ) : (
+              <h1 className="text-center font-semibold text-slate-900 text-xl">
+                No hay rutas para mostrar
+              </h1>
+            )}
           </div>
         </div>
 
