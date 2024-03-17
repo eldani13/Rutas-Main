@@ -12,31 +12,35 @@ export default function HomePage() {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [viewPassword, setViewPassword] = useState(false);
+  const [loadPetition, setLoadPetition] = useState(false);
 
   const handleLogin = async (e: FormEvent) => {
+    if (loadPetition) return;
+
+    setLoadPetition(true);
     e.preventDefault();
     try {
-      const response = await fetch(
-        `${processEnv.back}createtoken`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            username: inputValues.username,
-            password: inputValues.password,
-            role: inputValues.selectRol,
-          }),
-        }
-      );
+      const response = await fetch(`${processEnv.back}createtoken`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: inputValues.username,
+          password: inputValues.password,
+          role: inputValues.selectRol,
+        }),
+      });
 
       if (response.ok) {
         const data = await response.json();
         setCookie(processEnv.jtIdentity, data.token);
         window.location.href = "/Inicio";
       } else {
+        setLoadPetition(false);
         setErrorMessage("Credenciales incorrectas");
       }
     } catch (error) {
+      setLoadPetition(false);
+
       setErrorMessage(
         "Upss, error inesperado, por favor contacte con el desarrollador"
       );
@@ -179,12 +183,41 @@ export default function HomePage() {
 
             <div className="flex justify-center p-4"></div>
 
-            <button
-              type="submit"
-              className="bg-gradient-to-b rounded-full from-gray-700 to-gray-900 font-medium p-2 md:p-4 text-white uppercase w-full"
-            >
-              Login
-            </button>
+            {!loadPetition ? (
+              <button
+                type="submit"
+                className="bg-gradient-to-b rounded-full from-gray-700 to-gray-900 font-medium p-2 md:p-4 text-white uppercase w-full"
+              >
+                Login
+              </button>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="5em"
+                height="5em"
+                className="m-auto text-blue-600"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z"
+                  opacity="0.5"
+                />
+                <path
+                  fill="currentColor"
+                  d="M20 12h2A10 10 0 0 0 12 2V4A8 8 0 0 1 20 12Z"
+                >
+                  <animateTransform
+                    attributeName="transform"
+                    dur="1s"
+                    from="0 12 12"
+                    repeatCount="indefinite"
+                    to="360 12 12"
+                    type="rotate"
+                  />
+                </path>
+              </svg>
+            )}
           </form>
         </div>
       </div>

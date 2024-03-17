@@ -290,7 +290,7 @@ export default function Product() {
               </div>
             </div>
             <h1 className="text-slate-900 font-semibold text-xl text-center">
-              {viewAddProduct[1] == "insert" ? "Insertar" : "Editar"} vehículo
+              {viewAddProduct[1] == "insert" ? "Insertar" : "Editar"} producto
             </h1>
             <div className="flex flex-col gap-3 mb-16">
               <div>

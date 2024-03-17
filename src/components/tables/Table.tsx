@@ -12,6 +12,8 @@ export function Table({
   setClickInProduct,
   clickInProduct,
 }: Props): JSX.Element {
+  console.log(products)
+
   return (
     <div className="w-full h-full overflow-y-auto p-4">
       <div className="">

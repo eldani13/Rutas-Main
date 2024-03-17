@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 import {
   getAllFetchDataValues,
   patchEditVal,
@@ -22,6 +22,9 @@ import Link from "next/link";
 export default function Sales({ params }) {
   const { rutaId } = params;
 
+  const [indexCurrentRequest, setIndexCurrentRequest] = useState<number>(0);
+  const [ammountSaleInp, setAmmountSaleInp] = useState<number>(1);
+
   const [allProducts, setAllProducts] = useState<MessageProduct[]>();
   const [products, setProducts] = useState<MessageProduct[]>();
   const [clickInProduct, setClickInProduct] = useState<null | MessageProduct>(
@@ -34,6 +37,9 @@ export default function Sales({ params }) {
 
   const [routeCurrent, setRouteCurrent] = useState<null | MessageRoute>(null);
 
+  const [requestProductsAll, setRequestProductsAll] = useState<
+    null | MessageRequestProducts[]
+  >(null);
   const [requestCurrentIfExist, setRequestCurrentIfExist] =
     useState<null | MessageRequestProducts>(null);
 
@@ -186,7 +192,6 @@ export default function Sales({ params }) {
   }, []);
 
   useEffect(() => {
- 
     const dataReturn = allProducts
       ?.filter((prod) => {
         return requestCurrentIfExist?.products.some(
@@ -201,10 +206,12 @@ export default function Sales({ params }) {
           ...obj,
           amount: objetoEnSegundoArray?.amount || 0,
           amountCurrent: objetoEnSegundoArray?.amountCurrent || 0,
+          _idInRequest: objetoEnSegundoArray?._id || "",
         };
       });
-    setProducts(dataReturn)
-
+    // @ts-ignore
+    //ADDMER
+    setProducts(dataReturn);
 
     console.log(dataReturn);
   }, [allProducts]);
@@ -233,7 +240,10 @@ export default function Sales({ params }) {
   console.log(products);
   // }, []);
 
-  async function saleProduct(productSale: MessageProduct | null | undefined) {
+  async function saleProduct(
+    productSale: MessageProduct | null | undefined,
+    ammountSale: number
+  ) {
     if (!productSale) {
       Swal.fire({
         icon: "error",
@@ -248,28 +258,21 @@ export default function Sales({ params }) {
         showConfirmButton: false,
       });
     } else {
-
-      // await patchEditVal(
-      //   `${processEnv.back}request-products/edit/${rutaId}`,
-      //   {
-      //     state: state,
-      //   },
-      //   () => {},
-      //   "requisito"
-      // );
-
-      patchSaleProduct(
-        `${processEnv.back}api/v1/products/edit/${productSale._id}`,
+      await patchEditVal(
+        `${processEnv.back}request-products/edit/${requestCurrentIfExist?._id}/${productSale._idInRequest}`,
         {
-          ...productSale,
-          productIsSold: true,
+          amount: productSale.amount,
+          amountCurrent: productSale.amountCurrent - ammountSale,
         },
         async () => {
           const dateCurrent = new Date().toISOString();
           const amountNew =
-            (routeCurrent?.amountOfMerchandise || 0) + productSale.productPrice;
+            (routeCurrent?.amountOfMerchandise || 0) +
+            productSale.productPrice * ammountSale;
+          // setRequestCurrentIfExist(prev=>({...prev, products:[...prev.products, {}]}))
+          await getIfProductSelect();
           await patchEditVal(
-            `${processEnv.back}api/v1/rutas/edit/${routeCurrent?._id}`,
+            `${processEnv.back}rutas/edit/${routeCurrent?._id}`,
             {
               amountOfMerchandise: amountNew,
               LastMinuteSale: dateCurrent,
@@ -285,12 +288,43 @@ export default function Sales({ params }) {
             },
             "Ruta"
           );
-
-          setClickInProduct(null);
-          set_actualProductSearchScanner(null);
-          getProducts();
-        }
+        },
+        "requisito"
       );
+
+      // patchSaleProduct(
+      //   `${processEnv.back}api/v1/products/edit/${productSale._id}`,
+      //   {
+      //     ...productSale,
+      //     productIsSold: true,
+      //   },
+      //   async () => {
+      //     const dateCurrent = new Date().toISOString();
+      //     const amountNew =
+      //       (routeCurrent?.amountOfMerchandise || 0) + productSale.productPrice;
+      //     await patchEditVal(
+      //       `${processEnv.back}api/v1/rutas/edit/${routeCurrent?._id}`,
+      //       {
+      //         amountOfMerchandise: amountNew,
+      //         LastMinuteSale: dateCurrent,
+      //       },
+      //       () => {
+      //         // event.currentTarget.reset();
+      //         //@ts-ignore
+      //         setRouteCurrent((prev) => ({
+      //           ...prev,
+      //           LastMinuteSale: dateCurrent,
+      //           amountOfMerchandise: amountNew,
+      //         }));
+      //       },
+      //       "Ruta"
+      //     );
+
+      //     setClickInProduct(null);
+      //     set_actualProductSearchScanner(null);
+      //     getProducts();
+      //   }
+      // );
     }
   }
 
@@ -318,7 +352,10 @@ export default function Sales({ params }) {
       ).then((rec) => {
         console.log(rec);
         // @ts-ignore
-        setRequestCurrentIfExist(rec.details);
+        setRequestProductsAll(rec.details);
+        if (rec.details.length > 0) {
+          setRequestCurrentIfExist(rec.details[0]);
+        }
       });
     } catch (err) {
       console.log(err);
@@ -345,11 +382,35 @@ export default function Sales({ params }) {
             {clockLastMinuteSale()}
           </div>
           <div className="md:static flex flex-col items-start justify-center pb-10 md:min-w-60">
+            <div
+              className={`${
+                clickInProduct === null ? "hidden" : "flex"
+              } gap-2 items-center justify-center w-full mb-2 bg-slate-50 rounded-md p-2`}
+            >
+              <label className="text-sm ">Cantidad: </label>
+              <input
+                className="border rounded-md px-2 py-1 font-bold"
+                type="number"
+                name="inpAmmount"
+                value={ammountSaleInp}
+                onChange={(e) =>
+                  setAmmountSaleInp(
+                    // @ts-ignore
+                    parseInt(e.target.value) > clickInProduct?.amountCurrent
+                      ? clickInProduct?.amountCurrent
+                      : parseInt(e.target.value)
+                  )
+                }
+                max={clickInProduct?.amountCurrent}
+                min={1}
+              />
+            </div>
+
             <ButtonCrud
               isHidden={clickInProduct === null}
               text="Vender Producto"
               color="bg-blue-500"
-              onclickHandle={() => saleProduct(clickInProduct)}
+              onclickHandle={() => saleProduct(clickInProduct, ammountSaleInp)}
             >
               <svg
                 className="w-6 h-6"
@@ -365,86 +426,170 @@ export default function Sales({ params }) {
           </div>
         </div>
       </div>
-
-      {requestCurrentIfExist && requestCurrentIfExist.state === "aprobado" && (
-        <div
-          className="flex flex-col pl-3  max-h-[100vh] h-full "
-          style={{ alignSelf: "flex-start" }}
-        >
-          <SearchInput
-            label="Buscar Producto"
-            value={search}
-            setValue={setSearch}
-            handleClickOnOffScanner={handleClickOnOffScanner}
-          />
-
-          {filteredProducts && (
-            <Table
-              products={filteredProducts.sort(
-                (a, b) =>
-                  (a.productIsSold ? 1 : -1) - (b.productIsSold ? 1 : -1)
-              )}
-              clickInProduct={clickInProduct}
-              setClickInProduct={setClickInProduct}
-            />
-          )}
-        </div>
-      )}
-      {requestCurrentIfExist && requestCurrentIfExist.state !== "aprobado" && (
-        <div
-          className="flex flex-col pl-3  max-h-[100vh] h-full items-center justify-center"
-          style={{ alignSelf: "flex-start" }}
-        >
-          <p className="text-xl font-bold mb-1">
-            Revisa la sección de requisitos, el estado de tu requisito es:
-          </p>
-          <p
-            className={`${
-              requestCurrentIfExist.state === "pendiente"
-                ? "text-yellow-500"
-                : requestCurrentIfExist.state === "rechazado"
-                ? "text-orange-500"
-                : requestCurrentIfExist.state === "aprobado"
-                ? "text-lime-500"
-                : ""
-            } text-center text-xl font-bold mb-10`}
+      <div className="flex flex-col h-full w-full ">
+        <div className="ps-4 pt-2 flex items-center gap-2">
+          <label>Petición: </label>
+          <button
+            onClick={() => {
+              setRequestCurrentIfExist(
+                // @ts-ignore
+                requestProductsAll[indexCurrentRequest - 1]
+              );
+              setIndexCurrentRequest(indexCurrentRequest - 1);
+            }}
+            className={`${indexCurrentRequest == 0 && "text-slate-400"}`}
+            disabled={indexCurrentRequest == 0}
           >
-            {requestCurrentIfExist.state}
-          </p>
-
-          <Link href="/Inicio/request">
-            <button
-              type="button"
-              className="inline-block rounded border-2 hover:scale-105
-                border-info px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-info transition duration-150 ease-in-out hover:border-info-600 hover:bg-info-50/50 hover:text-info-600 focus:border-info-600 focus:bg-info-50/50 focus:text-info-600 focus:outline-none focus:ring-0 active:border-info-700 active:text-info-700 motion-reduce:transition-none "
-              data-twe-ripple-init
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="2em"
+              height="2em"
+              viewBox="0 0 32 32"
             >
-              Ir a sección
-            </button>
-          </Link>
-        </div>
-      )}
-      {!requestCurrentIfExist && (
-        <div
-          className="flex flex-col pl-3  max-h-[100vh] h-full items-center justify-center"
-          style={{ alignSelf: "flex-start" }}
-        >
-          <p className="text-xl font-bold mb-10">
-            No tienes productos asignados
-          </p>
+              <path
+                fill="currentColor"
+                d="M16 2a14 14 0 1 0 14 14A14 14 0 0 0 16 2m8 15H11.85l5.58 5.573L16 24l-8-8l8-8l1.43 1.393L11.85 15H24Z"
+              />
+              <path
+                fill="none"
+                d="m16 8l1.43 1.393L11.85 15H24v2H11.85l5.58 5.573L16 24l-8-8z"
+              />
+            </svg>
+          </button>
+          <p className="font-semibold">{indexCurrentRequest + 1}</p>
+          <button
+            onClick={() => {
+              setRequestCurrentIfExist(
+                // @ts-ignore
+                requestProductsAll[indexCurrentRequest + 1]
+              );
 
-          <Link href="/Inicio/request">
-            <button
-              type="button"
-              className="inline-block rounded border-2 hover:scale-105
-                border-info px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-info transition duration-150 ease-in-out hover:border-info-600 hover:bg-info-50/50 hover:text-info-600 focus:border-info-600 focus:bg-info-50/50 focus:text-info-600 focus:outline-none focus:ring-0 active:border-info-700 active:text-info-700 motion-reduce:transition-none "
-              data-twe-ripple-init
+              console.log(
+                indexCurrentRequest + 1 >=
+                  (requestProductsAll?.length || 0) - 1
+                  ? // @ts-ignore
+                  requestProductsAll[indexCurrentRequest + 1]
+                  : null
+              );
+              // @ts-ignore
+              console.log(requestProductsAll[indexCurrentRequest + 1]);
+
+              setIndexCurrentRequest(indexCurrentRequest + 1);
+            }}
+            className={`${
+              indexCurrentRequest + 1 > (requestProductsAll?.length || 0)-1 &&
+              "text-slate-400"
+            }`}
+            disabled={
+              indexCurrentRequest + 1 > (requestProductsAll?.length || 0)-1
+            }
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="2em"
+              height="2em"
+              viewBox="0 0 32 32"
             >
-              Realizar un requisito de productos
-            </button>
-          </Link>
+              <path
+                fill="currentColor"
+                d="M2 16A14 14 0 1 0 16 2A14 14 0 0 0 2 16m6-1h12.15l-5.58-5.607L16 8l8 8l-8 8l-1.43-1.427L20.15 17H8Z"
+              />
+              <path
+                fill="none"
+                d="m16 8l-1.43 1.393L20.15 15H8v2h12.15l-5.58 5.573L16 24l8-8z"
+              />
+            </svg>
+          </button>
+
+          {/* <select name="" id="" className="w-fit px-4" onChange={e=>{setRequestCurrentIfExist(e.target.value)}}>
+              {requestProductsAll?.map((ex, index) => (
+                <option value={index}>{index + 1}</option>
+              ))}
+            </select> */}
         </div>
-      )}
+
+        {requestCurrentIfExist &&
+          requestCurrentIfExist.state === "aprobado" && (
+            <div
+              className="flex flex-col pl-3  max-h-[100vh] h-full "
+              style={{ alignSelf: "flex-start" }}
+            >
+              <SearchInput
+                label="Buscar Producto"
+                value={search}
+                setValue={setSearch}
+                handleClickOnOffScanner={handleClickOnOffScanner}
+              />
+
+              {filteredProducts && (
+                <Table
+                  products={filteredProducts.sort(
+                    (a, b) =>
+                      (a.productIsSold ? 1 : -1) - (b.productIsSold ? 1 : -1)
+                  )}
+                  clickInProduct={clickInProduct}
+                  setClickInProduct={setClickInProduct}
+                />
+              )}
+            </div>
+          )}
+        {requestCurrentIfExist &&
+          requestCurrentIfExist.state !== "aprobado" && (
+            <div
+              className="flex flex-col pl-3  max-h-[100vh] w-full h-full items-center justify-center"
+              style={{ alignSelf: "flex-start" }}
+            >
+              <p className="text-xl font-bold mb-1">
+                Revisa la sección de requisitos, el estado de tu requisito es:
+              </p>
+              <p
+                className={`${
+                  requestCurrentIfExist.state === "pendiente"
+                    ? "text-yellow-500"
+                    : requestCurrentIfExist.state === "rechazado"
+                    ? "text-orange-500"
+                    : requestCurrentIfExist.state === "aprobado"
+                    ? "text-lime-500"
+                    : ""
+                } text-center text-xl font-bold mb-10`}
+              >
+                {requestCurrentIfExist.state}
+              </p>
+
+              <Link href="/Inicio/request">
+                <button
+                  type="button"
+                  className="inline-block rounded border-2 hover:scale-105
+                border-info px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-info transition duration-150 ease-in-out hover:border-info-600 hover:bg-info-50/50 hover:text-info-600 focus:border-info-600 focus:bg-info-50/50 focus:text-info-600 focus:outline-none focus:ring-0 active:border-info-700 active:text-info-700 motion-reduce:transition-none "
+                  data-twe-ripple-init
+                >
+                  Ir a sección
+                </button>
+              </Link>
+            </div>
+          )}
+        {!requestCurrentIfExist && (
+          <div
+            className="flex flex-col pl-3  max-h-[100vh] h-full items-center justify-center"
+            style={{ alignSelf: "flex-start" }}
+          >
+            <p className="text-xl font-bold mb-10">
+              No tienes productos asignados
+            </p>
+
+            <Link href="/Inicio/request">
+              <button
+                type="button"
+                className="inline-block rounded border-2 hover:scale-105
+                border-info px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-info transition duration-150 ease-in-out hover:border-info-600 hover:bg-info-50/50 hover:text-info-600 focus:border-info-600 focus:bg-info-50/50 focus:text-info-600 focus:outline-none focus:ring-0 active:border-info-700 active:text-info-700 motion-reduce:transition-none "
+                data-twe-ripple-init
+              >
+                Realizar un requisito de productos
+              </button>
+            </Link>
+          </div>
+        )}
+      </div>
 
       <div
         className={`${
@@ -459,9 +604,37 @@ export default function Sales({ params }) {
             {actualProductSearchScanner && (
               <div>
                 <div
+                  className={`flex gap-2 items-center justify-center w-full mb-2 bg-slate-50 rounded-md p-2`}
+                >
+                  <label className="text-sm ">Cantidad: </label>
+                  <input
+                    className="border rounded-md px-2 py-1 font-bold"
+                    type="number"
+                    name="inpAmmount"
+                    value={ammountSaleInp}
+                    onChange={(e) =>
+                      setAmmountSaleInp(
+                        // @ts-ignore
+                        parseInt(e.target.value) >
+                          actualProductSearchScanner?.amountCurrent
+                          ? actualProductSearchScanner?.amountCurrent
+                          : parseInt(e.target.value)
+                      )
+                    }
+                    max={actualProductSearchScanner?.amountCurrent}
+                    min={1}
+                  />
+                </div>
+                <div
                   // bg-[linear-gradient(225deg,_#a1c4fd_10%,_#c2e9fb_90%)]
                   className={` 
-            relative my-2 justify-center  py-6  justify-content rounded-xl flex flex-col px-5 gap-1 font-semibold hover:bg-slate-200  bg-[linear-gradient(225deg,_#acfca2_10%,_#c0faea_90%)]
+            relative my-2 justify-center  py-6  justify-content rounded-xl flex flex-col px-5 gap-1 font-semibold hover:bg-slate-200  
+            ${
+              actualProductSearchScanner.amountCurrent === 0
+                ? "bg-red-100"
+                : "bg-[linear-gradient(225deg,_#acfca2_10%,_#c0faea_90%)]"
+            }
+            
             `}
                   style={{ gridTemplateColumns: "50px 1fr 1fr 1fr" }}
                 >
@@ -481,9 +654,14 @@ export default function Sales({ params }) {
                     <span className=" font-black">Precio: $</span>
                     {actualProductSearchScanner.productPrice}
                   </td>
+                  <td className="flex gap-1 ">
+                    <span className=" font-black">Cantidad / Actual: </span>
+                    {actualProductSearchScanner.amount} /{" "}
+                    {actualProductSearchScanner.amountCurrent}
+                  </td>
                   <td className="text-center flex absolute left-0 top-0 w-full">
                     <p className="w-full uppercase text-xl mt-2 font-bold ">
-                      {actualProductSearchScanner.productIsSold
+                      {actualProductSearchScanner.amountCurrent === 0
                         ? "X Producto vendido X"
                         : "Producto"}
                     </p>
@@ -503,7 +681,9 @@ export default function Sales({ params }) {
                   isHidden={actualProductSearchScanner.productIsSold}
                   text="Vender Producto"
                   color="bg-blue-500"
-                  onclickHandle={() => saleProduct(actualProductSearchScanner)}
+                  onclickHandle={() =>
+                    saleProduct(actualProductSearchScanner, ammountSaleInp)
+                  }
                 >
                   <svg
                     className="w-6 h-6"

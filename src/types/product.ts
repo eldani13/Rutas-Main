@@ -1,6 +1,6 @@
 export interface RootProduct {
-    message: MessageProduct[]
-    details: boolean
+    message: boolean
+    details: MessageProduct[]
 }
 
 export interface MessageProduct {
@@ -12,5 +12,6 @@ export interface MessageProduct {
     productIdScan: number,
     amount: number,
     amountCurrent: number,
+    _idInRequest: number,
     __v: number
 }
