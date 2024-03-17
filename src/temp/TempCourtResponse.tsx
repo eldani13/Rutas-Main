@@ -36,6 +36,16 @@ export const courtResponse: Corte = {
       cantidad: 3,
       precio: 8,
     },
+    {
+      nombre: 'Producto 2',
+      cantidad: 3,
+      precio: 8,
+    },
+    {
+      nombre: 'Producto 2',
+      cantidad: 3,
+      precio: 8,
+    },
   ],
   productosNoVendidos: [
     {
