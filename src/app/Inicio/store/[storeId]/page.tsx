@@ -1,6 +1,6 @@
 "use client";
 import { MessageProduct, RootProduct } from "@/types/product";
-import { getAllFetchDataValues } from "@/utils/api";
+import { deleteRemoveData, getAllFetchDataValues } from "@/utils/api";
 import { processEnv } from "@/utils/cookies";
 import { useEffect, useState } from "react";
 import ViewAllProducts from "../../../../components/views/ViewAllProducts";
@@ -12,19 +12,31 @@ export default function Products({ params }: { params: { storeId: string } }) {
 
   const [searchData, setSearchData] = useState("");
   const [selectData, setSelectData] = useState<MessageProduct[] | null>(null);
-  const [storeCurrent, setStoreCurrent] = useState<MessageStores[] | null>(
+  const [storeCurrent, setStoreCurrent] = useState<MessageStores | null>(
     null
   );
 
   const getStoreCurrent = async () => {
     await getAllFetchDataValues(`${processEnv.back}tienda/${storeId}`).then(
       (resp) => {
-        console.log(resp);
-        // setStoreCurrent(resp.message);
-        
+        console.log(resp)
+        setStoreCurrent(resp.message);
       }
     );
   };
+
+  const removeStore = async () => {
+    await deleteRemoveData(
+      `${processEnv.back}tienda/delete/${storeId}`,
+      () => {
+        window.location.href = "/Inicio/store";
+      },
+      "tienda",
+      `Quieres eliminar \nTienda: ${storeCurrent?.nombre} \nCoordinador: ${storeCurrent?.coordinador}`
+    );
+  };
+  console.log(storeCurrent)
+
   useEffect(() => {
     getStoreCurrent();
   }, []);
@@ -41,6 +53,13 @@ export default function Products({ params }: { params: { storeId: string } }) {
       </div> */}
       <span></span>
       <div className="max-h-[100vh] h-full pt-14 flex flex-col overflow-y-auto p-5 ">
+        <button
+          onClick={removeStore}
+          className="absolute right-2 top-2 bg-red-400 rounded-xl hover:bg-red-500 px-2 py-1 text-slate-50"
+        >
+          Eliminar tienda
+        </button>
+
         {/* Informacion */}
         <hr className="mb-10 border-[1px]" />
         {/* {allDataProducts && ( */}
