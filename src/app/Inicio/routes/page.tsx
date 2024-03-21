@@ -1,4 +1,5 @@
 "use client";
+import RouteForm from "@/components/forms/RouteForm";
 import { RootEmployees } from "@/types/employees";
 import { MessageRoute, RootRoute } from "@/types/routes";
 import { RootVehicle } from "@/types/vehicles";
@@ -213,7 +214,16 @@ export default function Route() {
             />
           </svg>
         </button>
-        {addRoute && (
+        <RouteForm
+          viewForm={addRoute}
+          setViewForm={setAddRoute}
+          formSucces={() => {
+            setAddRoute(false);
+            getAllData();
+          }}
+        />
+
+        {/* {addRoute && (
           <div
             className={`bg-[#1d1b1b6e] absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${
               addRoute ? "visible" : "hidden"
@@ -239,7 +249,6 @@ export default function Route() {
                 </div>
               </div>
               <h1 className="text-slate-900 font-semibold text-xl text-center">
-                {/* {viewAddProduct[1] == "insert" ? "Insertar" : "Editar"}  */}
                 Agregar Ruta
               </h1>
               <div className="flex flex-col gap-3 mb-16">
@@ -376,7 +385,7 @@ export default function Route() {
               </div>
             </form>
           </div>
-        )}
+        )} */}
       </div>
     </>
   );
