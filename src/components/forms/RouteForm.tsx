@@ -260,15 +260,19 @@ export default function RouteForm({
                   >
                     <option value="-1">Seleccionar tienda</option>
                     {allDataStores &&
-                      allDataStores.map((store) => (
-                        <option
-                          value={store._id}
-                          key={"mappOption2-" + store._id}
-                        >
-                          Tienda:{store.nombre} | coordinador:
-                          {store.coordinador}
-                        </option>
-                      ))}
+                      allDataStores
+                        .filter((store) =>
+                          !dataForm?.tiendas.some((u) => u === store._id)
+                        )
+                        .map((store) => (
+                          <option
+                            value={store._id}
+                            key={"mappOption2-" + store._id}
+                          >
+                            Tienda:{store.nombre} | coordinador:
+                            {store.coordinador}
+                          </option>
+                        ))}
                   </select>
                 </div>
               </div>
@@ -277,7 +281,23 @@ export default function RouteForm({
                   allDataStores &&
                   dataForm.tiendas.map((store) => (
                     <div className="flex items-center gap-3">
-                      <button className="hover:scale-110">
+                      <button
+                        className="hover:scale-110"
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+
+                          setDataForm((prev) => {
+                            if (!prev) return null;
+                            return {
+                              ...prev,
+                              tiendas: prev.tiendas.filter(
+                                (item) => item !== store
+                              ),
+                            };
+                          });
+                        }}
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="1.2em"
