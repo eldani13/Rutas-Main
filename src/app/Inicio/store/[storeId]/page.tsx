@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import ViewAllProducts from "../../../../components/views/ViewAllProducts";
 import ViewProductsSelect from "../../../../components/views/ViewProductsSelect";
 import { MessageStores, ProductsInStores } from "@/types/stores";
+import StoreForm from "@/components/forms/StoreForm";
 
 export default function Products({ params }: { params: { storeId: string } }) {
   const { storeId } = params;
@@ -25,6 +26,7 @@ export default function Products({ params }: { params: { storeId: string } }) {
   >(null);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isModifyStore, setIsModifyStore] = useState(false);
 
   const getStoreCurrent = async () => {
     await getAllFetchDataValues(`${processEnv.back}tienda/${storeId}`).then(
@@ -105,6 +107,7 @@ export default function Products({ params }: { params: { storeId: string } }) {
   };
   console.log(productsInStore);
   console.log(selectData);
+  console.log(storeCurrent);
   // console.log(productsInStoreInitial);
   return (
     <>
@@ -119,12 +122,20 @@ export default function Products({ params }: { params: { storeId: string } }) {
       </div> */}
       <span></span>
       <div className="max-h-[100vh] h-full pt-14 flex flex-col overflow-y-auto p-5 ">
-        <button
-          onClick={removeStore}
-          className="absolute right-2 top-2 bg-red-400 rounded-xl hover:bg-red-500 px-2 py-1 text-slate-50"
-        >
-          Eliminar tienda
-        </button>
+        <div className="absolute right-2 top-2 flex gap-5">
+          <button
+            onClick={() => setIsModifyStore(true)}
+            className="bg-blue-400 rounded-xl hover:bg-blue-500 px-2 py-1 text-slate-50"
+          >
+            Editar tienda
+          </button>
+          <button
+            onClick={removeStore}
+            className="bg-red-400 rounded-xl hover:bg-red-500 px-2 py-1 text-slate-50"
+          >
+            Eliminar tienda
+          </button>
+        </div>
 
         {/* Informacion */}
         <hr className="mb-10 border-[1px]" />
@@ -227,6 +238,17 @@ export default function Products({ params }: { params: { storeId: string } }) {
             </svg>
           )}
         </div>
+
+        <StoreForm
+          view={isModifyStore}
+          setReturnView={setIsModifyStore}
+          handleSuccesForm={() => {
+            // getAllStores();
+            // setViewForm(false);
+          }}
+          dataFormCurrentParam={storeCurrent}
+          type="Editar"
+        />
       </div>
     </>
   );
