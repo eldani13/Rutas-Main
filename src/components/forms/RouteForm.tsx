@@ -43,22 +43,21 @@ export default function RouteForm({
 
   const onHandleform_EditRoute = async (e: SyntheticEvent) => {
     e.preventDefault;
-    const formData = new FormData(e.currentTarget as HTMLFormElement);
-    const employee = formData.get("employee") as string;
-    const vehicle = formData.get("vehicle") as string;
-    const start = (formData.get("routeStart") as string).split(",").map(Number);
-    const end = (formData.get("routeEnd") as string).split(",").map(Number);
-    const state = (formData.get("state") as string) === "a" ? true : false;
+    // const formData = new FormData(e.currentTarget as HTMLFormElement);
+    // const employee = formData.get("employee") as string;
+    // const vehicle = formData.get("vehicle") as string;
+    // const start = (formData.get("routeStart") as string).split(",").map(Number);
+    // const end = (formData.get("routeEnd") as string).split(",").map(Number);
+    // const state = (formData.get("state") as string) === "a" ? true : false;
     // console.log(employee + vehicle + start + )
 
     await postInsertData(
       `${processEnv.back}rutas/new`,
       {
-        empleado: employee,
-        vehicle: vehicle,
-        start: start,
-        end: end,
-        status: state,
+        empleado: dataForm?.empleado,
+        vehicle: dataForm?.vehicle,
+        tiendas: dataForm?.tiendas,
+        status: dataForm?.status,
         amountOfMerchandise: 0,
         LastMinuteSale: new Date().toISOString(),
       },
@@ -131,7 +130,6 @@ export default function RouteForm({
     >
       <form
         onSubmit={onHandleform_EditRoute}
-        action=""
         className="relative bg-slate-50 flex p-20 flex-col rounded-xl"
       >
         <div className="w-full flex absolute justify-center top-[0] -translate-y-[50%] left-0 right-0 ">
