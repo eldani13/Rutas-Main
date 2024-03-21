@@ -4,11 +4,21 @@ export interface RootStores {
 }
 
 export interface MessageStores {
-  _id: string;
+  _id: number;
   nombre: string;
   direccion: string;
-  productos: {
-    product: string;
-  }[];
+  coordinador: string;
+  coordenadas: {
+    x: number;
+    y: number;
+  };
+  productos: ProductsInStores[];
+  __v: number;
+}
+
+export interface ProductsInStores{
+  _id: number;
+  product: string;
+  price: number
   __v: number;
 }

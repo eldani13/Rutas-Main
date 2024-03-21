@@ -51,7 +51,7 @@ export default function Store() {
                     {store.nombre}
                   </h1>
                   <h2 className="text-sm text-slate-700">
-                    Coordinador: Addmer core
+                    Coordinador: {store.coordinador}
                   </h2>
                   <h2 className="text-xs text-right mt-2">
                     {/* jr alfonso ugarte C.3 */}
@@ -87,7 +87,10 @@ export default function Store() {
         <StoreForm
           view={viewForm}
           setReturnView={setViewForm}
-          handleSuccesForm={getAllStores}
+          handleSuccesForm={() => {
+            getAllStores();
+            setViewForm(false);
+          }}
         />
       </div>
     </>

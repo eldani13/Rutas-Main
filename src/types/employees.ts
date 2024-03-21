@@ -12,3 +12,4 @@ export interface RootEmployees {
     message: MessageEmployees[]
     details: boolean
 }
+

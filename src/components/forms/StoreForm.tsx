@@ -13,9 +13,9 @@ export default function StoreForm({
 }) {
   const [dataFormCurrent, setDataFormCurrent] = useState({
     name: "",
-    coordinator: "", //falta por el backend
+    coordinator: "", 
     address: "",
-    coordinates: "", //falta por el backend
+    coordinates: "", 
   });
 
   const handleSendForm = async (e: FormEvent) => {
@@ -24,27 +24,38 @@ export default function StoreForm({
   };
 
   const addStore = async () => {
-    await postInsertData(
-      `${processEnv.back}tienda/new`,
-      {
-        nombre: dataFormCurrent.name,
-        // coordinator: dataFormCurrent.coordinator, //falta por el backend
-        direccion: dataFormCurrent.address,
-        // coordinates: "" //falta por el backend
-      },
-      () => {
-        setDataFormCurrent({
-          name: "",
-          coordinator: "", //falta por el backend
-          address: "",
-          coordinates: "", //falta por el backend
-        });
-        if (handleSuccesForm) {
-          handleSuccesForm();
-        }
-      },
-      "tienda"
-    );
+    
+    try
+    {
+      const coord = (dataFormCurrent.coordinates as string).split(",").map(Number);
+      await postInsertData(
+        `${processEnv.back}tienda/new`,
+        {
+          nombre: dataFormCurrent.name,
+          coordinador: dataFormCurrent.coordinator, 
+          direccion: dataFormCurrent.address,
+          coordenadas: {
+            x: coord[0],
+            y: coord[1]
+          }
+        },
+        () => {
+          setDataFormCurrent({
+            name: "",
+            coordinator: "",
+            address: "",
+            coordinates: "", 
+          });
+          if (handleSuccesForm) {
+            handleSuccesForm();
+          }
+        },
+        "tienda"
+      );
+
+    }catch{
+      alert("Upps, ocurrió un error")
+    }
   };
 
   return (
