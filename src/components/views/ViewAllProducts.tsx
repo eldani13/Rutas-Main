@@ -7,10 +7,12 @@ export default function ViewAllProducts({
   dataFilter = "",
   noIncludeData = null,
   setProductsSelect = null,
+  setAllDataProductsProp
 }: {
   dataFilter?: string;
   noIncludeData?: MessageProduct[] | null;
   setProductsSelect?: Dispatch<SetStateAction<MessageProduct[] | null>> | null;
+  setAllDataProductsProp?: Dispatch<SetStateAction<MessageProduct[] | null>> | null;
 }) {
   const [allDataProducts, setAllDataProducts] = useState<
     MessageProduct[] | null
@@ -19,6 +21,8 @@ export default function ViewAllProducts({
     await getAllFetchDataValues(`${processEnv.back}view-products`).then(
       (rec: RootProduct) => {
         setAllDataProducts(rec.details);
+        if (!setAllDataProductsProp) return
+        setAllDataProductsProp(rec.details)
       }
     );
   };

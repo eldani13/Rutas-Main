@@ -8,6 +8,15 @@ export default function ViewProductsSelect({
   productsSelect: MessageProduct[] | null;
   setProductsSelect?: Dispatch<SetStateAction<MessageProduct[] | null>> | null;
 }) {
+  const handleUpdateProductSelect = (index: number, newNumber: number) => {
+    if (!setProductsSelect) return;
+    setProductsSelect((prev) => {
+      const newArray: MessageProduct[] | null = prev && [...prev];
+      if (newArray) newArray[index].productPrice = newNumber;
+      return newArray;
+    });
+  };
+
   return (
     <div className="w-full pt-5 flex flex-col gap-6">
       {productsSelect &&
@@ -51,17 +60,15 @@ export default function ViewProductsSelect({
               </p>
             </div>
             <div className="flex items-center gap-1 font-bold text-xl">
-              
               <input
                 type="number"
                 className="flex gap-2 w-32 text-center p-2 border rounded-xl outline-none "
                 min={0}
-                // onChange={(e) =>
-                //   handleUpdateProductSelect(index, parseInt(e.target.value))
-                // }
+                onChange={(e) =>
+                  handleUpdateProductSelect(index, parseInt(e.target.value))
+                }
                 value={product.productPrice ?? 0}
               />
-              
             </div>
           </div>
         ))}

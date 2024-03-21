@@ -62,7 +62,7 @@ export const patchSaleProduct = async (
 
 export const patchEditVal = async (
   pathForResponse: string,
-  dataBody: {},
+  dataBody: {} | [],
   functionDataOk: () => void,
   modifyName: string
 ): Promise<any> => {

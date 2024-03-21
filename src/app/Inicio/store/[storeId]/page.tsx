@@ -1,25 +1,35 @@
 "use client";
-import { MessageProduct, RootProduct } from "@/types/product";
-import { deleteRemoveData, getAllFetchDataValues } from "@/utils/api";
+import { MessageProduct } from "@/types/product";
+import {
+  deleteRemoveData,
+  getAllFetchDataValues,
+  patchEditVal,
+} from "@/utils/api";
 import { processEnv } from "@/utils/cookies";
 import { useEffect, useState } from "react";
 import ViewAllProducts from "../../../../components/views/ViewAllProducts";
 import ViewProductsSelect from "../../../../components/views/ViewProductsSelect";
-import { MessageStores, RootStores } from "@/types/stores";
+import { MessageStores, ProductsInStores } from "@/types/stores";
 
 export default function Products({ params }: { params: { storeId: string } }) {
   const { storeId } = params;
 
   const [searchData, setSearchData] = useState("");
+  const [allDataProducts, setAllDataProducts] = useState<
+    MessageProduct[] | null
+  >(null);
   const [selectData, setSelectData] = useState<MessageProduct[] | null>(null);
-  const [storeCurrent, setStoreCurrent] = useState<MessageStores | null>(
-    null
-  );
+  const [storeCurrent, setStoreCurrent] = useState<MessageStores | null>(null);
+  const [productsInStore, setProductsInStore] = useState<
+    MessageProduct[] | null
+  >(null);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const getStoreCurrent = async () => {
     await getAllFetchDataValues(`${processEnv.back}tienda/${storeId}`).then(
       (resp) => {
-        console.log(resp)
+        console.log(resp);
         setStoreCurrent(resp.message);
       }
     );
@@ -35,11 +45,66 @@ export default function Products({ params }: { params: { storeId: string } }) {
       `Quieres eliminar \nTienda: ${storeCurrent?.nombre} \nCoordinador: ${storeCurrent?.coordinador}`
     );
   };
-  console.log(storeCurrent)
 
   useEffect(() => {
     getStoreCurrent();
   }, []);
+  useEffect(() => {
+    transformIdToProducts();
+  }, [allDataProducts]);
+
+  const transformIdToProducts = () => {
+    const dataReturn =
+      allDataProducts
+        ?.filter((prod) => {
+          return storeCurrent?.productos.some(
+            (item) => item.product === prod._id
+          );
+        })
+        .map((obj: MessageProduct) => {
+          const objetoEnSegundoArray = storeCurrent?.productos.find(
+            (item) => obj._id === item.product
+          );
+          return {
+            ...obj,
+            productPrice: objetoEnSegundoArray?.price || 0,
+            _idInRequest: objetoEnSegundoArray?._id || 0,
+          } as MessageProduct;
+        }) || null;
+
+    if (!dataReturn) return;
+    const newData = [...dataReturn];
+    setProductsInStore(newData);
+    // setProductsInStoreInitial(newData);
+    setSelectData(newData);
+  };
+
+  const handleSendData = async () => {
+    if (!selectData) return;
+    setIsLoading(true);
+    console.log(
+      selectData.map((prev) => ({
+        product: prev?._id,
+        price: prev.productPrice,
+      }))
+    );
+    await patchEditVal(
+      `${processEnv.back}tienda/rempleaceproducts/${storeId}`,
+
+      selectData.map((prev) => ({
+        product: prev._id,
+        price: prev.productPrice,
+      })),
+
+      async () => {
+        await getStoreCurrent();
+      },
+      "Quieres Modificar los productos de la tienda?"
+    );
+    setIsLoading(false);
+  };
+  console.log(productsInStore);
+  // console.log(productsInStoreInitial);
   return (
     <>
       {/* <div className="h-[100%]">
@@ -95,6 +160,7 @@ export default function Products({ params }: { params: { storeId: string } }) {
               dataFilter={searchData}
               noIncludeData={selectData}
               setProductsSelect={setSelectData}
+              setAllDataProductsProp={setAllDataProducts}
             />
             {/* Contenido */}
             <ViewProductsSelect
@@ -103,6 +169,60 @@ export default function Products({ params }: { params: { storeId: string } }) {
             />
           </div>
         )}
+
+        <div className="w-full flex justify-center gap-5 mt-10">
+          {!isLoading ? (
+            <>
+              <button
+                type="button"
+                onClick={async () => {
+                  setIsLoading(true);
+                  await getStoreCurrent();
+                  transformIdToProducts();
+                  setIsLoading(false);
+                }}
+                className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+              >
+                Reiniciar
+              </button>
+
+              <button
+                type="button"
+                onClick={handleSendData}
+                className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 "
+              >
+                Guardar cambios
+              </button>
+            </>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="5em"
+              height="5em"
+              className="m-auto text-blue-600"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z"
+                opacity="0.5"
+              />
+              <path
+                fill="currentColor"
+                d="M20 12h2A10 10 0 0 0 12 2V4A8 8 0 0 1 20 12Z"
+              >
+                <animateTransform
+                  attributeName="transform"
+                  dur="1s"
+                  from="0 12 12"
+                  repeatCount="indefinite"
+                  to="360 12 12"
+                  type="rotate"
+                />
+              </path>
+            </svg>
+          )}
+        </div>
       </div>
     </>
   );
