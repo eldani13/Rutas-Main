@@ -443,7 +443,7 @@ export default function Route({ params }) {
         <RouteForm
           viewForm={viewForm}
           setViewForm={setViewForm}
-          type="add"
+          type="modify"
           routeCurrent={routeCurrent}
           setRouteIfIsModify={setRouteCurrent}
         />
