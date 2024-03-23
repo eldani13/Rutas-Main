@@ -2,7 +2,11 @@ import { MessageEmployees, RootEmployees } from "@/types/employees";
 import { MessageRoute } from "@/types/routes";
 import { MessageStores, RootStores } from "@/types/stores";
 import { MessageVehicle, RootVehicle } from "@/types/vehicles";
-import { getAllFetchDataValues, postInsertData } from "@/utils/api";
+import {
+  getAllFetchDataValues,
+  patchEditVal,
+  postInsertData,
+} from "@/utils/api";
 import { processEnv } from "@/utils/cookies";
 import { SyntheticEvent, useEffect, useState } from "react";
 
@@ -13,6 +17,9 @@ export default function RouteForm({
   setViewForm,
   formSucces,
   stores,
+  type,
+  routeCurrent,
+  setRouteIfIsModify,
 }: {
   viewForm: boolean;
   setViewForm: React.Dispatch<React.SetStateAction<boolean>>;
@@ -20,6 +27,11 @@ export default function RouteForm({
   vehicles?: MessageVehicle[] | null;
   formSucces?: (() => void) | null;
   stores?: MessageStores[] | null;
+  type: "add" | "modify";
+  routeCurrent?: MessageRoute | null;
+  setRouteIfIsModify?: React.Dispatch<
+    React.SetStateAction<MessageRoute | null>
+  > | null;
 }) {
   const [dataForm, setDataForm] = useState<null | MessageRoute>({
     _id: "",
@@ -41,16 +53,13 @@ export default function RouteForm({
     null
   );
 
-  const onHandleform_EditRoute = async (e: SyntheticEvent) => {
+  const onHandleform = async (e: SyntheticEvent) => {
     e.preventDefault;
-    // const formData = new FormData(e.currentTarget as HTMLFormElement);
-    // const employee = formData.get("employee") as string;
-    // const vehicle = formData.get("vehicle") as string;
-    // const start = (formData.get("routeStart") as string).split(",").map(Number);
-    // const end = (formData.get("routeEnd") as string).split(",").map(Number);
-    // const state = (formData.get("state") as string) === "a" ? true : false;
-    // console.log(employee + vehicle + start + )
+    if (type === "add") return await addRoute();
+    return await editRoute();
+  };
 
+  const addRoute = async () => {
     await postInsertData(
       `${processEnv.back}rutas/new`,
       {
@@ -66,6 +75,30 @@ export default function RouteForm({
         formSucces();
       },
       "ruta"
+    );
+  };
+  const editRoute = async () => {
+    if (routeCurrent == dataForm) return;
+
+    await patchEditVal(
+      `${processEnv.back}rutas/edit/${routeCurrent?._id}`,
+      {
+        empleado: dataForm?.empleado,
+        vehicle: dataForm?.vehicle,
+        tiendas: dataForm?.tiendas,
+        status: dataForm?.status,
+        amountOfMerchandise: dataForm?.amountOfMerchandise,
+        LastMinuteSale: dataForm?.LastMinuteSale,
+      },
+      () => {
+        if (setRouteIfIsModify) {
+          setRouteIfIsModify(dataForm);
+        }
+
+        if (!formSucces) return;
+        formSucces();
+      },
+      "Ruta"
     );
   };
 
@@ -119,6 +152,12 @@ export default function RouteForm({
     getAllStores();
   }, []);
 
+  useEffect(() => {
+    if (!routeCurrent) return;
+    setDataForm(routeCurrent);
+  }, [routeCurrent]);
+
+  console.log(routeCurrent);
   console.log(dataForm);
   console.log(allDataStores);
 
@@ -129,7 +168,7 @@ export default function RouteForm({
       }`}
     >
       <form
-        onSubmit={onHandleform_EditRoute}
+        onSubmit={onHandleform}
         className="relative bg-slate-50 flex p-20 flex-col rounded-xl"
       >
         <div className="w-full flex absolute justify-center top-[0] -translate-y-[50%] left-0 right-0 ">
@@ -259,8 +298,9 @@ export default function RouteForm({
                     <option value="-1">Seleccionar tienda</option>
                     {allDataStores &&
                       allDataStores
-                        .filter((store) =>
-                          !dataForm?.tiendas.some((u) => u === store._id)
+                        .filter(
+                          (store) =>
+                            !dataForm?.tiendas.some((u) => u === store._id)
                         )
                         .map((store) => (
                           <option

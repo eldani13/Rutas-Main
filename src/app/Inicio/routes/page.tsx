@@ -221,6 +221,7 @@ export default function Route() {
             setAddRoute(false);
             getAllData();
           }}
+          type="add"
         />
 
         {/* {addRoute && (

@@ -79,6 +79,7 @@ export default function Route({ params }) {
       const decodedToken = jwt.decode(getData as string);
       if (decodedToken && typeof decodedToken !== "string")
         setRole(decodedToken?.role as "empleado" | "administrador");
+      console.log(decodedToken);
     } catch (error) {
       console.error("Error al obtener datos del token:", error);
     }
@@ -173,7 +174,7 @@ export default function Route({ params }) {
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
-
+  console.log(role);
   return (
     <>
       <div
@@ -242,7 +243,7 @@ export default function Route({ params }) {
 
         {/* Botones */}
         <div className="z-20 absolute bottom-0 ms-3 ps-3 xl:ps-0 gap-3 xl:gap-0 xl:static pb-10 flex  xl:flex-col xl:space-y-5 items-center">
-          {role === "administrador" ? null : (
+          {role === "administrador" && (
             <>
               <ButtonCrud
                 isHidden={false}
@@ -439,7 +440,13 @@ export default function Route({ params }) {
             </div>
           </div>
         </div>
-        <RouteForm viewForm={viewForm} setViewForm={setViewForm} />
+        <RouteForm
+          viewForm={viewForm}
+          setViewForm={setViewForm}
+          type="add"
+          routeCurrent={routeCurrent}
+          setRouteIfIsModify={setRouteCurrent}
+        />
         {/* {modifyRoute.route && (
           <div
             className={`bg-[#1d1b1b6e] z-20 absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${
