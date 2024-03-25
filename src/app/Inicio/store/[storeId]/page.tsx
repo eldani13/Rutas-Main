@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import ViewAllProducts from "../../../../components/views/ViewAllProducts";
 import ViewProductsSelect from "../../../../components/views/ViewProductsSelect";
 import { MessageStores, ProductsInStores } from "@/types/stores";
+import StoreForm from "@/components/forms/StoreForm";
 
 export default function Products({ params }: { params: { storeId: string } }) {
   const { storeId } = params;
@@ -25,6 +26,7 @@ export default function Products({ params }: { params: { storeId: string } }) {
   >(null);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isModifyStore, setIsModifyStore] = useState(false);
 
   const getStoreCurrent = async () => {
     await getAllFetchDataValues(`${processEnv.back}tienda/${storeId}`).then(
@@ -104,6 +106,8 @@ export default function Products({ params }: { params: { storeId: string } }) {
     setIsLoading(false);
   };
   console.log(productsInStore);
+  console.log(selectData);
+  console.log(storeCurrent);
   // console.log(productsInStoreInitial);
   return (
     <>
@@ -118,12 +122,20 @@ export default function Products({ params }: { params: { storeId: string } }) {
       </div> */}
       <span></span>
       <div className="max-h-[100vh] h-full pt-14 flex flex-col overflow-y-auto p-5 ">
-        <button
-          onClick={removeStore}
-          className="absolute right-2 top-2 bg-red-400 rounded-xl hover:bg-red-500 px-2 py-1 text-slate-50"
-        >
-          Eliminar tienda
-        </button>
+        <div className="absolute right-2 top-2 flex gap-5">
+          <button
+            onClick={() => setIsModifyStore(true)}
+            className="bg-blue-400 rounded-xl hover:bg-blue-500 px-2 py-1 text-slate-50"
+          >
+            Editar tienda
+          </button>
+          <button
+            onClick={removeStore}
+            className="bg-red-400 rounded-xl hover:bg-red-500 px-2 py-1 text-slate-50"
+          >
+            Eliminar tienda
+          </button>
+        </div>
 
         {/* Informacion */}
         <hr className="mb-10 border-[1px]" />
@@ -172,28 +184,31 @@ export default function Products({ params }: { params: { storeId: string } }) {
 
         <div className="w-full flex justify-center gap-5 mt-10">
           {!isLoading ? (
-            <>
-              <button
-                type="button"
-                onClick={async () => {
-                  setIsLoading(true);
-                  await getStoreCurrent();
-                  transformIdToProducts();
-                  setIsLoading(false);
-                }}
-                className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-              >
-                Reiniciar
-              </button>
+            selectData &&
+            selectData.length > 0 && (
+              <>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    setIsLoading(true);
+                    await getStoreCurrent();
+                    transformIdToProducts();
+                    setIsLoading(false);
+                  }}
+                  className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                >
+                  Reiniciar
+                </button>
 
-              <button
-                type="button"
-                onClick={handleSendData}
-                className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 "
-              >
-                Guardar cambios
-              </button>
-            </>
+                <button
+                  type="button"
+                  onClick={handleSendData}
+                  className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 "
+                >
+                  Guardar cambios
+                </button>
+              </>
+            )
           ) : (
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -223,6 +238,17 @@ export default function Products({ params }: { params: { storeId: string } }) {
             </svg>
           )}
         </div>
+
+        <StoreForm
+          view={isModifyStore}
+          setReturnView={setIsModifyStore}
+          handleSuccesForm={() => {
+            // getAllStores();
+            // setViewForm(false);
+          }}
+          dataFormCurrentParam={storeCurrent}
+          type="Editar"
+        />
       </div>
     </>
   );
