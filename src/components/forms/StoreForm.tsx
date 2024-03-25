@@ -1,50 +1,68 @@
-import { postInsertData } from "@/utils/api";
+import { MessageStores } from "@/types/stores";
+import { patchEditVal, postInsertData } from "@/utils/api";
 import { processEnv } from "@/utils/cookies";
-import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 
 export default function StoreForm({
   view = false,
   setReturnView = null,
   handleSuccesForm,
+  type = "Agregar",
+  dataFormCurrentParam,
 }: {
   view?: boolean;
   setReturnView?: Dispatch<SetStateAction<boolean>> | null;
   handleSuccesForm?: () => void;
+  dataFormCurrentParam?: MessageStores | null;
+  type?: "Agregar" | "Editar";
 }) {
   const [dataFormCurrent, setDataFormCurrent] = useState({
     name: "",
-    coordinator: "", 
+    coordinator: "",
     address: "",
-    coordinates: "", 
+    coordinates: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSendForm = async (e: FormEvent) => {
     e.preventDefault();
-    await addStore();
+    setIsLoading(true);
+    if (type === "Agregar") {
+      await addStore();
+    } else {
+      await editStore();
+    }
+    setIsLoading(false);
   };
 
   const addStore = async () => {
-    
-    try
-    {
-      const coord = (dataFormCurrent.coordinates as string).split(",").map(Number);
+    try {
+      const coord = (dataFormCurrent.coordinates as string)
+        .split(",")
+        .map(Number);
       await postInsertData(
         `${processEnv.back}tienda/new`,
         {
           nombre: dataFormCurrent.name,
-          coordinador: dataFormCurrent.coordinator, 
+          coordinador: dataFormCurrent.coordinator,
           direccion: dataFormCurrent.address,
           coordenadas: {
             x: coord[0],
-            y: coord[1]
-          }
+            y: coord[1],
+          },
         },
         () => {
           setDataFormCurrent({
             name: "",
             coordinator: "",
             address: "",
-            coordinates: "", 
+            coordinates: "",
           });
           if (handleSuccesForm) {
             handleSuccesForm();
@@ -52,11 +70,49 @@ export default function StoreForm({
         },
         "tienda"
       );
-
-    }catch{
-      alert("Upps, ocurrió un error")
+    } catch {
+      alert("Upps, ocurrió un error");
     }
   };
+  const editStore = async () => {
+    try {
+      const coord = (dataFormCurrent.coordinates as string)
+        .split(",")
+        .map(Number);
+      await patchEditVal(
+        `${processEnv.back}tienda/edit/${dataFormCurrentParam?._id}`,
+        {
+          nombre: dataFormCurrent.name,
+          coordinador: dataFormCurrent.coordinator,
+          direccion: dataFormCurrent.address,
+          coordenadas: {
+            x: coord[0],
+            y: coord[1],
+          },
+        },
+        () => {
+          if (handleSuccesForm) {
+            handleSuccesForm();
+          }
+        },
+        "tienda"
+      );
+    } catch {
+      alert("Upps, ocurrió un error");
+    }
+  };
+
+  useEffect(() => {
+    console.log(dataFormCurrentParam);
+    if (!dataFormCurrentParam) return;
+
+    setDataFormCurrent({
+      name: dataFormCurrentParam.nombre,
+      address: dataFormCurrentParam.direccion,
+      coordinates: `${dataFormCurrentParam.coordenadas.x},${dataFormCurrentParam.coordenadas.y}`,
+      coordinator: dataFormCurrentParam.coordinador,
+    });
+  }, [dataFormCurrentParam]);
 
   return (
     <div
@@ -163,19 +219,50 @@ export default function StoreForm({
           />
         </div>
         <div className="flex justify-center gap-10 pt-10">
-          <button
-            onClick={() => setReturnView && setReturnView(false)}
-            type="button"
-            className={`text-white px-5 py-2.5 text-center rounded-lg text-sm w-full sm:w-auto focus:ring-4 focus:outline-none focus:ring-blue-300 bg-red-400 hover:bg-red-700`}
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            className={`text-white px-5 py-2.5 text-center rounded-lg text-sm w-full sm:w-auto focus:ring-4 focus:outline-none focus:ring-blue-300 bg-blue-700 hover:bg-blue-800`}
-          >
-            Actualizar
-          </button>
+          {!isLoading ? (
+            <>
+              <button
+                onClick={() => setReturnView && setReturnView(false)}
+                type="button"
+                className={`text-white px-5 py-2.5 text-center rounded-lg text-sm w-full sm:w-auto focus:ring-4 focus:outline-none focus:ring-blue-300 bg-red-400 hover:bg-red-700`}
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                className={`text-white px-5 py-2.5 text-center rounded-lg text-sm w-full sm:w-auto focus:ring-4 focus:outline-none focus:ring-blue-300 bg-blue-700 hover:bg-blue-800`}
+              >
+                {type}
+              </button>
+            </>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="5em"
+              height="5em"
+              className="m-auto text-blue-600"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z"
+                opacity="0.5"
+              />
+              <path
+                fill="currentColor"
+                d="M20 12h2A10 10 0 0 0 12 2V4A8 8 0 0 1 20 12Z"
+              >
+                <animateTransform
+                  attributeName="transform"
+                  dur="1s"
+                  from="0 12 12"
+                  repeatCount="indefinite"
+                  to="360 12 12"
+                  type="rotate"
+                />
+              </path>
+            </svg>
+          )}
         </div>
       </form>
     </div>

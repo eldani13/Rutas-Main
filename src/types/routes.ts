@@ -7,8 +7,7 @@ export interface MessageRoute {
     _id: string
     empleado: string
     vehicle: string
-    start: number[]
-    end: number[]
+    tiendas: string[]
     status: boolean
     amountOfMerchandise: number
     LastMinuteSale: string

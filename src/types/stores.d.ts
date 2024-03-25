@@ -4,7 +4,7 @@ export interface RootStores {
 }
 
 export interface MessageStores {
-  _id: number;
+  _id: string;
   nombre: string;
   direccion: string;
   coordinador: string;
@@ -17,7 +17,7 @@ export interface MessageStores {
 }
 
 export interface ProductsInStores{
-  _id: number;
+  _id: string;
   product: string;
   price: number
   __v: number;
