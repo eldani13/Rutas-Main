@@ -4,6 +4,7 @@ import { MessageEmployees, RootEmployees } from "@/types/employees";
 import { MessageProduct, RootProduct } from "@/types/product";
 import { MessageRequestProducts } from "@/types/requestProducts";
 import { MessageRoute } from "@/types/routes";
+import { Product } from "@/types/requestProducts";
 import { getAllFetchDataValues, patchEditVal } from "@/utils/api";
 import { getCookie, processEnv } from "@/utils/cookies";
 import { useEffect, useState } from "react";
@@ -16,16 +17,55 @@ export default function Product() {
   const [selectDataRequest, setSelectDataRequest] =
     useState<null | MessageRequestProducts>(null);
 
+  const [selectedProduct, setSelectedProduct] = useState<MessageProduct | null>(
+    null
+  );
+
   const [showAssignQuantityMessage, setShowAssignQuantityMessage] =
     useState(false);
 
-    const handleConfirmAssignQuantity = () => {
-      // Aquí puedes agregar la lógica para manejar la cantidad asignada
-      console.log("Cantidad asignada:", assignQuantity);
-      setShowAssignQuantityMessage(false);
-      setAssignQuantity(0);
+  const [showModal, setShowModal] = useState<boolean>(false);
+
+  const [assignedQuantity, setAssignedQuantity] = useState<number | undefined>(
+    undefined
+  );
+  const asignarCantidad = (product: Product) => {
+    if (product && assignedQuantity !== undefined) {
+      const updatedProduct = { ...product, cantidadAsignada: assignedQuantity };
+
+      console.log("Producto actualizado:", updatedProduct);
+      closeModal();
+      setAssignedQuantity(undefined);
+    }
+  };
+
+  const openModalForApprove = () => {
+    setShowModal(true);
+  };
+
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const convertToProduct = (messageProduct: MessageProduct): Product => {
+    return {
+      assignedQuantity: 0,
+      product: messageProduct.productName,
+      amount: messageProduct.amount,
+      amountCurrent: messageProduct.amountCurrent,
+      _id: messageProduct._id,
     };
-  
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+  const handleConfirmAssignQuantity = () => {
+    console.log("Cantidad asignada:", assignQuantity);
+    setShowAssignQuantityMessage(false);
+    setAssignQuantity(0);
+  };
 
   const [assignQuantity, setAssignQuantity] = useState(0);
 
@@ -54,15 +94,13 @@ export default function Product() {
 
   const updateTable = async (state: string) => {
     if (state === "aprobado" && selectDataRequest?.state !== "aprobado") {
-      // Mostrar el modal si se intenta aprobar el pedido sin asignar cantidad
       setShowAssignQuantityMessage(true);
       return;
     }
 
-    // Si no se muestra el modal, realizar la actualización normalmente
     await patchEditVal(
       `${processEnv.back}request-products/edit/${selectDataRequest?._id}`,
-      { state },
+      { products:selectDataRequest?.products, state },
       () => {},
       "requisito"
     );
@@ -101,6 +139,18 @@ export default function Product() {
   console.log(allDataEmployees);
   console.log(allDataProducts);
 
+  const handleUpdateProductSelect = (index: number, newNumber: number) => {
+    if(newNumber < 0 ||  isNaN(newNumber)){
+      return null;
+    }
+    //@ts-ignore
+    setSelectDataRequest((prev) => {
+      const newArray = prev && [...prev.products];
+      if (newArray) newArray[index].amount = newNumber;
+      if (!prev) return null;
+      return { ...prev, products: newArray };
+    });
+  };
   return (
     <>
       <div className="h-[100%]">
@@ -225,7 +275,17 @@ export default function Product() {
                     /> */}
                     <div className="flex gap-10">
                       <button
-                      className="bg-red-400 p-2 rounded-full font-bold hover:scale-105 duration-100"
+                        className="bg-green-400 p-2 rounded-full font-bold hover:scale-105 duration-100"
+                        onClick={() => {
+                          updateTable("aprobado");
+                          setShowAssignQuantityMessage(false);
+                          setAssignQuantity(0);
+                        }}
+                      >
+                        Aceptar
+                      </button>
+                      <button
+                        className="bg-red-400 p-2 rounded-full font-bold hover:scale-105 duration-100"
                         onClick={() => {
                           setShowAssignQuantityMessage(false);
                           setAssignQuantity(0);
@@ -288,16 +348,18 @@ export default function Product() {
                           (u: MessageProduct) => u._id == pr_product.product
                         )?.productDescription
                       }
-                      <button className="bg-[#eab346] rounded-full text-black p-2 text-sm">Asignar cantidad</button>
+                      {/* <button
+                        className="bg-[#eab346] rounded-full text-black p-2 text-sm"
+                        onClick={openModal}
+                      >
+                        Asignar cantidad
+                      </button> */}
                     </p>
                     <p className="text-sm font-semibold">
                       Cantidad solicitada: {pr_product.amount}
                     </p>
-                    <p className="text-sm font-semibold">
-                      Cantidad asignada: {pr_product.assignedQuantity || assignQuantity}
-                    </p>
+
                     <p className="text-right text-sm font-bold mt-3">
-                      
                       {/* {product.productPrice}  */}
                       {
                         allDataProducts?.find(
@@ -308,17 +370,49 @@ export default function Product() {
                     </p>
                   </div>
 
-                 
-                  {/* <div className="flex items-center gap-1 font-bold text-xl">
+                  {selectedProduct && showModal && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-transparent opacity-100">
+                      <div className="bg-white p-4 rounded-lg">
+                        <h2 className="text-lg font-semibold mb-2">
+                          Ingresa la cantidad:
+                        </h2>
+                        <input
+                          type="number"
+                          className="border border-gray-300 rounded-md p-2"
+                          onChange={(e) =>
+                            setAssignedQuantity(parseInt(e.target.value))
+                          }
+                        />
+                        <div className="mt-2 flex justify-end">
+                          <button
+                            className="bg-gray-200 hover:bg-gray-300 rounded px-4 py-2 mr-2"
+                            onClick={closeModal}
+                          >
+                            Cancelar
+                          </button>
+                          <button
+                            className="bg-[#eab346] hover:bg-[#d99e32] rounded px-4 py-2 text-white"
+                            onClick={() =>
+                              asignarCantidad(convertToProduct(selectedProduct))
+                            }
+                          >
+                            Asignar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex items-center gap-1 font-bold text-xl">
                     <button
-                      // disabled={(product?.productAmount ?? 0) === 0}
+                      disabled={(pr_product.amount ?? 0) === 0}
                       className="w-8 h-8 bg-red-200 rounded-md"
-                      // onClick={() =>
-                      //   handleUpdateProductSelect(
-                      //     index,
-                      //     (product?.productAmount ?? 0) - 1
-                      //   )
-                      // }
+                      onClick={() =>
+                        handleUpdateProductSelect(
+                          index,
+                          (pr_product.amount ?? 0) - 1
+                        )
+                      }
                     >
                       -
                     </button>
@@ -326,26 +420,27 @@ export default function Product() {
                       type="number"
                       className="flex w-14 text-center"
                       min={0}
-                      // onChange={(e) =>
-                      //   handleUpdateProductSelect(
-                      //     index,
-                      //     parseInt(e.target.value)
-                      //   )
-                      // }
-                      // value={product.productAmount ?? 0}
+                      value={pr_product.amount}
+                      onChange={(e) =>
+                        handleUpdateProductSelect(
+                          index,
+                          parseInt(e.target.value)
+                        )
+                      }
                     />
+
                     <button
                       className="w-8 h-8 bg-green-200 rounded-md"
-                      // onClick={() =>
-                      //   handleUpdateProductSelect(
-                      //     index,
-                      //     (product?.productAmount ?? 0) + 1
-                      //   )
-                      // }
+                      onClick={() =>
+                        handleUpdateProductSelect(
+                          index,
+                          (pr_product.amount ?? 0) + 1
+                        )
+                      }
                     >
                       +
                     </button>
-                  </div> */}
+                  </div>
                 </div>
               ))}
             </div>

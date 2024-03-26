@@ -16,10 +16,3 @@ interface Product {
   _id: string;
 }
 
-
-interface ProductosNoVendidos {
-  _id: string;
-  nombre: string;
-  cantidad: number;
-  precio: number;
-}
