@@ -84,8 +84,9 @@ export default function Product() {
       state: "pendiente",
       dateTime: new Date().toISOString(),
       products: getProductsSelect?.map((product) => ({
-        productId: product._id,
+        product: product._id,
         amount: product.amount,
+        stateProduct : "registrado"
       })),
     };
 
