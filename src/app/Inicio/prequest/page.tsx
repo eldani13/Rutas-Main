@@ -92,16 +92,41 @@ export default function Product() {
     );
   };
 
-  const updateTable = async (state: string) => {
-    if (state === selectDataRequest?.state) {
+
+  //const updateTable = async (state: string) => {
+   // if (state === selectDataRequest?.state) {
       // setShowAssignQuantityMessage(true);
       
-      return;
-    }
+     // return;
+    //}
 
+    //await patchEditVal(
+     // `${processEnv.back}request-products/edit/${selectDataRequest?._id}`,
+     // { state: state },
+
+  const updateTable = async (state: "aprobado" | "rechazado") => {
+    if (state === "aprobado") {
+      await updateAceptRequest();
+    } else {
+      await patchEditVal(
+        `${processEnv.back}request-products/edit/${selectDataRequest?._id}`,
+        {
+          state: state,
+        },
+        () => {},
+        "requisito"
+      );
+    }
+  };
+
+  const updateAceptRequest = async () => {
     await patchEditVal(
-      `${processEnv.back}request-products/edit/${selectDataRequest?._id}`,
-      { state: state },
+      `${processEnv.back}request-products/update-acepted/${selectDataRequest?._id}`,
+      {
+        ...selectDataRequest,
+        state: "aprobado",
+      },
+
       () => {},
       "requisito"
     );
