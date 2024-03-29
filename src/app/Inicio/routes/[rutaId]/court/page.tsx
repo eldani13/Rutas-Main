@@ -21,6 +21,9 @@ import Quagga from "@ericblade/quagga2";
 import { MessageRequestProducts } from "@/types/requestProducts";
 import Swal from "sweetalert2";
 import Link from "next/link";
+import { ResponseServer, ProductosCortes } from "@/types/corteResponse";
+import Products from "@/app/Inicio/store/[storeId]/page";
+
 
 // @ts-ignore
 export default function Court({ params }) {
@@ -33,12 +36,51 @@ export default function Court({ params }) {
     "insert",
   ]);
 
+  useEffect(() => {
+    getIfProductSelect();
+    getProducts();
+    getDataRoute();
+  }, []);
+
   const formRef = useRef<HTMLFormElement>(null);
 
+  const [allProducts, setAllProducts] = useState<MessageProduct[]>();
   const [search, setSearch] = useState("");
   const [_scannerIsRunning, set_scannerIsRunning] = useState(false);
   const [actualProductSearchScanner, set_actualProductSearchScanner] =
     useState<MessageProduct | null>(null);
+    const [requestProductsAll, setRequestProductsAll] = useState<
+    null | MessageRequestProducts[]
+  >(null);
+
+
+  useEffect(() => {
+    const dataReturn = allProducts
+      ?.filter((prod) => {
+        return requestCurrentIfExist?.products?.some(
+          (item) => item.product === prod._id
+        );
+      })
+      .map((obj) => {
+        const objetoEnSegundoArray = requestCurrentIfExist?.products.find(
+          (item) => obj._id === item.product
+        );
+        return {
+          ...obj,
+          amount: objetoEnSegundoArray?.amount || 0,
+          amountCurrent: objetoEnSegundoArray?.amountCurrent || 0,
+          _idInRequest: objetoEnSegundoArray?._id || "",
+        };
+      });
+    // @ts-ignore
+    //ADDMER
+    setProducts(dataReturn);
+
+    console.log(dataReturn);
+  }, [allProducts]);
+
+  
+  
 
   const { rutaId } = params;
   const [routeCurrent, setRouteCurrent] = useState<null | MessageRoute>(null);
@@ -68,7 +110,6 @@ export default function Court({ params }) {
       () => {
         // event.currentTarget.reset();
         setRouteCurrent(modifyRoute.route);
-        getDataDirections(modifyRoute.route || null);
         setModifyRoute((prev) => ({ ...prev, state: false }));
       },
       "Ruta"
@@ -101,7 +142,6 @@ export default function Court({ params }) {
 
     setRouteCurrent(dataValues || null);
     setModifyRoute((prev) => ({ ...prev, route: dataValues || null }));
-    await getDataDirections(dataValues || null);
   };
   const getDataEmploye = async () => {
     await getAllFetchDataValues(
@@ -131,20 +171,8 @@ export default function Court({ params }) {
     );
   };
 
-  const getDataDirections = async (currentRoute: MessageRoute | null) => {
-    setLoadingDirections(true);
 
-    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/`;
-    const routes = `${currentRoute?.start[0]}, ${currentRoute?.start[1]}; ${currentRoute?.end[0]}, ${currentRoute?.end[1]}`;
-    const options = `?alternatives=false&geometries=geojson&overview=simplified&steps=false&access_token=pk.eyJ1IjoibGRhbmlpMTMiLCJhIjoiY2xxemE3OXBuMDMxaDJxb2ZwbWYyeXczNSJ9.Clw9VnVZszkfexTJ1tOMUw`;
-
-    await getAllFetchDataValues(`${url}${routes}${options}`)
-      .then((data) => {
-        setResponseDirections(data);
-      })
-      .catch((err) => setErrorResponseDirections(err))
-      .finally(() => setLoadingDirections(false));
-  };
+    
 
   useEffect(() => {
     getDataRoute();
@@ -164,7 +192,6 @@ export default function Court({ params }) {
     setMenuOpen(!menuOpen);
   };
 
-  const [allProducts, setAllProducts] = useState<MessageProduct[]>();
   const [products, setProducts] = useState<MessageProduct[]>();
   const [clickInProduct, setClickInProduct] = useState<null | MessageProduct>(
     null
@@ -181,126 +208,7 @@ export default function Court({ params }) {
     );
     setAllProducts(productsget.details);
   };
-  function startScanner() {
-    Quagga.init(
-      {
-        inputStream: {
-          name: "Live",
-          type: "LiveStream",
-          //@ts-ignore
-          target: document.querySelector("#viewcamera"),
-          constraints: {
-            facingMode: "environment",
-          },
-        },
-        decoder: {
-          readers: [
-            "code_128_reader",
-            "ean_reader",
-            "ean_8_reader",
-            "code_39_reader",
-            "code_39_vin_reader",
-            "codabar_reader",
-            "upc_reader",
-            "upc_e_reader",
-            "i2of5_reader",
-          ],
-          debug: {
-            //@ts-ignore
-            showCanvas: true,
-            showPatches: true,
-            showFoundPatches: true,
-            showSkeleton: true,
-            showLabels: true,
-            showPatchLabels: true,
-            showRemainingPatchLabels: true,
-            boxFromPatches: {
-              showTransformed: true,
-              showTransformedBox: true,
-              showBB: true,
-            },
-          },
-        },
-      },
-      function (err) {
-        if (err) {
-          console.log(err);
-          return;
-        }
-
-        console.log("Initialization finished. Ready to start");
-        Quagga.start();
-
-        // Set flag to is running
-        set_scannerIsRunning(true);
-      }
-    );
-
-    Quagga.onProcessed(function (result) {
-      var drawingCtx = Quagga.canvas.ctx.overlay,
-        drawingCanvas = Quagga.canvas.dom.overlay;
-      drawingCanvas.style.position = "absolute";
-      drawingCanvas.style.top = "0";
-      if (result) {
-        if (result.boxes) {
-          drawingCtx.clearRect(
-            0,
-            0,
-            //@ts-ignore
-            parseInt(drawingCanvas.getAttribute("width")),
-            //@ts-ignore
-            parseInt(drawingCanvas.getAttribute("height"))
-          );
-          result.boxes
-            .filter(function (box) {
-              return box !== result.box;
-            })
-            .forEach(function (box) {
-              Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, {
-                color: "green",
-                lineWidth: 2,
-              });
-            });
-        }
-
-        if (result.box) {
-          Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, {
-            color: "#00F",
-            lineWidth: 2,
-          });
-        }
-
-        if (result.codeResult && result.codeResult.code) {
-          Quagga.ImageDebug.drawPath(
-            result.line,
-            { x: "x", y: "y" },
-            drawingCtx,
-            { color: "red", lineWidth: 3 }
-          );
-        }
-      }
-    });
-
-    Quagga.onDetected(function (result) {
-      console.log(
-        "Barcode detected and processed : [" + result.codeResult.code + "]",
-        result
-      );
-
-      const productFind = products?.find(
-        (item) => item.productIdScan == parseInt(result.codeResult.code || "0")
-      );
-      if (
-        productFind != undefined &&
-        productFind != actualProductSearchScanner
-      ) {
-        //@ts-ignore
-        set_actualProductSearchScanner(productFind);
-        // @ts-ignore
-        setSearch(result.codeResult.code);
-      }
-    });
-  }
+  
 
   useEffect(() => {
     getIfProductSelect();
@@ -310,10 +218,8 @@ export default function Court({ params }) {
 
   useEffect(() => {
     const dataReturn = allProducts
-      ?.filter((prod) => {
-        return requestCurrentIfExist?.products.some(
-          (item) => item.product === prod._id
-        );
+      ?.filter(() => {
+        return
       })
       .map((obj) => {
         const objetoEnSegundoArray = requestCurrentIfExist?.products.find(
@@ -330,90 +236,7 @@ export default function Court({ params }) {
     console.log(dataReturn);
   }, [allProducts]);
 
-  const handleClickOnOffScanner = (value: boolean) => {
-    console.log("lol");
-    if (!value) {
-      set_scannerIsRunning(value);
-      try {
-        Quagga.stop();
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
-      startScanner();
-    }
-  };
-
-  // useEffect(() => {
-  const filteredProducts = products?.filter(
-    (product) =>
-      product.productName.toLowerCase().includes(search.toLowerCase()) ||
-      product.productDescription.toLowerCase().includes(search.toLowerCase()) ||
-      `${product.productIdScan}`.includes(search)
-  );
-  console.log(products);
-  // }, []);
-
-  async function saleProduct(productSale: MessageProduct | null | undefined) {
-    if (!productSale) {
-      Swal.fire({
-        icon: "error",
-        title: "Error al intentar hacer la compra",
-        text: "Por favor seleccione un producto",
-        toast: true,
-        timer: 2500,
-        position: "bottom-right",
-        background: "#a00",
-        color: "#fff",
-        timerProgressBar: true,
-        showConfirmButton: false,
-      });
-    } else {
-      // await patchEditVal(
-      //   `${processEnv.back}request-products/edit/${rutaId}`,
-      //   {
-      //     state: state,
-      //   },
-      //   () => {},
-      //   "requisito"
-      // );
-
-      patchSaleProduct(
-        `${processEnv.back}api/v1/products/edit/${productSale._id}`,
-        {
-          ...productSale,
-          productIsSold: true,
-        },
-        async () => {
-          const dateCurrent = new Date().toISOString();
-          const amountNew =
-            (routeCurrent?.amountOfMerchandise || 0) + productSale.productPrice;
-          await patchEditVal(
-            `${processEnv.back}api/v1/rutas/edit/${routeCurrent?._id}`,
-            {
-              amountOfMerchandise: amountNew,
-              LastMinuteSale: dateCurrent,
-            },
-            () => {
-              // event.currentTarget.reset();
-              //@ts-ignore
-              setRouteCurrent((prev) => ({
-                ...prev,
-                LastMinuteSale: dateCurrent,
-                amountOfMerchandise: amountNew,
-              }));
-            },
-            "Ruta"
-          );
-
-          setClickInProduct(null);
-          set_actualProductSearchScanner(null);
-          getProducts();
-        }
-      );
-    }
-  }
-
+   
   const getIfProductSelect = async () => {
     try {
       await getAllFetchDataValues(
@@ -428,6 +251,106 @@ export default function Court({ params }) {
     }
   };
   console.log(requestCurrentIfExist);
+
+  // fetch('close-court/' + rutaId)
+  // .then(response => {
+  //   if (!response.ok) {
+  //     throw new Error('Network response was not ok');
+  //   }
+  //   return response.json();
+  // })
+  // .then(data => {
+  //   
+  //   const productosNoVendidos = data.response.ProductosNoVendidos;
+    
+  //   
+  //   console.log(productosNoVendidos);
+  // })
+  // .catch(error => {
+  //   console.error('Hubo un problema con la solicitud fetch:', error);
+  // });
+
+
+
+  //closecourt
+
+  // async function getRouteData(rutaId: string): Promise<ResponseServer> {
+  //   try {
+  //     const response = await fetch(`/routes/${rutaId}`);
+      
+  //     if (!response.ok) {
+  //       throw new Error(`Error al obtener los datos de la ruta. Codigo de estado: ${response.status}`);
+  //     }
+  
+  //     const data: ResponseServer = await response.json();
+  
+  //     return data;
+  //   } catch (error) {
+  //     console.error('Error al obtener datos de la ruta:', error);
+  //     throw error;
+  //   }
+  // }
+  
+  // getRouteData('rutaId').then((datosRuta) => {
+  //   console.log('Datos de la ruta:', datosRuta);
+  // }).catch((error) => {
+  //   console.error('Error al obtener datos de la ruta:', error);
+  // });
+
+  // const [currentCourts, setCurrentCourts] = useState<ResponseServer | null>(null);
+
+  // useEffect(() => {
+  //   getRouteData('iDRuta')
+  //     .then((datosRuta) => {
+  //       setCurrentCourts(datosRuta);
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error al obtener datos de la ruta:', error);
+  //     });
+  // }, []);
+
+
+  const getDataProducts = async () => {
+    await getAllFetchDataValues(
+      `${processEnv.back}routes/products/${routeCurrent && routeCurrent.empleado}`
+    )
+      .then((rec) => {
+        const messList: MessageEmployees = rec;
+        console.log(rec);
+        if (messList != null) {
+          setEmployeCurrent(messList);
+        }
+      })
+      .catch(() => setEmployeCurrent(null));
+  };
+  
+
+
+  const [productosNoVendidos, setProductosNoVendidos] = useState<ProductosCortes[]>([]);
+  const [productosVendidos, setProductosVendidos] = useState<ProductosCortes[]>([]);
+  const [productosDevolucion, setProductosDevolucion] = useState<ProductosCortes[]>([]);
+
+
+  // NoVendidos
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getAllFetchDataValues(`http://localhost:3000/api/v1/close-court/${rutaId}`);
+        setProductosNoVendidos(data.response.ProductosNoVendidos);
+        setProductosVendidos(data.response.ProductosVendidos);
+        setProductosDevolucion(data.response.ProductosDevueltos);
+      } catch (error) {
+        console.error('Hubo un problema con la solicitud fetch no vendidos:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+  console.log('ProductosNoVendidos: ', productosNoVendidos);
+  console.log('ProductosNoVendidos: ', productosDevolucion);
+  console.log('ProductosNoVendidos: ', productosVendidos);
 
   return (
     <>
@@ -616,7 +539,9 @@ export default function Court({ params }) {
             {/* Primer div */}
 
             <div className="flex flex-col text-black px-3 xl:col-span-1 col-span-3 col-start-1 row-start-1 h-[35vh] overflow-y-auto">
-              <h1 className="flex justify-center text-2xl font-bold">Vendidos</h1>
+              <h1 className="flex justify-center text-2xl font-bold">
+                Vendidos
+              </h1>
               <table className="h-full w-full border-collapse">
                 <thead>
                   <tr className="bg-[#ccc] rounded-full grid grid-cols-3 py-2.5">
@@ -626,14 +551,14 @@ export default function Court({ params }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentCourt.productosVendidos.map((product, index) => (
+                  {productosVendidos && productosVendidos.map((prod) => (
                     <tr
-                      key={"productoVendido-" + index}
+                      key={'productosvendidos' + prod.stateProduct}
                       className="grid grid-cols-3 py-2.5 text-center"
                     >
-                      <td>{product.nombre}</td>
-                      <td>{product.cantidad}</td>
-                      <td>{product.precio}</td>
+                      <td>{prod.product}</td>
+                      <td>{prod.amount}</td>
+                      <td>{}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -641,7 +566,9 @@ export default function Court({ params }) {
             </div>
 
             <div className="flex flex-col text-black px-3 xl:col-span-1 col-span-3 col-start-1 row-start-1 h-[35vh] overflow-y-auto">
-              <h1 className="flex justify-center text-2xl font-bold">No Vendidos</h1>
+              <h1 className="flex justify-center text-2xl font-bold">
+                No Vendidos
+              </h1>
               <table className="h-full w-full border-collapse">
                 <thead>
                   <tr className="bg-[#ccc] rounded-full grid grid-cols-3 py-2.5">
@@ -651,14 +578,14 @@ export default function Court({ params }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentCourt.productosVendidos.map((product, index) => (
+                  {productosNoVendidos && productosNoVendidos.map((prod) => (
                     <tr
-                      key={"productoVendido-" + index}
+                      key={'productosnovendidos' + prod.stateProduct}
                       className="grid grid-cols-3 py-2.5 text-center"
                     >
-                      <td>{product.nombre}</td>
-                      <td>{product.cantidad}</td>
-                      <td>{product.precio}</td>
+                      <td>{prod.product}</td>
+                      <td>{prod.amountCurrent}</td>
+                      <td>{}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -667,7 +594,9 @@ export default function Court({ params }) {
             {/* Tercer div */}
 
             <div className="flex  flex-col justify-items-center text-black px-3  pb-5 row-span-2  xl:col-span-2 col-span-3 xl:col-start-3 xl:row-start-1 col-start-1 row-start-3  xl:justify-start h-[35vh] overflow-y-auto mb-10">
-              <h1 className="flex justify-center text-2xl font-bold">Devoluciones</h1>
+              <h1 className="flex justify-center text-2xl font-bold">
+                Devoluciones
+              </h1>
               <table className="h-full w-full border-collapse">
                 <thead>
                   <tr className="bg-[#ccc] rounded-full grid grid-cols-3 py-2">
@@ -678,14 +607,14 @@ export default function Court({ params }) {
                 </thead>
 
                 <tbody>
-                {currentCourt.productosVendidos.map((product, index) => (
+                  {productosDevolucion && productosDevolucion.map((producto) => (
                     <tr
-                      key={"productoVendido-" + index}
+                      key={"productoDevolucion" + producto}
                       className="grid grid-cols-3 py-2.5 text-center"
                     >
-                      <td>{product.nombre}</td>
-                      <td>{product.cantidad}</td>
-                      <td>{product.precio}</td>
+                      <td>{}</td>
+                      <td>{}</td>
+                      <td>{}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -792,7 +721,9 @@ export default function Court({ params }) {
                 className="w-full  gap-5 rounded-xl text-center py-5"
                 style={{ boxShadow: "0px 6px 13.7px 0px rgba(0, 0, 0, 0.10)" }}
               >
-                <p className="font-bold text-lg">DIFERENCIA DEVOLUCION ES DE:</p>
+                <p className="font-bold text-lg">
+                  DIFERENCIA DEVOLUCION ES DE:
+                </p>
                 <p className="font-normal text-xl text-red-500 relative">
                   $ {}
                   <span className=" ps-3 text-sm font-bold absolute top-[-3px]">

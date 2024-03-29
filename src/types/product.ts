@@ -15,3 +15,13 @@ export interface MessageProduct {
     _idInRequest: number,
     __v: number
 }
+
+
+
+
+interface Producto {
+    _id: string;
+    nombre: string;
+    cantidad: number;
+    precio: number;
+  }
