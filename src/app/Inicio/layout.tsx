@@ -79,7 +79,7 @@ export default function RootLayout({
         className={`${inter.className} grid min-h-screen items-center justify-between text-[#000] `}
         style={{ gridTemplateColumns: "auto auto 1fr" }}
       >
-        <div className="bg-[#bbbcbc] flex flex-col items-center pt-16 space-y-14 h-screen w-fit px-4">
+        <div className="bg-[#bbbcbc] flex flex-col items-center py-5 h-screen w-fit px-4 justify-around">
           {/* Home */}
 
           <Link href="/Inicio">
