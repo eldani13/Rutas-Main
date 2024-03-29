@@ -109,13 +109,12 @@ export default function Route() {
       "ruta"
     );
   };
-  console.log(routes);
   return (
     <>
       <div className="h-[100%]">
         <div className="hidden xl:flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 px-4 h-[100%]">
           <div className="flex flex-col items-start justify-center">
-            <h1 className="text-[#000] text-2xl font-bold mb-1">Rutas</h1>
+            <h1 className="text-[#4e4343] text-2xl font-bold mb-1">Rutas</h1>
           </div>
           <div className="flex flex-col text-[#000] items-start">
             <span className="">Gestiona tus rutas.</span>
@@ -123,24 +122,22 @@ export default function Route() {
         </div>
       </div>
 
-      <div className="relative text-[#000] flex flex-col justify-center items-center gap-20  overflow-y-auto h-full max-h-[100vh]">
-        <div className="flex flex-col ">
-          <div className="flex flex-wrap max-w-full justify-around px-4 gap-x-10 gap-y-5 py-4 pt-10  w-full">
-            {routes && routes.message.length > 0 ? (
-              routes.message.map((routeName: MessageRoute, index: number) => (
-                <LinkRoute
-                  key={"ruta_" + index}
-                  employees={employees}
-                  vehicles={vehicles}
-                  routeCurrent={routeName}
-                />
-              ))
-            ) : (
-              <h1 className="text-center font-semibold text-slate-900 text-xl">
-                No hay rutas para mostrar
-              </h1>
-            )}
-          </div>
+      <div className="relative text-[#000] flex overflow-y-auto h-full max-h-[100vh]">
+        <div className="flex m-auto flex-wrap max-w-full justify-around lg:px-4 gap-x-10 gap-y-5 py-4 pt-10  w-full">
+          {routes && routes.message.length > 0 ? (
+            routes.message.map((routeName: MessageRoute, index: number) => (
+              <LinkRoute
+                key={"ruta_" + index}
+                employees={employees}
+                vehicles={vehicles}
+                routeCurrent={routeName}
+              />
+            ))
+          ) : (
+            <h1 className="text-center font-semibold text-slate-900 text-xl">
+              No hay rutas para mostrar
+            </h1>
+          )}
         </div>
 
         <button
