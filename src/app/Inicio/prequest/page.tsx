@@ -37,11 +37,27 @@ export default function Product() {
     );
   };
 
-  const updateTable = async (state: string) => {
+  const updateTable = async (state: "aprobado" | "rechazado") => {
+    if (state === "aprobado") {
+      await updateAceptRequest();
+    } else {
+      await patchEditVal(
+        `${processEnv.back}request-products/edit/${selectDataRequest?._id}`,
+        {
+          state: state,
+        },
+        () => {},
+        "requisito"
+      );
+    }
+  };
+
+  const updateAceptRequest = async () => {
     await patchEditVal(
-      `${processEnv.back}request-products/edit/${selectDataRequest?._id}`,
+      `${processEnv.back}request-products/update-acepted/${selectDataRequest?._id}`,
       {
-        state: state,
+        ...selectDataRequest,
+        state: "aprobado",
       },
       () => {},
       "requisito"
