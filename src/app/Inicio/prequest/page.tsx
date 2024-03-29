@@ -93,14 +93,15 @@ export default function Product() {
   };
 
   const updateTable = async (state: string) => {
-    if (state === "aprobado" && selectDataRequest?.state !== "aprobado") {
-      setShowAssignQuantityMessage(true);
+    if (state === selectDataRequest?.state) {
+      // setShowAssignQuantityMessage(true);
+      
       return;
     }
 
     await patchEditVal(
       `${processEnv.back}request-products/edit/${selectDataRequest?._id}`,
-      { products:selectDataRequest?.products, state },
+      { state: state },
       () => {},
       "requisito"
     );
@@ -139,18 +140,84 @@ export default function Product() {
   console.log(allDataEmployees);
   console.log(allDataProducts);
 
+  // const handleUpdateProductSelect = (index: number, newNumber: number) => {
+  //   if(newNumber < 0 ||  isNaN(newNumber)){
+  //     return null;
+  //   }
+    
+  //   //@ts-ignore
+  //   setSelectDataRequest((prev) => {
+  //     const newArray = prev && [...prev.products];
+  //     if (newArray) newArray[index].amount = newNumber;
+  //     if (!prev) return null;
+  //     return { ...prev, products: newArray };
+  //   });
+  //   if (selectDataRequest && selectDataRequest.products) {
+  //     // Crear una copia del objeto selectDataRequest
+  //     const updatedDataRequest = { ...selectDataRequest };
+  
+  //     // Verificar si el índice proporcionado es válido
+  //     if (index >= 0 && index < updatedDataRequest.products.length) {
+  //       // Actualizar la cantidad del producto en la copia del objeto
+  //       updatedDataRequest.products[index].amount = newNumber;
+  
+  //       // Actualizar el estado selectDataRequest con la copia actualizada
+  //       setSelectDataRequest(updatedDataRequest);
+  //     }
+  //   }
+  // };
+
   const handleUpdateProductSelect = (index: number, newNumber: number) => {
-    if(newNumber < 0 ||  isNaN(newNumber)){
+    if (newNumber < 0 || isNaN(newNumber)) {
       return null;
     }
-    //@ts-ignore
-    setSelectDataRequest((prev) => {
-      const newArray = prev && [...prev.products];
-      if (newArray) newArray[index].amount = newNumber;
-      if (!prev) return null;
-      return { ...prev, products: newArray };
-    });
+  
+    const updatedDataRequest = { ...selectDataRequest };
+  
+    if (
+      updatedDataRequest &&
+      updatedDataRequest.products &&
+      index >= 0 &&
+      index < updatedDataRequest.products.length
+    ) {
+      updatedDataRequest.products[index].amount = newNumber;
+  
+      //@ts-ignore
+      setSelectDataRequest(updatedDataRequest);
+    }
   };
+  
+  // Función para enviar los datos actualizados al backend
+  const sendUpdatedDataToBackend = () => {
+    // Verificar si selectDataRequest está definido y tiene productos
+    if (selectDataRequest && selectDataRequest.products) {
+      // Aquí debes enviar selectDataRequest al backend, por ejemplo, usando una solicitud HTTP
+      // Ejemplo con fetch:
+      fetch(`http://localhost:3000/api/v1/request-products/edit/${selectDataRequest?._id}`, {
+        method: 'PATCH', // Usar PATCH o PUT para actualizar los datos en el backend
+        headers: {
+          'Content-Type': 'application/json',
+          // Agregar encabezados necesarios, como token de autenticación si es necesario
+        },
+        body: JSON.stringify(selectDataRequest), // Convertir el objeto a JSON antes de enviarlo al backend
+      })
+        .then((response) => {
+          if (response.ok) {
+            // Manejar la respuesta del backend si es necesario
+            console.log('Datos actualizados enviados exitosamente al backend');
+          } else {
+            // Manejar errores de respuesta del backend si es necesario
+            console.error('Error al enviar los datos actualizados al backend');
+          }
+        })
+        .catch((error) => {
+          // Manejar errores de red u otros errores relacionados con la solicitud HTTP
+          console.error('Error al enviar los datos actualizados al backend:', error);
+        });
+    }
+  };
+  
+  
   return (
     <>
       <div className="h-[100%]">
@@ -229,7 +296,7 @@ export default function Product() {
               )}
               <div className="flex flex-col gap-3">
                 <button
-                  onClick={() => updateTable("aprobado")}
+                  onClick={() => setShowAssignQuantityMessage(true)}
                   disabled={selectDataRequest.state === "aprobado"}
                   className={`bg-lime-300  px-3 py-1 rounded-full text-sm font-semibold hover:scale-105 duration-100 ${
                     selectDataRequest.state === "aprobado"
@@ -277,11 +344,13 @@ export default function Product() {
                       <button
                         className="bg-green-400 p-2 rounded-full font-bold hover:scale-105 duration-100"
                         onClick={() => {
+                          sendUpdatedDataToBackend();
                           updateTable("aprobado");
                           setShowAssignQuantityMessage(false);
                           setAssignQuantity(0);
                         }}
                       >
+                        
                         Aceptar
                       </button>
                       <button
@@ -318,7 +387,7 @@ export default function Product() {
                   className="flex w-full justify-center items-center gap-3"
                   key={"dataselect-" + index}
                 >
-                  {/* <button>
+                  <button>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-7 hover:animate-pulse text-red-700"
@@ -333,7 +402,7 @@ export default function Product() {
                         d="M4 7h16M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3m-5 5l4 4m0-4l-4 4"
                       />
                     </svg>
-                  </button> */}
+                  </button>
                   <div className=" w-2/3 bg-blue-100 p-3 rounded-xl">
                     <p className="text-center font-semibold">
                       {
@@ -370,7 +439,7 @@ export default function Product() {
                     </p>
                   </div>
 
-                  {selectedProduct && showModal && (
+                  {/* {selectedProduct && showModal && (
                     <div className="fixed inset-0 flex items-center justify-center bg-transparent opacity-100">
                       <div className="bg-white p-4 rounded-lg">
                         <h2 className="text-lg font-semibold mb-2">
@@ -401,7 +470,7 @@ export default function Product() {
                         </div>
                       </div>
                     </div>
-                  )}
+                  )} */}
 
                   <div className="flex items-center gap-1 font-bold text-xl">
                     <button
