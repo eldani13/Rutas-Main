@@ -11,12 +11,14 @@ import Link from "next/link";
 import React, { SyntheticEvent, useEffect, useState } from "react";
 // import Home from "./HomeSection";
 
+type TypeRole = "administrador" |  "empleado" | null;
+
 export default function Route() {
   const [routes, setRoutes] = useState<null | RootRoute>(null);
   const [employees, setEmployees] = useState<null | MessageEmployees[]>(null);
   const [vehicles, setVehicles] = useState<null | MessageVehicle[]>(null);
   const [addRoute, setAddRoute] = useState(false);
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState<"administrador" |  "empleado" | null>(null);
 
   const fetchName = async () => {
     try {
@@ -24,7 +26,7 @@ export default function Route() {
       const getData = await getCookie(processEnv.jtIdentity);
       const decodedToken = jwt.decode(getData as string);
       if (decodedToken && typeof decodedToken !== "string")
-        setRole(decodedToken?.role as string);
+        setRole(decodedToken?.role as TypeRole);
     } catch (error) {
       console.error("Error al obtener datos del token:", error);
     }
