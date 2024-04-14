@@ -353,7 +353,7 @@ export default function Product() {
                           )
                             .toLowerCase()
                             .includes(getInputData.toLowerCase()) &&
-                          !getProductsSelect?.includes(u)
+                          !getProductsSelect?.some(objd=>objd._id === u._id)
                       )
                       .map((product, index) => (
                         <div
@@ -379,8 +379,8 @@ export default function Product() {
                             <button
                               onClick={() =>
                                 setProductsSelect((prev) => {
-                                  if (prev === null) return [product];
-                                  return [...prev, product];
+                                  if (prev === null) return [{...product, amount: 1} as MessageProduct];
+                                  return [...prev, {...product, amount: 1} as MessageProduct];
                                 })
                               }
                             >
