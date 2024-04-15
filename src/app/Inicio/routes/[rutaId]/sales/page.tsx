@@ -1,26 +1,49 @@
 "use client";
 
-import React, { useState, useEffect, FormEvent } from "react";
+import React, { useState, useEffect } from "react";
 import {
   getAllFetchDataValues,
   patchEditVal,
   patchSaleProduct,
 } from "@/utils/api";
-import { MessageProduct, RootProduct } from "@/types/product";
+import { MessageProduct } from "@/types/product";
 import { Table, SearchInput } from "@/components";
 import Swal from "sweetalert2";
 import { ButtonCrud } from "@/components/buttons/ButtonCrud";
 
-import Quagga from "@ericblade/quagga2";
+import  { QuaggaJSResultObject } from "@ericblade/quagga2";
 import { MessageRoute } from "@/types/routes";
-import { getCookie, processEnv } from "@/utils/cookies";
-import jwt from "jsonwebtoken";
+import { processEnv } from "@/utils/cookies";
 import { MessageRequestProducts } from "@/types/requestProducts";
 import Link from "next/link";
+import { ScannerCode } from "@/utils/ScannerCode";
 
 //@ts-ignore
 export default function Sales({ params }) {
   const { rutaId } = params;
+
+  const scannerCode = new ScannerCode("viewcamera", (result: QuaggaJSResultObject)=>{
+    const productFind = products?.find(
+      (item) => item.productIdScan == parseInt(result.codeResult.code || "0")
+    );
+    if (
+      productFind != undefined &&
+      productFind != actualProductSearchScanner
+    ) {
+      //@ts-ignore
+      set_actualProductSearchScanner(productFind);
+      // @ts-ignore
+      setSearch(result.codeResult.code);
+      
+    }
+  }, (state:boolean)=>set_scannerIsRunning(state))
+  const [_scannerIsRunning, set_scannerIsRunning] = useState(false);
+
+
+
+
+
+
 
   const [indexCurrentRequest, setIndexCurrentRequest] = useState<number>(0);
   const [ammountSaleInp, setAmmountSaleInp] = useState<number>(1);
@@ -31,7 +54,6 @@ export default function Sales({ params }) {
     null
   );
   const [search, setSearch] = useState("");
-  const [_scannerIsRunning, set_scannerIsRunning] = useState(false);
   const [actualProductSearchScanner, set_actualProductSearchScanner] =
     useState<MessageProduct | null>(null);
 
@@ -64,169 +86,21 @@ export default function Sales({ params }) {
     );
     setAllProducts(productsget.details);
   };
-  function startScanner() {
-    Quagga.init(
-      {
-        inputStream: {
-          name: "Live",
-          type: "LiveStream",
-          //@ts-ignore
-          target: document.querySelector("#viewcamera"),
-          constraints: {
-            facingMode: "environment",
-          },
-        },
-        decoder: {
-          readers: [
-            "code_128_reader",
-            "ean_reader",
-            "ean_8_reader",
-            "code_39_reader",
-            "code_39_vin_reader",
-            "codabar_reader",
-            "upc_reader",
-            "upc_e_reader",
-            "i2of5_reader",
-          ],
-          debug: {
-            //@ts-ignore
-            showCanvas: true,
-            showPatches: true,
-            showFoundPatches: true,
-            showSkeleton: true,
-            showLabels: true,
-            showPatchLabels: true,
-            showRemainingPatchLabels: true,
-            boxFromPatches: {
-              showTransformed: true,
-              showTransformedBox: true,
-              showBB: true,
-            },
-          },
-        },
-      },
-      function (err) {
-        if (err) {
-          console.log(err);
-          return;
-        }
+  
 
-        console.log("Initialization finished. Ready to start");
-        Quagga.start();
-
-        // Set flag to is running
-        set_scannerIsRunning(true);
-      }
-    );
-
-    Quagga.onProcessed(function (result) {
-      var drawingCtx = Quagga.canvas.ctx.overlay,
-        drawingCanvas = Quagga.canvas.dom.overlay;
-      drawingCanvas.style.position = "absolute";
-      drawingCanvas.style.top = "0";
-      if (result) {
-        if (result.boxes) {
-          drawingCtx.clearRect(
-            0,
-            0,
-            //@ts-ignore
-            parseInt(drawingCanvas.getAttribute("width")),
-            //@ts-ignore
-            parseInt(drawingCanvas.getAttribute("height"))
-          );
-          result.boxes
-            .filter(function (box) {
-              return box !== result.box;
-            })
-            .forEach(function (box) {
-              Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, {
-                color: "green",
-                lineWidth: 2,
-              });
-            });
-        }
-
-        if (result.box) {
-          Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, {
-            color: "#00F",
-            lineWidth: 2,
-          });
-        }
-
-        if (result.codeResult && result.codeResult.code) {
-          Quagga.ImageDebug.drawPath(
-            result.line,
-            { x: "x", y: "y" },
-            drawingCtx,
-            { color: "red", lineWidth: 3 }
-          );
-        }
-      }
-    });
-
-    Quagga.onDetected(function (result) {
-      console.log(
-        "Barcode detected and processed : [" + result.codeResult.code + "]",
-        result
-      );
-
-      const productFind = products?.find(
-        (item) => item.productIdScan == parseInt(result.codeResult.code || "0")
-      );
-      if (
-        productFind != undefined &&
-        productFind != actualProductSearchScanner
-      ) {
-        //@ts-ignore
-        set_actualProductSearchScanner(productFind);
-        // @ts-ignore
-        setSearch(result.codeResult.code);
-      }
-    });
-  }
-
-  useEffect(() => {
-    getIfProductSelect();
-    getProducts();
-    getDataRoute();
-  }, []);
-
-  useEffect(() => {
-    const dataReturn = allProducts
-      ?.filter((prod) => {
-        return requestCurrentIfExist?.products.some(
-          (item) => item.product === prod._id
-        );
-      })
-      .map((obj) => {
-        const objetoEnSegundoArray = requestCurrentIfExist?.products.find(
-          (item) => obj._id === item.product
-        );
-        return {
-          ...obj,
-          amount: objetoEnSegundoArray?.amount || 0,
-          amountCurrent: objetoEnSegundoArray?.amountCurrent || 0,
-          _idInRequest: objetoEnSegundoArray?._id || "",
-        };
-      });
-    // @ts-ignore
-    //ADDMER
-    setProducts(dataReturn);
-
-    console.log(dataReturn);
-  }, [allProducts]);
+  
 
   const handleClickOnOffScanner = (value: boolean) => {
-    console.log("lol");
+ 
     if (!value) {
       set_scannerIsRunning(value);
       try {
-        Quagga.stop();
+        scannerCode.stopScanner();
       } catch (err) {
         console.log(err);
       }
     } else {
-      startScanner();
+      scannerCode.startScanner();
     }
   };
 
@@ -362,6 +236,43 @@ export default function Sales({ params }) {
     }
   };
   console.log(requestCurrentIfExist);
+
+
+
+
+
+
+
+  useEffect(() => {
+    getIfProductSelect();
+    getProducts();
+    getDataRoute();
+  }, []);
+
+  useEffect(() => {
+    const dataReturn = allProducts
+      ?.filter((prod) => {
+        return requestCurrentIfExist?.products.some(
+          (item) => item.product === prod._id
+        );
+      })
+      .map((obj) => {
+        const objetoEnSegundoArray = requestCurrentIfExist?.products.find(
+          (item) => obj._id === item.product
+        );
+        return {
+          ...obj,
+          amount: objetoEnSegundoArray?.amount || 0,
+          amountCurrent: objetoEnSegundoArray?.amountCurrent || 0,
+          _idInRequest: objetoEnSegundoArray?._id || "",
+        };
+      });
+    // @ts-ignore
+    //ADDMER
+    setProducts(dataReturn);
+
+    console.log(dataReturn);
+  }, [allProducts]);
 
   return (
     <>
