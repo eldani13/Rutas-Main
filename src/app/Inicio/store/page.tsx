@@ -28,7 +28,7 @@ export default function Store() {
       <div className="flex items-center justify-center gap-5 p-5 flex-wrap relative h-full">
         {allStores && allStores.length > 0 ? (
           allStores.map((store) => (
-            <Link href={`store/${store._id}`}>
+            <Link href={`store/${store._id}`} key={store._id}>
               <div
                 className="grid grid-cols-[auto_1fr] rounded-md shadow shadow-slate-800/30 p-3 gap-2 bg-white
 					hover:bg-slate-100 duration-100 cursor-pointer"
