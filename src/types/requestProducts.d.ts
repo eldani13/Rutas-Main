@@ -8,7 +8,7 @@ export interface MessageRequestProducts {
   assignedQuantity?: number;
 }
 
-interface Product {
+export interface Product {
   assignedQuantity: number;
   product: string;
   amount: number;

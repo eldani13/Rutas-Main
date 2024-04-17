@@ -11,14 +11,14 @@ import Link from "next/link";
 import React, { SyntheticEvent, useEffect, useState } from "react";
 // import Home from "./HomeSection";
 
-type TypeRole = "administrador" |  "empleado" | null;
+type TypeRole = "administrador" | "empleado" | null;
 
 export default function Route() {
   const [routes, setRoutes] = useState<null | RootRoute>(null);
   const [employees, setEmployees] = useState<null | MessageEmployees[]>(null);
   const [vehicles, setVehicles] = useState<null | MessageVehicle[]>(null);
   const [addRoute, setAddRoute] = useState(false);
-  const [role, setRole] = useState<"administrador" |  "empleado" | null>(null);
+  const [role, setRole] = useState<"administrador" | "empleado" | null>(null);
 
   const fetchName = async () => {
     try {
@@ -42,19 +42,19 @@ export default function Route() {
       } | null;
 
       if (jwt_decode?.role === "administrador") {
-        return await getAllFetchDataValues(`${processEnv.back}rutas/`).then(
+        await getAllFetchDataValues(`${processEnv.back}rutas/`).then(
           (rec: RootRoute) => {
             setRoutes(rec);
           }
         );
+      } else {
+        await getAllFetchDataValues(
+          //@ts-ignore
+          `${processEnv.back}rutas/employee/${jwt_decode?._id}`
+        ).then((rec) => {
+          setRoutes(rec);
+        });
       }
-
-      await getAllFetchDataValues(
-        //@ts-ignore
-        `${processEnv.back}rutas/employee/${jwt_decode?._id}`
-      ).then((rec) => {
-        setRoutes(rec);
-      });
     });
   };
 

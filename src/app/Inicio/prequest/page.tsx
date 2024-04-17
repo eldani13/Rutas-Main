@@ -13,7 +13,7 @@ import { useRequestProducts } from "@/hooks/useRequestProducts";
 
 import "./style.css";
 
-export default function Product() {
+export default function PrequestProd() {
   const [selectDataRequest, setSelectDataRequest] =
     useState<null | MessageRequestProducts>(null);
 
@@ -124,7 +124,6 @@ export default function Product() {
       `${processEnv.back}request-products/update-acepted/${selectDataRequest?._id}`,
       {
         ...selectDataRequest,
-        state: "aprobado",
       },
 
       () => {},
@@ -218,7 +217,7 @@ export default function Product() {
     if (selectDataRequest && selectDataRequest.products) {
       // Aquí debes enviar selectDataRequest al backend, por ejemplo, usando una solicitud HTTP
       // Ejemplo con fetch:
-      fetch(`http://localhost:3000/api/v1/request-products/edit/${selectDataRequest?._id}`, {
+      fetch(`http://localhost:3000/api/v1/request-products/update-to-acepted/${selectDataRequest?._id}`, {
         method: 'PATCH', // Usar PATCH o PUT para actualizar los datos en el backend
         headers: {
           'Content-Type': 'application/json',
@@ -370,7 +369,7 @@ export default function Product() {
                         className="bg-green-400 p-2 rounded-full font-bold hover:scale-105 duration-100"
                         onClick={() => {
                           sendUpdatedDataToBackend();
-                          updateTable("aprobado");
+                          // updateTable("aprobado");
                           setShowAssignQuantityMessage(false);
                           setAssignQuantity(0);
                         }}

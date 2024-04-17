@@ -1,12 +1,12 @@
 import React, { useRef, useEffect } from "react";
 
-interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
+interface Props {
   label: string;
-  setValue: (value: string) => void;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
   handleClickOnOffScanner: (value: boolean) => void;
 }
 
-export function SearchInput({ label, ...props }: Props): JSX.Element {
+export function SearchInput({ label, setValue, handleClickOnOffScanner }: Props): JSX.Element {
   return (
     <form className="p-4 md:py-8 md:px-64" onSubmit={(e) => e.preventDefault()}>
       <label
@@ -45,8 +45,8 @@ export function SearchInput({ label, ...props }: Props): JSX.Element {
           className="block w-full p-4 ps-10 text-sm text-black border border-gray-500 rounded-lg"
           placeholder={label}
           required
-          onChange={(e) => props.setValue(e.target.value)}
-          {...props}
+          onChange={(e) => setValue(e.target.value)}
+          // {...props}
         />
 
         <button
@@ -59,7 +59,7 @@ export function SearchInput({ label, ...props }: Props): JSX.Element {
         <button
           type="button"
           className="absolute end-2.5 bottom-1/4 md:-right-10"
-          onClick={() => props.handleClickOnOffScanner(true)}
+          onClick={() => handleClickOnOffScanner(true)}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -1,28 +1,60 @@
 "use client";
 
-import React, { useState, useEffect, FormEvent } from "react";
+import React, { useState, useEffect } from "react";
 import {
   getAllFetchDataValues,
   patchEditVal,
   patchSaleProduct,
 } from "@/utils/api";
-import { MessageProduct, RootProduct } from "@/types/product";
+import { MessageProduct } from "@/types/product";
 import { Table, SearchInput } from "@/components";
 import Swal from "sweetalert2";
 import { ButtonCrud } from "@/components/buttons/ButtonCrud";
 
-import Quagga from "@ericblade/quagga2";
+import { QuaggaJSResultObject } from "@ericblade/quagga2";
 import { MessageRoute } from "@/types/routes";
-import { getCookie, processEnv } from "@/utils/cookies";
-import jwt from "jsonwebtoken";
+import { processEnv } from "@/utils/cookies";
 import { MessageRequestProducts } from "@/types/requestProducts";
 import Link from "next/link";
+import { ScannerCode } from "@/utils/ScannerCode";
+import { MessageStores } from "@/types/stores";
+import { GetDatas } from "@/utils/GetsDatas";
 
 //@ts-ignore
 export default function Sales({ params }) {
   const { rutaId } = params;
 
-  const [indexCurrentRequest, setIndexCurrentRequest] = useState<number>(0);
+  const getDatas = new GetDatas();
+
+  const scannerCode = new ScannerCode(
+    "viewcamera",
+    (result: QuaggaJSResultObject) => {
+      const productFind = products?.find(
+        (item) => item.productIdScan == parseInt(result.codeResult.code || "0")
+      );
+      if (
+        productFind != undefined &&
+        productFind != actualProductSearchScanner
+      ) {
+        //@ts-ignore
+        set_actualProductSearchScanner(productFind);
+        // @ts-ignore
+        setSearch(result.codeResult.code);
+      }
+    },
+    (state: boolean) => set_scannerIsRunning(state)
+  );
+  const [_scannerIsRunning, set_scannerIsRunning] = useState(false);
+  const [actualStoreSelected, setActualStoreSelected] =
+    useState<MessageStores | null>(null);
+
+  const [dataThis, setDataThis] = useState({
+    currentStore: null,
+  });
+
+  const [allStores, setAllStores] = useState<MessageStores[] | null>(null);
+
+  // const [indexCurrentRequest, setIndexCurrentRequest] = useState<number>(0);
   const [ammountSaleInp, setAmmountSaleInp] = useState<number>(1);
 
   const [allProducts, setAllProducts] = useState<MessageProduct[]>();
@@ -31,7 +63,6 @@ export default function Sales({ params }) {
     null
   );
   const [search, setSearch] = useState("");
-  const [_scannerIsRunning, set_scannerIsRunning] = useState(false);
   const [actualProductSearchScanner, set_actualProductSearchScanner] =
     useState<MessageProduct | null>(null);
 
@@ -64,180 +95,37 @@ export default function Sales({ params }) {
     );
     setAllProducts(productsget.details);
   };
-  function startScanner() {
-    Quagga.init(
-      {
-        inputStream: {
-          name: "Live",
-          type: "LiveStream",
-          //@ts-ignore
-          target: document.querySelector("#viewcamera"),
-          constraints: {
-            facingMode: "environment",
-          },
-        },
-        decoder: {
-          readers: [
-            "code_128_reader",
-            "ean_reader",
-            "ean_8_reader",
-            "code_39_reader",
-            "code_39_vin_reader",
-            "codabar_reader",
-            "upc_reader",
-            "upc_e_reader",
-            "i2of5_reader",
-          ],
-          debug: {
-            //@ts-ignore
-            showCanvas: true,
-            showPatches: true,
-            showFoundPatches: true,
-            showSkeleton: true,
-            showLabels: true,
-            showPatchLabels: true,
-            showRemainingPatchLabels: true,
-            boxFromPatches: {
-              showTransformed: true,
-              showTransformedBox: true,
-              showBB: true,
-            },
-          },
-        },
-      },
-      function (err) {
-        if (err) {
-          console.log(err);
-          return;
-        }
-
-        console.log("Initialization finished. Ready to start");
-        Quagga.start();
-
-        // Set flag to is running
-        set_scannerIsRunning(true);
-      }
-    );
-
-    Quagga.onProcessed(function (result) {
-      var drawingCtx = Quagga.canvas.ctx.overlay,
-        drawingCanvas = Quagga.canvas.dom.overlay;
-      drawingCanvas.style.position = "absolute";
-      drawingCanvas.style.top = "0";
-      if (result) {
-        if (result.boxes) {
-          drawingCtx.clearRect(
-            0,
-            0,
-            //@ts-ignore
-            parseInt(drawingCanvas.getAttribute("width")),
-            //@ts-ignore
-            parseInt(drawingCanvas.getAttribute("height"))
-          );
-          result.boxes
-            .filter(function (box) {
-              return box !== result.box;
-            })
-            .forEach(function (box) {
-              Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, {
-                color: "green",
-                lineWidth: 2,
-              });
-            });
-        }
-
-        if (result.box) {
-          Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, {
-            color: "#00F",
-            lineWidth: 2,
-          });
-        }
-
-        if (result.codeResult && result.codeResult.code) {
-          Quagga.ImageDebug.drawPath(
-            result.line,
-            { x: "x", y: "y" },
-            drawingCtx,
-            { color: "red", lineWidth: 3 }
-          );
-        }
-      }
-    });
-
-    Quagga.onDetected(function (result) {
-      console.log(
-        "Barcode detected and processed : [" + result.codeResult.code + "]",
-        result
-      );
-
-      const productFind = products?.find(
-        (item) => item.productIdScan == parseInt(result.codeResult.code || "0")
-      );
-      if (
-        productFind != undefined &&
-        productFind != actualProductSearchScanner
-      ) {
-        //@ts-ignore
-        set_actualProductSearchScanner(productFind);
-        // @ts-ignore
-        setSearch(result.codeResult.code);
-      }
-    });
-  }
-
-  useEffect(() => {
-    getIfProductSelect();
-    getProducts();
-    getDataRoute();
-  }, []);
-
-  useEffect(() => {
-    const dataReturn = allProducts
-      ?.filter((prod) => {
-        return requestCurrentIfExist?.products.some(
-          (item) => item.product === prod._id
-        );
-      })
-      .map((obj) => {
-        const objetoEnSegundoArray = requestCurrentIfExist?.products.find(
-          (item) => obj._id === item.product
-        );
-        return {
-          ...obj,
-          amount: objetoEnSegundoArray?.amount || 0,
-          amountCurrent: objetoEnSegundoArray?.amountCurrent || 0,
-          _idInRequest: objetoEnSegundoArray?._id || "",
-        };
-      });
-    // @ts-ignore
-    //ADDMER
-    setProducts(dataReturn);
-
-    console.log(dataReturn);
-  }, [allProducts]);
 
   const handleClickOnOffScanner = (value: boolean) => {
-    console.log("lol");
     if (!value) {
       set_scannerIsRunning(value);
       try {
-        Quagga.stop();
+        scannerCode.stopScanner();
       } catch (err) {
         console.log(err);
       }
     } else {
-      startScanner();
+      scannerCode.startScanner();
     }
   };
 
   // useEffect(() => {
-  const filteredProducts = products?.filter(
-    (product) =>
-      product.productName.toLowerCase().includes(search.toLowerCase()) ||
-      product.productDescription.toLowerCase().includes(search.toLowerCase()) ||
-      `${product.productIdScan}`.includes(search)
-  );
-  console.log(products);
+  const filteredProducts = products
+    ?.filter(
+      (product) =>
+        product.productName.toLowerCase().includes(search.toLowerCase()) ||
+        product.productDescription
+          .toLowerCase()
+          .includes(search.toLowerCase()) ||
+        `${product.productIdScan}`.includes(search)
+    )
+    .map((obj) => {
+      const price = actualStoreSelected?.productos.find(
+        (u) => u.product === obj._id
+      );
+      if (price) return { ...obj, productPrice: price.price };
+      return obj;
+    });
   // }, []);
 
   async function saleProduct(
@@ -328,7 +216,6 @@ export default function Sales({ params }) {
     }
   }
 
-  console.log(routeCurrent);
   const clockLastMinuteSale = () => {
     const date = new Date(routeCurrent?.LastMinuteSale || "");
 
@@ -350,7 +237,7 @@ export default function Sales({ params }) {
       await getAllFetchDataValues(
         `${processEnv.back}request-product/route/${rutaId}`
       ).then((rec) => {
-        console.log(rec);
+        // console.log(rec);
         // @ts-ignore
         setRequestProductsAll(rec.details);
         if (rec.details.length > 0) {
@@ -358,10 +245,52 @@ export default function Sales({ params }) {
         }
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
+
+  const dataSelf = async () => {
+    await getIfProductSelect();
+    await getProducts();
+    await getDataRoute();
+    const stores = await getDatas.getAllStores();
+    setActualStoreSelected(stores ? stores[0] : null);
+    setAllStores(stores);
+  };
+
+  useEffect(() => {
+    dataSelf();
+  }, []);
+
+  useEffect(() => {
+    const dataReturn = allProducts
+      ?.filter((prod) => {
+        return requestCurrentIfExist?.products.some(
+          (item) => item.product === prod._id
+        );
+      })
+      .map((obj) => {
+        const objetoEnSegundoArray = requestCurrentIfExist?.products.find(
+          (item) => obj._id === item.product
+        );
+        return {
+          ...obj,
+          amount: objetoEnSegundoArray?.amount || 0,
+          amountCurrent: objetoEnSegundoArray?.amountCurrent || 0,
+          _idInRequest: objetoEnSegundoArray?._id || "",
+        };
+      });
+    // @ts-ignore
+    //ADDMER
+    setProducts(dataReturn);
+  }, [allProducts]);
+
+  console.log("requestCurrentIfExist:");
   console.log(requestCurrentIfExist);
+  console.log("allStores:");
+  console.log(allStores);
+  console.log("routeCurrent");
+  console.log(routeCurrent);
 
   return (
     <>
@@ -428,14 +357,35 @@ export default function Sales({ params }) {
       </div>
       <div className="flex flex-col h-full w-full ">
         <div className="ps-4 pt-2 flex items-center gap-2">
-          <label>Petición: </label>
-          <button
+          <label>Tienda: </label>
+          <select
+            name=""
+            id=""
+            value={actualStoreSelected?._id}
+            onChange={(e) =>
+              setActualStoreSelected(
+                allStores?.find((u) => u._id === e.target.value) || null
+              )
+            }
+          >
+            {allStores &&
+              routeCurrent &&
+              allStores
+                .filter((u) => routeCurrent?.tiendas.includes(u._id))
+                .map((store) => (
+                  <option value={store._id} key={`storeSelect_${store._id}`}>
+                    {store.nombre}
+                  </option>
+                ))}
+          </select>
+          {/* todo */}
+          {/* <button
             onClick={() => {
               setRequestCurrentIfExist(
                 // @ts-ignore
                 requestProductsAll[indexCurrentRequest - 1]
               );
-              setIndexCurrentRequest(indexCurrentRequest - 1);
+              // setIndexCurrentRequest(indexCurrentRequest - 1);
             }}
             className={`${indexCurrentRequest == 0 && "text-slate-400"}`}
             disabled={indexCurrentRequest == 0}
@@ -499,13 +449,7 @@ export default function Sales({ params }) {
                 d="m16 8l-1.43 1.393L20.15 15H8v2h12.15l-5.58 5.573L16 24l8-8z"
               />
             </svg>
-          </button>
-
-          {/* <select name="" id="" className="w-fit px-4" onChange={e=>{setRequestCurrentIfExist(e.target.value)}}>
-              {requestProductsAll?.map((ex, index) => (
-                <option value={index}>{index + 1}</option>
-              ))}
-            </select> */}
+          </button> */}
         </div>
 
         {requestCurrentIfExist &&
@@ -516,12 +460,12 @@ export default function Sales({ params }) {
             >
               <SearchInput
                 label="Buscar Producto"
-                value={search}
+                // value={search}
                 setValue={setSearch}
                 handleClickOnOffScanner={handleClickOnOffScanner}
               />
 
-              {filteredProducts && (
+              {filteredProducts && actualStoreSelected && (
                 <Table
                   products={filteredProducts.sort(
                     (a, b) =>
@@ -602,7 +546,7 @@ export default function Sales({ params }) {
           </div>
           <div className="absolute bottom-5 w-full flex flex-col items-center">
             {actualProductSearchScanner && (
-              <div>
+              <>
                 <div
                   className={`flex gap-2 items-center justify-center w-full mb-2 bg-slate-50 rounded-md p-2`}
                 >
@@ -625,7 +569,7 @@ export default function Sales({ params }) {
                     min={1}
                   />
                 </div>
-                <div
+                <table
                   // bg-[linear-gradient(225deg,_#a1c4fd_10%,_#c2e9fb_90%)]
                   className={` 
             relative my-2 justify-center  py-6  justify-content rounded-xl flex flex-col px-5 gap-1 font-semibold hover:bg-slate-200  
@@ -638,36 +582,38 @@ export default function Sales({ params }) {
             `}
                   style={{ gridTemplateColumns: "50px 1fr 1fr 1fr" }}
                 >
-                  <td className=" mt-5  flex gap-1 ">
-                    <span className="font-black">ID:</span>
-                    {actualProductSearchScanner._id}
-                  </td>
-                  <td className="flex gap-1 ">
-                    <span className=" font-black">Nombre:</span>
-                    {actualProductSearchScanner.productName}
-                  </td>
-                  <td className="flex gap-1 ">
-                    <span className=" font-black">Descripción:</span>
-                    {actualProductSearchScanner.productDescription}
-                  </td>
-                  <td className="flex gap-1 ">
-                    <span className=" font-black">Precio: $</span>
-                    {actualProductSearchScanner.productPrice}
-                  </td>
-                  <td className="flex gap-1 ">
-                    <span className=" font-black">Cantidad / Actual: </span>
-                    {actualProductSearchScanner.amount} /{" "}
-                    {actualProductSearchScanner.amountCurrent}
-                  </td>
-                  <td className="text-center flex absolute left-0 top-0 w-full">
-                    <p className="w-full uppercase text-xl mt-2 font-bold ">
-                      {actualProductSearchScanner.amountCurrent === 0
-                        ? "X Producto vendido X"
-                        : "Producto"}
-                    </p>
-                  </td>
-                </div>
-              </div>
+                  <tr>
+                    <td className=" mt-5  flex gap-1 ">
+                      <span className="font-black">ID:</span>
+                      {actualProductSearchScanner._id}
+                    </td>
+                    <td className="flex gap-1 ">
+                      <span className=" font-black">Nombre:</span>
+                      {actualProductSearchScanner.productName}
+                    </td>
+                    <td className="flex gap-1 ">
+                      <span className=" font-black">Descripción:</span>
+                      {actualProductSearchScanner.productDescription}
+                    </td>
+                    <td className="flex gap-1 ">
+                      <span className=" font-black">Precio: $</span>
+                      {actualProductSearchScanner.productPrice}
+                    </td>
+                    <td className="flex gap-1 ">
+                      <span className=" font-black">Cantidad / Actual: </span>
+                      {actualProductSearchScanner.amount} /{" "}
+                      {actualProductSearchScanner.amountCurrent}
+                    </td>
+                    <td className="text-center flex absolute left-0 top-0 w-full">
+                      <p className="w-full uppercase text-xl mt-2 font-bold ">
+                        {actualProductSearchScanner.amountCurrent === 0
+                          ? "X Producto vendido X"
+                          : "Producto"}
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </>
             )}
             <div className="flex gap-10 ">
               <button

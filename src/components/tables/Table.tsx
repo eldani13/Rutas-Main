@@ -12,34 +12,38 @@ export function Table({
   setClickInProduct,
   clickInProduct,
 }: Props): JSX.Element {
-  console.log(products)
+  console.log(products);
 
   return (
     <div className="w-full h-full overflow-y-auto p-4">
-      <div className="">
-        <div
-          className=" hidden md:grid items-center bg-neutral-300 py-2 font-bold gap-2 px-3 mb-2 rounded-full text-center"
-          style={{ gridTemplateColumns: "50px 1fr 1fr 1fr 1fr" }}
+      <table className="">
+        <thead
+          className=" hidden md:block items-center bg-neutral-300 py-2 font-bold gap-2 px-3 mb-2 rounded-full text-center"
+          
         >
-          <p>ID</p>
-          <p>Nombre</p>
-          <p>Descripcion</p>
-          <p>Precio</p>
-          <p>Cantidad/actual</p>
-        </div>
+          <tr className="w-full flex justify-around">
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripcion</th>
+            <th>Precio</th>
+            <th>Cantidad/actual</th>
+          </tr>
+        </thead>
+        <tbody>
+
         {
           // @ts-ignore
           products &&
             products?.map((data: MessageProduct, index: number) => (
-              <div
+              <tr
                 onClick={() => {
-                  if ((data.amountCurrent > 0)) {
+                  if (data.amountCurrent > 0) {
                     setClickInProduct(clickInProduct != null ? null : data);
                   }
                 }}
                 className={`
             relative my-2 justify-center  py-6 md:py-2 justify-content rounded-xl flex flex-col px-5 gap-1 font-semibold ${
-              (data.amountCurrent <= 0)
+              data.amountCurrent <= 0
                 ? "bg-red-200"
                 : "hover:bg-slate-200 cursor-pointer bg-[linear-gradient(225deg,_#a1c4fd_10%,_#c2e9fb_90%)] "
             }  ${
@@ -78,13 +82,14 @@ export function Table({
                 <td className="flex gap-1 ">
                   {" "}
                   <span className="md:hidden font-black">Cantidad actual</span>
-                  {data.amount}/
-                  {data.amountCurrent}
+                  {data.amount}/{data.amountCurrent}
                 </td>
-              </div>
+              </tr>
             ))
         }
-      </div>
+        </tbody>
+
+      </table>
     </div>
   );
 }

@@ -12,7 +12,7 @@ export const getAllFetchDataValues = async (
     }
     return await response.json();
   } catch (error) {
-    throw error;
+    console.error(error);
   }
 };
 
@@ -56,7 +56,7 @@ export const patchSaleProduct = async (
       }
     }
   } catch (error) {
-    throw error;
+    console.error(error);
   }
 };
 
@@ -94,7 +94,7 @@ export const patchEditVal = async (
       });
     }
   } catch (error) {
-    throw error;
+    console.error(error);
   }
 };
 
@@ -175,7 +175,7 @@ export const deleteRemoveData = async (
         });
       }
     } catch (error) {
-      throw error;
+      console.error(error);
     }
   }
 };
