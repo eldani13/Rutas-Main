@@ -1,5 +1,4 @@
 import { MessageProduct } from "@/types/product";
-import { error } from "console";
 import Swal from "sweetalert2";
 
 export const getAllFetchDataValues = async (
