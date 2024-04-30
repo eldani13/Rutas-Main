@@ -67,7 +67,7 @@ export const patchEditVal = async (
 ): Promise<any> => {
   try {
     const response = await fetch(pathForResponse, {
-      method: "PATCH",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
