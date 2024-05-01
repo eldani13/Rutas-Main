@@ -79,7 +79,7 @@ export default function Route() {
               routes.message.map((routeName: MessageRoute, index: number) => (
                 <Link
                   key={"ruta_" + index}
-                  href={`/Inicio/corte-ruta/${routeName.empleado}`}
+                  href={`/Inicio/cortes/${routeName.empleado}`}
                   passHref
                   className="group cursor-pointer flex gap-5 justify-between items-center md:gap-x-10 px-5  py-2 hover:bg-gray-100 rounded-full"
                 >
