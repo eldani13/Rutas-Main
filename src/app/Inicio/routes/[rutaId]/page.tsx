@@ -104,7 +104,6 @@ export default function Route({ params }) {
       (rec: RootVehicle) => {
         const messList: MessageVehicle[] = rec.message;
         if (Array.isArray(messList) && messList.length > 0) {
-
           setVehicleCurrent(
             // @ts-ignore
             messList.find((u) => u._id == routeCurrent.vehicle)

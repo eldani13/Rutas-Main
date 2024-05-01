@@ -17,8 +17,6 @@ export default function Court() {
     "insert",
   ]);
 
-
-
   const formRef = useRef<HTMLFormElement>(null);
 
   return (

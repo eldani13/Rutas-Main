@@ -2,17 +2,16 @@
 import { RootEmployees } from "@/types/employees";
 import { MessageRoute, RootRoute } from "@/types/routes";
 import { RootVehicle } from "@/types/vehicles";
-import { getAllFetchDataValues, postInsertData } from "@/utils/api";
+import { getAllFetchDataValues } from "@/utils/api";
 import { processEnv, getCookie } from "@/utils/cookies";
 import jwt from "jsonwebtoken";
 import Link from "next/link";
-import React, { SyntheticEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function Route() {
   const [routes, setRoutes] = useState<null | RootRoute>(null);
   const [employees, setEmployees] = useState<null | RootEmployees>(null);
   const [vehicles, setVehicles] = useState<null | RootVehicle>(null);
-  const [addRoute, setAddRoute] = useState(false);
   const [role, setRole] = useState("");
 
   const fetchName = async () => {
