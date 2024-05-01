@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-// import Home from "./HomeSection";
 import mapboxgl from "mapbox-gl";
 import { getAllFetchDataValues } from "@/utils/api";
 import { MessageRoute, RootRoute } from "@/types/routes";
