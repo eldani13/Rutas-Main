@@ -284,7 +284,7 @@ export default function RootLayout({
           )}
 
           {roleUser === "administrador" && (
-            <Link href="/Inicio/reportes">
+            <Link href="/Inicio/cortes">
               <div>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
