@@ -17,8 +17,6 @@ export default function Court() {
     "insert",
   ]);
 
-
-
   const formRef = useRef<HTMLFormElement>(null);
 
   return (
@@ -103,11 +101,14 @@ export default function Court() {
               color="bg-green-500"
               onclickHandle={() => setviewAddproductos([true, "insert"])}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="h-6 w-6">
-                <path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 512 512"
+                className="h-6 w-6"
+              >
+                <path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z" />
               </svg>
             </ButtonCrud>
-
 
             <div className="flex bg-[#ececec] justify-center items-center gap-4 rounded-full h-14 w-52 px-2 py-2 mb-2">
               <button
@@ -165,7 +166,7 @@ export default function Court() {
           <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
         </svg>
 
-        <hr className='mb-10 border-[1px]' />
+        <hr className="mb-10 border-[1px]" />
 
         {showPDF ? (
           <PDFViewer className="w-full h-[100vh]" showToolbar>
@@ -193,7 +194,6 @@ export default function Court() {
                 />
               </svg>
             </button>
-            {/*gridTemplateAreas: " 'productSold productSold summary' 'productNotSold productNotSold summary'*/}
 
             {/* Primer div */}
             <div className="flex text-black px-3 xl:col-span-2 col-span-3 col-start-1 row-start-1 h-[20vh] ">
@@ -208,10 +208,9 @@ export default function Court() {
                 <tbody>
                   {currentCourt.productosVendidos.map((product, index) => (
                     <tr
-
                       key={"productoVendido-" + index}
-                      className='grid grid-cols-3 py-2.5 text-center'>
-
+                      className="grid grid-cols-3 py-2.5 text-center"
+                    >
                       <td>{product.nombre}</td>
                       <td>{product.cantidad}</td>
                       <td>{product.precio}</td>
@@ -234,10 +233,9 @@ export default function Court() {
                 <tbody>
                   {currentCourt.productosNoVendidos.map((product, index) => (
                     <tr
-
-                      key={"productoNoVendido-"+ index}
-                      className='grid grid-cols-3 py-2.5 text-center'>
-
+                      key={"productoNoVendido-" + index}
+                      className="grid grid-cols-3 py-2.5 text-center"
+                    >
                       <td>{product.nombre}</td>
                       <td>{product.cantidad}</td>
                       <td>{product.precio}</td>
@@ -319,16 +317,22 @@ export default function Court() {
                   viewAddproductos[1] == "insert" ? "bg-teal-300" : "bg-sky-400"
                 } w-20 h-20 flex rounded-full items-center justify-center shadow-lg shadow-emerald-800`}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height='40' width='40'>
-                  <path d="M547.6 103.8L490.3 13.1C485.2 5 476.1 0 466.4 0H109.6C99.9 0 90.8 5 85.7 13.1L28.3 103.8c-29.6 46.8-3.4 111.9 51.9 119.4c4 .5 8.1 .8 12.1 .8c26.1 0 49.3-11.4 65.2-29c15.9 17.6 39.1 29 65.2 29c26.1 0 49.3-11.4 65.2-29c15.9 17.6 39.1 29 65.2 29c26.2 0 49.3-11.4 65.2-29c16 17.6 39.1 29 65.2 29c4.1 0 8.1-.3 12.1-.8c55.5-7.4 81.8-72.5 52.1-119.4zM499.7 254.9l-.1 0c-5.3 .7-10.7 1.1-16.2 1.1c-12.4 0-24.3-1.9-35.4-5.3V384H128V250.6c-11.2 3.5-23.2 5.4-35.6 5.4c-5.5 0-11-.4-16.3-1.1l-.1 0c-4.1-.6-8.1-1.3-12-2.3V384v64c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V384 252.6c-4 1-8 1.8-12.3 2.3z"/>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 576 512"
+                  height="40"
+                  width="40"
+                >
+                  <path d="M547.6 103.8L490.3 13.1C485.2 5 476.1 0 466.4 0H109.6C99.9 0 90.8 5 85.7 13.1L28.3 103.8c-29.6 46.8-3.4 111.9 51.9 119.4c4 .5 8.1 .8 12.1 .8c26.1 0 49.3-11.4 65.2-29c15.9 17.6 39.1 29 65.2 29c26.1 0 49.3-11.4 65.2-29c15.9 17.6 39.1 29 65.2 29c26.2 0 49.3-11.4 65.2-29c16 17.6 39.1 29 65.2 29c4.1 0 8.1-.3 12.1-.8c55.5-7.4 81.8-72.5 52.1-119.4zM499.7 254.9l-.1 0c-5.3 .7-10.7 1.1-16.2 1.1c-12.4 0-24.3-1.9-35.4-5.3V384H128V250.6c-11.2 3.5-23.2 5.4-35.6 5.4c-5.5 0-11-.4-16.3-1.1l-.1 0c-4.1-.6-8.1-1.3-12-2.3V384v64c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V384 252.6c-4 1-8 1.8-12.3 2.3z" />
                 </svg>
               </div>
             </div>
             <h1 className="text-slate-900 font-semibold text-xl text-center p-8">
-              {viewAddproductos[1] == "insert" ? "Historial" : "Editar"} de productos vendidos
+              {viewAddproductos[1] == "insert" ? "Historial" : "Editar"} de
+              productos vendidos
             </h1>
             <div className="flex flex-col gap-3 mb-16">
-            <table className="h-full w-full border-collapse">
+              <table className="h-full w-full border-collapse">
                 <thead>
                   <tr className="bg-[#ccc] rounded-full grid grid-cols-4 py-2.5">
                     <th>Producto</th>
@@ -359,7 +363,6 @@ export default function Court() {
               >
                 Aceptar
               </button>
-
             </div>
           </form>
         </div>
