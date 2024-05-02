@@ -103,21 +103,6 @@ export default function Route({ params }) {
 
           {/* Botones */}
           <div className="pb-10 flex flex-col space-y-10 items-center">
-            <ButtonCrud
-              isHidden={false}
-              text="Ver Historial"
-              color="bg-green-500"
-              onclickHandle={() => setviewAddproductos([true, "insert"])}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 512 512"
-                className="h-6 w-6"
-              >
-                <path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z" />
-              </svg>
-            </ButtonCrud>
-
             <div className="flex bg-[#ececec] justify-center items-center gap-4 rounded-full h-14 w-52 px-2 py-2 mb-2">
               <button
                 onClick={() => setShowPDF(!showPDF)}
@@ -205,94 +190,63 @@ export default function Route({ params }) {
 
             {/* Primer div */}
             <div className="flex text-black px-3 xl:col-span-2 col-span-3 col-start-1 row-start-1 h-[20vh] ">
-              <table className="h-full w-full border-collapse">
+              <table className="w-full border-collapse">
                 <thead>
-                  <tr className="bg-[#ccc] rounded-full grid grid-cols-3 py-2.5">
-                    {/* <th>Producto</th> */}
-                    <th>Cantidad</th>
-                    <th>Precio</th>
+                  <tr className="bg-[#ccc] rounded-full py-2.5">
+                    <th className="hidden md:table-cell">Nombre tienda</th>
+                    <th className="hidden md:table-cell">Descarga</th>
+                    <th>Entregado en merc</th>
+                    <th>Entregado en ef</th>
+                    <th>Diferencia</th>
                   </tr>
                 </thead>
                 <tbody>
                   {currentCourt.productosVendidos.map((product, index) => (
                     <tr
                       key={"productoVendido-" + index}
-                      className="grid grid-cols-3 py-2.5 text-center"
+                      className="py-2.5 text-center"
                     >
-                      {/* <td>{product.nombre}</td> */}
-                      <td>{product.cantidad}</td>
-                      <td>{product.precio}</td>
+                      <td className="hidden md:table-cell">descarga ej</td>
+                      <td>descarga ej</td>
+                      <td>descarga ej</td>
+                      <td>descarga ej</td>
+                      <td>descarga ej</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            {/* Tercer div */}
 
             <div className="flex text-black px-3 xl:col-span-2 col-span-3 row-start-2 h-[20vh]">
-              <table className="h-full w-full border-collapse">
+              <table className="w-full border-collapse">
                 <thead>
-                  <tr className="bg-[#ccc] rounded-full grid grid-cols-3 py-2">
-                    {/* <th>Producto</th> */}
-                    <th>Cantidad</th>
-                    <th>Precio</th>
+                  <tr className="bg-[#ccc] rounded-full py-2">
+                    <th>Descarga</th>
+                    <th>EnEfectivo</th>
+                    <th>EnMerca</th>
+                    <th>Diferencia</th>
                   </tr>
                 </thead>
                 <tbody>
                   {currentCourt.productosNoVendidos.map((product, index) => (
                     <tr
                       key={"productoNoVendido-" + index}
-                      className="grid grid-cols-3 py-2.5 text-center"
+                      className="py-2.5 text-center"
                     >
-                      {/* <td>{product.nombre}</td> */}
-                      <td>{product.cantidad}</td>
-                      <td>{product.precio}</td>
+                      <td>ejemplo de otra tabla alaburguer</td>
+                      <td>ejemplo de otra tabla alaburguer</td>
+                      <td>ejemplo de otra tabla alaburguer</td>
+                      <td>ejemplo de otra tabla alaburguer</td>
+                      {/* <td>{product.cantidad}</td> */}
+                      {/* <td>{product.precio}</td> */}
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            {/* Segundo div */}
 
-            <div className="flex  flex-col justify-items-center  text-black px-3  pb-5 row-span-2  xl:col-span-2 col-span-3 xl:col-start-3 xl:row-start-1 col-start-1 row-start-3  xl:justify-start">
-              {/* Primer elemento */}
-              <div className="text-[#000]  flex flex-col items-center w-full h-fit bg-[#ccc] py-2 rounded-full mb-8">
-                <p className="font-bold text-[20px] text-center">ESTIMADOS</p>
-              </div>
-              <div className="grid gap-3 md:mb-10 ">
-                <div className="flex justify-between  ">
-                  <td className="justify-self-start">Salio con</td>
-                  <td className="relative">
-                    {currentCourt.estimados.salio}
-                    <span className=" ps-3 text-sm font-bold top-0">MXN</span>
-                  </td>
-                </div>
-                <div className="flex justify-between  ">
-                  <td>Vendio</td>
-                  <td className="relative">
-                    {currentCourt.estimados.vendio}
-                    <span className=" ps-3 text-sm font-bold top-0">MXN</span>
-                  </td>
-                </div>
-                <div className="flex justify-between ">
-                  <td>Entrego en Efectivo</td>
-                  <td className="relative">
-                    {currentCourt.estimados.efectivo}
-                    <span className=" ps-3 text-sm font-bold top-0">MXN</span>
-                  </td>
-                </div>
-                <div className="flex justify-between  ">
-                  <td>Entrego en mercancia</td>
-                  <td className="relative">
-                    {currentCourt.estimados.mercancia}
-                    <span className=" ps-3 text-sm font-bold   top-[-3]">
-                      MXN
-                    </span>
-                  </td>
-                </div>
-              </div>
-            </div>
-            {/* Cuarto div */}
+            {/* Segundo div */}
+            {/* Cuarto div
             <div className="w-full flex flex-col p-4   xl:col-start-3 xl:row-start-2 mb-3 xl:mb-0 xl:justify-end">
               <div
                 className="w-full  gap-5 rounded-xl text-center py-5"
@@ -306,7 +260,7 @@ export default function Route({ params }) {
                   </span>
                 </p>
               </div>
-            </div>
+            </div> */}
           </div>
         )}
         <div
