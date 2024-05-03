@@ -1,7 +1,5 @@
 "use client";
 import { MessageProduct, RootProduct } from "@/types/product";
-import { getAllFetchDataValues } from "@/utils/api";
-import { processEnv } from "@/utils/cookies";
 import { useEffect, useState } from "react";
 import ViewAllProducts from "../../../../components/views/ViewAllProducts";
 import ViewProductsSelect from "../../../../components/views/ViewProductsSelect";

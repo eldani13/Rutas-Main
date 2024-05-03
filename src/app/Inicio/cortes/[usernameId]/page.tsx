@@ -6,6 +6,7 @@ import { courtResponse } from "@/temp/TempCourtResponse";
 import { ButtonCrud } from "@/components/buttons/ButtonCrud";
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import CourtPDF from "@/pdf/CourtPDF";
+import { log } from "console";
 
 // @ts-ignore
 export default function Route({ params }) {
@@ -45,13 +46,49 @@ export default function Route({ params }) {
   const [showPDF, setShowPDF] = useState(false);
   const [currentCourt, setCurrentCourt] = useState(courtResponse);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
+  const [store, setCurrentStore] = useState();
+  console.log(currentCourt);
 
   const [viewAddproductos, setviewAddproductos] = useState<[boolean, string]>([
     false,
     "insert",
   ]);
 
-  const formRef = useRef<HTMLFormElement>(null);
+  const [tiendas, setTiendas] = useState([]);
+
+  useEffect(() => {
+    const fetchTiendas = async () => {
+      try {
+        const api = await fetch(`${processEnv.back}tiendas`);
+        const data = await api.json();
+
+        if (!data || !data.message) {
+          console.log("No se encontraron datos de tiendas");
+          return;
+        }
+
+        setTiendas(data.message.map((tienda: any) => tienda.nombre));
+      } catch (error) {
+        console.error("Error al obtener las tiendas:", error);
+      }
+    };
+
+    fetchTiendas();
+  }, []);
+
+  // save entregado en mercancia
+
+  const saveMercancia = async () => {
+    const api = await fetch(`${processEnv.back}create-mercancia`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: "",
+    });
+  };
+
+  const showMercancia = async () => {};
 
   return (
     <>
@@ -195,24 +232,65 @@ export default function Route({ params }) {
                   <tr className="bg-[#ccc] rounded-full py-2.5">
                     <th className="hidden md:table-cell">Nombre tienda</th>
                     <th className="hidden md:table-cell">Descarga</th>
-                    <th>Entregado en merc</th>
-                    <th>Entregado en ef</th>
+                    <th>Entregado en mercancia</th>
+                    <th>Entregado en efectivo</th>
                     <th>Diferencia</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {currentCourt.productosVendidos.map((product, index) => (
-                    <tr
-                      key={"productoVendido-" + index}
-                      className="py-2.5 text-center"
-                    >
-                      <td className="hidden md:table-cell">descarga ej</td>
-                      <td>descarga ej</td>
-                      <td>descarga ej</td>
-                      <td>descarga ej</td>
-                      <td>descarga ej</td>
-                    </tr>
-                  ))}
+                  <tr>
+                    {/* nombre tienda */}
+                    <td>
+                      {tiendas.map((nombre, index) => (
+                        <li key={index}>{nombre}</li>
+                      ))}
+                    </td>
+
+                    {/* descarga */}
+                    <td>
+                      {tiendas.map((nombre, index) => (
+                        <li key={index}>{nombre}</li>
+                      ))}
+                    </td>
+
+                    {/* entregado en mercancia */}
+                    <td>
+                      {tiendas.map((nombre, index) => (
+                        // <li key={index}>{nombre}</li>
+                        <input
+                          key={index}
+                          className="border-4"
+                          type="number"
+                          value={0}
+                          min={0}
+                          name=""
+                          id=""
+                        />
+                      ))}
+                    </td>
+
+                    {/* entregado en efectivo */}
+                    <td>
+                      {tiendas.map((nombre, index) => (
+                        <input
+                          key={index}
+                          className="border-4"
+                          type="number"
+                          value={0}
+                          min={0}
+                          name=""
+                          id=""
+                        />
+                      ))}
+                    </td>
+
+                    {/* diferencia */}
+                    <td>
+                      {tiendas.map((nombre, index) => (
+                        <li key={index}>{nombre}</li>
+                      ))}
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -222,8 +300,8 @@ export default function Route({ params }) {
                 <thead>
                   <tr className="bg-[#ccc] rounded-full py-2">
                     <th>Descarga</th>
-                    <th>EnEfectivo</th>
-                    <th>EnMerca</th>
+                    <th>En efectivo</th>
+                    <th>En mercancia</th>
                     <th>Diferencia</th>
                   </tr>
                 </thead>
@@ -237,30 +315,11 @@ export default function Route({ params }) {
                       <td>ejemplo de otra tabla alaburguer</td>
                       <td>ejemplo de otra tabla alaburguer</td>
                       <td>ejemplo de otra tabla alaburguer</td>
-                      {/* <td>{product.cantidad}</td> */}
-                      {/* <td>{product.precio}</td> */}
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-
-            {/* Segundo div */}
-            {/* Cuarto div
-            <div className="w-full flex flex-col p-4   xl:col-start-3 xl:row-start-2 mb-3 xl:mb-0 xl:justify-end">
-              <div
-                className="w-full  gap-5 rounded-xl text-center py-5"
-                style={{ boxShadow: "0px 6px 13.7px 0px rgba(0, 0, 0, 0.10)" }}
-              >
-                <p className="font-bold text-lg">LA DIFERENCIA ES DE:</p>
-                <p className="font-normal text-xl text-red-500 relative">
-                  $ {currentCourt.estimados.diferencia}
-                  <span className=" ps-3 text-sm font-bold absolute top-[-3px]">
-                    MXN
-                  </span>
-                </p>
-              </div>
-            </div> */}
           </div>
         )}
         <div

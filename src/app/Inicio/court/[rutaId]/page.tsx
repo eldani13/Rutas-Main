@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import mapboxgl from "mapbox-gl";
+// import mapboxgl from "mapbox-gl";
 import { getAllFetchDataValues } from "@/utils/api";
 import { MessageRoute, RootRoute } from "@/types/routes";
 import { MessageVehicle, RootVehicle } from "@/types/vehicles";
@@ -10,8 +10,6 @@ import { MessageEmployees, RootEmployees } from "@/types/employees";
 import { Map, LoadingMap } from "@/components";
 import { DirectionsResponse } from "@/types/RouteResponseApi";
 import { routeResponse } from "@/temp/TempResponseDirections";
-
-// import './style.css'
 
 // @ts-ignore
 export default function Route({ params }) {

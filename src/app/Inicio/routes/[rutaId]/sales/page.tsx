@@ -541,12 +541,12 @@ export default function Sales({ params }) {
               </p>
               <p
                 className={`${requestCurrentIfExist.state === "pendiente"
-                    ? "text-yellow-500"
-                    : requestCurrentIfExist.state === "rechazado"
-                      ? "text-orange-500"
-                      : requestCurrentIfExist.state === "aprobado"
-                        ? "text-lime-500"
-                        : ""
+                  ? "text-yellow-500"
+                  : requestCurrentIfExist.state === "rechazado"
+                    ? "text-orange-500"
+                    : requestCurrentIfExist.state === "aprobado"
+                      ? "text-lime-500"
+                      : ""
                   } text-center text-xl font-bold mb-10`}
               >
                 {requestCurrentIfExist.state}
