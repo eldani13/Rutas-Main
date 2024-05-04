@@ -3,7 +3,6 @@ import { MessageProduct, RootProduct } from "@/types/product";
 import { useEffect, useState } from "react";
 import ViewAllProducts from "../../../../components/views/ViewAllProducts";
 import ViewProductsSelect from "../../../../components/views/ViewProductsSelect";
-import { useRouter } from "next/router";
 
 export default function Products({ params }: any) {
   const { nombre } = params

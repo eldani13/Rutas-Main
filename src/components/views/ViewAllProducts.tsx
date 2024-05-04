@@ -52,7 +52,6 @@ export default function ViewAllProducts({
                 </p>
               </div>
               <div>
-                {/* <button></button> */}
                 <p className="text-right text-sm font-bold mt-3">
                   {product.productPrice}
                   <span className="text-xs ps-1">MXN</span>

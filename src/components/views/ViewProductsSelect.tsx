@@ -18,6 +18,10 @@ export default function ViewProductsSelect({
           >
             <button
               onClick={() => {
+                // if (!setProductsSelect) return;
+                // const newData = [...productsSelect]; // Clonar el array
+                // newData.splice(index, 1); // Eliminar el producto en el índice especificado
+                // setProductsSelect(newData); // Actualizar el estado
                 if (!setProductsSelect) return;
                 const newData = productsSelect.filter(
                   (dato) => dato != product
@@ -51,17 +55,16 @@ export default function ViewProductsSelect({
               </p>
             </div>
             <div className="flex items-center gap-1 font-bold text-xl">
-              
               <input
                 type="number"
                 className="flex gap-2 w-32 text-center p-2 border rounded-xl outline-none "
-                min={0}
-                // onChange={(e) =>
-                //   handleUpdateProductSelect(index, parseInt(e.target.value))
-                // }
-                value={product.productPrice ?? 0}
+                // min={0}
+                onChange={
+                  (e) => console.log(e.target.value)
+                  // handleUpdateProductSelect(index, parseInt(e.target.value))
+                }
+                value={product.productPrice ?? ""}
               />
-              
             </div>
           </div>
         ))}
