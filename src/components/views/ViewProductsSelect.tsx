@@ -8,6 +8,15 @@ export default function ViewProductsSelect({
   productsSelect: MessageProduct[] | null;
   setProductsSelect?: Dispatch<SetStateAction<MessageProduct[] | null>> | null;
 }) {
+  const handleUpdateProductSelect = (index: number, newNumber: number) => {
+    if (!setProductsSelect) return;
+    setProductsSelect((prev) => {
+      const newArray: MessageProduct[] | null = prev && [...prev];
+      if (newArray) newArray[index].productPrice = newNumber;
+      return newArray;
+    });
+  };
+
   return (
     <div className="w-full pt-5 flex flex-col gap-6">
       {productsSelect &&
@@ -18,10 +27,6 @@ export default function ViewProductsSelect({
           >
             <button
               onClick={() => {
-                // if (!setProductsSelect) return;
-                // const newData = [...productsSelect]; // Clonar el array
-                // newData.splice(index, 1); // Eliminar el producto en el índice especificado
-                // setProductsSelect(newData); // Actualizar el estado
                 if (!setProductsSelect) return;
                 const newData = productsSelect.filter(
                   (dato) => dato != product
@@ -37,9 +42,9 @@ export default function ViewProductsSelect({
                 <path
                   fill="none"
                   stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="M4 7h16M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3m-5 5l4 4m0-4l-4 4"
                 />
               </svg>
@@ -58,12 +63,11 @@ export default function ViewProductsSelect({
               <input
                 type="number"
                 className="flex gap-2 w-32 text-center p-2 border rounded-xl outline-none "
-                // min={0}
-                onChange={
-                  (e) => console.log(e.target.value)
-                  // handleUpdateProductSelect(index, parseInt(e.target.value))
+                min={0}
+                onChange={(e) =>
+                  handleUpdateProductSelect(index, parseInt(e.target.value))
                 }
-                value={product.productPrice ?? ""}
+                value={product.productPrice ?? 0}
               />
             </div>
           </div>

@@ -1,3 +1,4 @@
+
 import { MessageProduct, RootProduct } from "@/types/product";
 import { getAllFetchDataValues } from "@/utils/api";
 import { processEnv } from "@/utils/cookies";
@@ -7,10 +8,12 @@ export default function ViewAllProducts({
   dataFilter = "",
   noIncludeData = null,
   setProductsSelect = null,
+  setAllDataProductsProp
 }: {
   dataFilter?: string;
   noIncludeData?: MessageProduct[] | null;
   setProductsSelect?: Dispatch<SetStateAction<MessageProduct[] | null>> | null;
+  setAllDataProductsProp?: Dispatch<SetStateAction<MessageProduct[] | null>> | null;
 }) {
   const [allDataProducts, setAllDataProducts] = useState<
     MessageProduct[] | null
@@ -19,6 +22,8 @@ export default function ViewAllProducts({
     await getAllFetchDataValues(`${processEnv.back}view-products`).then(
       (rec: RootProduct) => {
         setAllDataProducts(rec.details);
+        if (!setAllDataProductsProp) return
+        setAllDataProductsProp(rec.details)
       }
     );
   };
@@ -52,6 +57,7 @@ export default function ViewAllProducts({
                 </p>
               </div>
               <div>
+                {/* <button></button> */}
                 <p className="text-right text-sm font-bold mt-3">
                   {product.productPrice}
                   <span className="text-xs ps-1">MXN</span>
