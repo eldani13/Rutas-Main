@@ -382,9 +382,11 @@ export default function Sales({ params }) {
               {/* ! render stores */}
               <ul className="store-list">
                 {store.map((stores) => (
+                  // @ts-ignore
                   <li key={stores._id}>
                     <br />
                     <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded">
+                      {/* @ts-ignore */}
                       {stores.nombre}
                     </button>
                   </li>
