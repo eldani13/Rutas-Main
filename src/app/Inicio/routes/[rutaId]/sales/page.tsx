@@ -261,7 +261,6 @@ export default function Sales({ params }) {
           const amountNew =
             (routeCurrent?.amountOfMerchandise || 0) +
             productSale.productPrice * ammountSale;
-          // setRequestCurrentIfExist(prev=>({...prev, products:[...prev.products, {}]}))
           await getIfProductSelect();
           await patchEditVal(
             `${processEnv.back}rutas/edit/${routeCurrent?._id}`,
@@ -321,7 +320,7 @@ export default function Sales({ params }) {
   };
   console.log(requestCurrentIfExist);
 
-  const [store, setStore] = useState("");
+  const [store, setStore] = useState([]);
 
   // render stores function
 
@@ -336,7 +335,7 @@ export default function Sales({ params }) {
   };
 
   const renderStores = async () => {
-    const API = await fetch("http://localhost:5000/api/v1/stores", {
+    const API = await fetch("http://localhost:5000/api/v1/tiendas", {
       method: "GET",
     });
 
@@ -345,7 +344,7 @@ export default function Sales({ params }) {
     const data = await API.json();
     console.log(data);
 
-    setStore(data);
+    setStore(data.message);
   };
 
   useEffect(() => {
@@ -376,12 +375,20 @@ export default function Sales({ params }) {
           </div>
           <div className="md:static flex flex-col items-start justify-center pb-10 md:min-w-60">
             <div
-              className={`${clickInProduct === null ? "hidden" : "flex"
-                } gap-2 items-center justify-center w-full mb-2 bg-slate-50 rounded-md p-2`}
+              className={`${
+                clickInProduct === null ? "hidden" : "flex"
+              } gap-2 items-center justify-center w-full mb-2 bg-slate-50 rounded-md p-2`}
             >
               {/* ! render stores */}
               <ul className="store-list">
-                {store  }
+                {store.map((stores) => (
+                  <li key={stores._id}>
+                    <br />
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded">
+                      {stores.nombre}
+                    </button>
+                  </li>
+                ))}
               </ul>
               {/* close render stores */}
 
@@ -464,7 +471,7 @@ export default function Sales({ params }) {
               console.log(
                 indexCurrentRequest + 1 >= (requestProductsAll?.length || 0) - 1
                   ? // @ts-ignore
-                  requestProductsAll[indexCurrentRequest + 1]
+                    requestProductsAll[indexCurrentRequest + 1]
                   : null
               );
               // @ts-ignore
@@ -472,9 +479,10 @@ export default function Sales({ params }) {
 
               setIndexCurrentRequest(indexCurrentRequest + 1);
             }}
-            className={`${indexCurrentRequest + 1 > (requestProductsAll?.length || 0) - 1 &&
+            className={`${
+              indexCurrentRequest + 1 > (requestProductsAll?.length || 0) - 1 &&
               "text-slate-400"
-              }`}
+            }`}
             disabled={
               indexCurrentRequest + 1 > (requestProductsAll?.length || 0) - 1
             }
@@ -532,14 +540,15 @@ export default function Sales({ params }) {
                 Revisa la sección de requisitos, el estado de tu requisito es:
               </p>
               <p
-                className={`${requestCurrentIfExist.state === "pendiente"
+                className={`${
+                  requestCurrentIfExist.state === "pendiente"
                     ? "text-yellow-500"
                     : requestCurrentIfExist.state === "rechazado"
-                      ? "text-orange-500"
-                      : requestCurrentIfExist.state === "aprobado"
-                        ? "text-lime-500"
-                        : ""
-                  } text-center text-xl font-bold mb-10`}
+                    ? "text-orange-500"
+                    : requestCurrentIfExist.state === "aprobado"
+                    ? "text-lime-500"
+                    : ""
+                } text-center text-xl font-bold mb-10`}
               >
                 {requestCurrentIfExist.state}
               </p>
@@ -580,8 +589,9 @@ export default function Sales({ params }) {
       </div>
 
       <div
-        className={`${!_scannerIsRunning ? "hidden" : "flex"
-          } absolute bg-[#151516cc] top-0 w-full h-full z-10 `}
+        className={`${
+          !_scannerIsRunning ? "hidden" : "flex"
+        } absolute bg-[#151516cc] top-0 w-full h-full z-10 `}
       >
         <div className="relative w-full h-full grid place-content-center ">
           <div className="relative flex h-fit w-fit">
@@ -615,10 +625,11 @@ export default function Sales({ params }) {
                 <div
                   className={` 
             relative my-2 justify-center  py-6  justify-content rounded-xl flex flex-col px-5 gap-1 font-semibold hover:bg-slate-200  
-            ${actualProductSearchScanner.amountCurrent === 0
-                      ? "bg-red-100"
-                      : "bg-[linear-gradient(225deg,_#acfca2_10%,_#c0faea_90%)]"
-                    }
+            ${
+              actualProductSearchScanner.amountCurrent === 0
+                ? "bg-red-100"
+                : "bg-[linear-gradient(225deg,_#acfca2_10%,_#c0faea_90%)]"
+            }
             
             `}
                   style={{ gridTemplateColumns: "50px 1fr 1fr 1fr" }}
