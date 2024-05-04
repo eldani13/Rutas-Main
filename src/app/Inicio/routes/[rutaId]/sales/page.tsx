@@ -1,22 +1,17 @@
 "use client";
 
 import React, { useState, useEffect, FormEvent } from "react";
-import {
-  getAllFetchDataValues,
-  patchEditVal,
-  patchSaleProduct,
-} from "@/utils/api";
+import { getAllFetchDataValues, patchEditVal } from "@/utils/api";
 import { MessageProduct, RootProduct } from "@/types/product";
 import { Table, SearchInput } from "@/components";
 import Swal from "sweetalert2";
 import { ButtonCrud } from "@/components/buttons/ButtonCrud";
-
 import Quagga from "@ericblade/quagga2";
 import { MessageRoute } from "@/types/routes";
 import { getCookie, processEnv } from "@/utils/cookies";
-import jwt from "jsonwebtoken";
 import { MessageRequestProducts } from "@/types/requestProducts";
 import Link from "next/link";
+import { error } from "console";
 
 //@ts-ignore
 export default function Sales({ params }) {
@@ -108,19 +103,18 @@ export default function Sales({ params }) {
       function (err) {
         if (err) {
           console.log(err);
-          return;
+          return err;
         }
 
-        console.log("Initialization finished. Ready to start");
+        // console.log("Initialization finished. Ready to start");
         Quagga.start();
 
-        // Set flag to is running
         set_scannerIsRunning(true);
       }
     );
 
     Quagga.onProcessed(function (result) {
-      var drawingCtx = Quagga.canvas.ctx.overlay,
+      let drawingCtx = Quagga.canvas.ctx.overlay,
         drawingCanvas = Quagga.canvas.dom.overlay;
       drawingCanvas.style.position = "absolute";
       drawingCanvas.style.top = "0";
@@ -210,7 +204,6 @@ export default function Sales({ params }) {
         };
       });
     // @ts-ignore
-    //ADDMER
     setProducts(dataReturn);
 
     console.log(dataReturn);
@@ -230,7 +223,6 @@ export default function Sales({ params }) {
     }
   };
 
-  // useEffect(() => {
   const filteredProducts = products?.filter(
     (product) =>
       product.productName.toLowerCase().includes(search.toLowerCase()) ||
@@ -291,40 +283,6 @@ export default function Sales({ params }) {
         },
         "requisito"
       );
-
-      // patchSaleProduct(
-      //   `${processEnv.back}api/v1/products/edit/${productSale._id}`,
-      //   {
-      //     ...productSale,
-      //     productIsSold: true,
-      //   },
-      //   async () => {
-      //     const dateCurrent = new Date().toISOString();
-      //     const amountNew =
-      //       (routeCurrent?.amountOfMerchandise || 0) + productSale.productPrice;
-      //     await patchEditVal(
-      //       `${processEnv.back}api/v1/rutas/edit/${routeCurrent?._id}`,
-      //       {
-      //         amountOfMerchandise: amountNew,
-      //         LastMinuteSale: dateCurrent,
-      //       },
-      //       () => {
-      //         // event.currentTarget.reset();
-      //         //@ts-ignore
-      //         setRouteCurrent((prev) => ({
-      //           ...prev,
-      //           LastMinuteSale: dateCurrent,
-      //           amountOfMerchandise: amountNew,
-      //         }));
-      //       },
-      //       "Ruta"
-      //     );
-
-      //     setClickInProduct(null);
-      //     set_actualProductSearchScanner(null);
-      //     getProducts();
-      //   }
-      // );
     }
   }
 
@@ -363,6 +321,41 @@ export default function Sales({ params }) {
   };
   console.log(requestCurrentIfExist);
 
+  const [store, setStore] = useState("");
+
+  // render stores function
+
+  const showInformationStore = async () => {
+    const API = await fetch("http://localhost:5000/api/v1/stores", {
+      method: "GET",
+    });
+
+    const result = await API.json();
+
+    if (!API.ok) throw new Error("error solamente alaburguer xD");
+  };
+
+  const renderStores = async () => {
+    const API = await fetch("http://localhost:5000/api/v1/stores", {
+      method: "GET",
+    });
+
+    if (!API.ok) throw new Error("error al consumir la api");
+
+    const data = await API.json();
+    console.log(data);
+
+    setStore(data);
+  };
+
+  useEffect(() => {
+    renderStores();
+  }, []);
+
+  useEffect(() => {
+    console.log(store);
+  }, [store]);
+
   return (
     <>
       <div className=" h-[100vh] ">
@@ -386,6 +379,12 @@ export default function Sales({ params }) {
               className={`${clickInProduct === null ? "hidden" : "flex"
                 } gap-2 items-center justify-center w-full mb-2 bg-slate-50 rounded-md p-2`}
             >
+              {/* ! render stores */}
+              <ul className="store-list">
+                {store  }
+              </ul>
+              {/* close render stores */}
+
               <label className="text-sm ">Cantidad: </label>
               <input
                 className="border rounded-md px-2 py-1 font-bold"
@@ -404,7 +403,6 @@ export default function Sales({ params }) {
                 min={1}
               />
             </div>
-
             <ButtonCrud
               isHidden={clickInProduct === null}
               text="Vender Producto"
@@ -497,12 +495,6 @@ export default function Sales({ params }) {
               />
             </svg>
           </button>
-
-          {/* <select name="" id="" className="w-fit px-4" onChange={e=>{setRequestCurrentIfExist(e.target.value)}}>
-              {requestProductsAll?.map((ex, index) => (
-                <option value={index}>{index + 1}</option>
-              ))}
-            </select> */}
         </div>
 
         {requestCurrentIfExist &&
@@ -621,7 +613,6 @@ export default function Sales({ params }) {
                   />
                 </div>
                 <div
-                  // bg-[linear-gradient(225deg,_#a1c4fd_10%,_#c2e9fb_90%)]
                   className={` 
             relative my-2 justify-center  py-6  justify-content rounded-xl flex flex-col px-5 gap-1 font-semibold hover:bg-slate-200  
             ${actualProductSearchScanner.amountCurrent === 0

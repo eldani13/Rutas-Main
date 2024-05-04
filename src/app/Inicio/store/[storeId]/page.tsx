@@ -3,21 +3,23 @@ import { MessageProduct, RootProduct } from "@/types/product";
 import { useEffect, useState } from "react";
 import ViewAllProducts from "../../../../components/views/ViewAllProducts";
 import ViewProductsSelect from "../../../../components/views/ViewProductsSelect";
+import { useRouter } from "next/router";
 
-export default function Products() {
+export default function Products({ params }: any) {
+  const { nombre } = params
+  console.log(nombre);
+
+  const [nameStore, setStoreName] = useState("");
   const [searchData, setSearchData] = useState("");
   const [selectData, setSelectData] = useState<MessageProduct[] | null>(null);
+
+  useEffect(() => {
+    setStoreName(nombre)
+    console.log(nombre);
+
+  }, [nameStore])
   return (
     <>
-      {/* <div className="h-[100%]">
-        <div className="z-10 rigth-0 bottom-0 h-fit absolute xl:static xl:flex flex-col items-start xl:border-r-2 xl:border-[#bbbcbc] md:pt-14  xl:h-[100%]">
-          <div className="hidden xl:visible xl:flex flex-col items-start justify-center px-2">
-            <h1 className="text-[#000] text-2xl font-bold mb-1">Rutas</h1>
-            <span className="">Listado de rutas</span>
-          </div>
-
-        </div>
-      </div> */}
       <span></span>
       <div className="max-h-[100vh] h-full pt-14 flex flex-col overflow-y-auto p-5 ">
         {/* Informacion */}
@@ -25,6 +27,7 @@ export default function Products() {
         {/* {allDataProducts && ( */}
         {true && (
           <div className="pb-28">
+            <h1>Nombre de tienda: {nameStore} </h1>
             <form className="rounded-xl w-full md:w-1/2 m-auto flex gap-1">
               <input
                 value={searchData}

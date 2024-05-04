@@ -1,13 +1,13 @@
 "use client";
 
 import { ViewOnlyGetComponent } from "@/components/views/ViewOnlyGetComponent";
-import { RootEmployees } from "@/types/employees";
-import { MessageProduct, RootProduct } from "@/types/product";
-import { RootRoute } from "@/types/routes";
+// import { RootEmployees } from "@/types/employees";
+// import { MessageProduct, RootProduct } from "@/types/product";
+// import { RootRoute } from "@/types/routes";
 import { getAllFetchDataValues } from "@/utils/api";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import Employees from "./employees/page";
+// import Employees from "./employees/page";
 import jwt from "jsonwebtoken";
 import { getCookie, processEnv } from "@/utils/cookies";
 

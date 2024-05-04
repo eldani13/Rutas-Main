@@ -1,8 +1,6 @@
 "use client";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-// import Home from "./HomeSection";
-import mapboxgl from "mapbox-gl";
 import {
   deleteRemoveData,
   getAllFetchDataValues,
@@ -14,7 +12,6 @@ import { MessageEmployees, RootEmployees } from "@/types/employees";
 
 import { Map, LoadingMap } from "@/components";
 import { DirectionsResponse } from "@/types/RouteResponseApi";
-import { routeResponse } from "@/temp/TempResponseDirections";
 import { ButtonCrud } from "@/components/buttons/ButtonCrud";
 import { processEnv } from "@/utils/cookies";
 
@@ -24,8 +21,6 @@ import "./style.css";
 export default function Route({ params }) {
   const { rutaId } = params;
   const [routeCurrent, setRouteCurrent] = useState<null | MessageRoute>(null);
-  const [isOpenMenu, setIsOpenMenu] = useState(false);
-
   const [esEmpleado, setEsEmpleado] = useState(true);
   const [modifyRoute, setModifyRoute] = useState<{
     state: boolean;
@@ -49,7 +44,6 @@ export default function Route({ params }) {
         amountOfMerchandise: modifyRoute.route?.amountOfMerchandise,
       },
       () => {
-        // event.currentTarget.reset();
         setRouteCurrent(modifyRoute.route);
         getDataDirections(modifyRoute.route || null);
         setModifyRoute((prev) => ({ ...prev, state: false }));
@@ -92,10 +86,7 @@ export default function Route({ params }) {
     )
       .then((rec) => {
         const messList: MessageEmployees = rec;
-        // console.log(rec);
-        if (messList != null) {
-          setEmployeCurrent(messList);
-        }
+        if (messList != null) setEmployeCurrent(messList);
       })
       .catch(() => setEmployeCurrent(null));
   };
@@ -117,12 +108,11 @@ export default function Route({ params }) {
     setLoadingDirections(true);
 
     const url = `https://api.mapbox.com/directions/v5/mapbox/driving/`;
-
-    // const routes = `${currentRoute?.start[0]}, ${currentRoute?.start[1]}; ${currentRoute?.end[0]}, ${currentRoute?.end[1]}`;
     const routes = `
       ${currentRoute?.start?.[0]}, 
       ${currentRoute?.start?.[1]}; 
-      ${currentRoute?.end?.[0]}, ${currentRoute?.end?.[1]}`;
+      ${currentRoute?.end?.[0]}, 
+      ${currentRoute?.end?.[1]}`;
 
     const options = `?alternatives=false&geometries=geojson&overview=simplified&steps=false&access_token=pk.eyJ1IjoibGRhbmlpMTMiLCJhIjoiY2xxemE3OXBuMDMxaDJxb2ZwbWYyeXczNSJ9.Clw9VnVZszkfexTJ1tOMUw`;
 
@@ -179,8 +169,9 @@ export default function Route({ params }) {
   return (
     <>
       <div
-        className={` ${menuOpen ? "sm:ml-0" : "hidden"
-          } hidden xl:flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 ml:px-4 h-[100%] justify-between  overflow-hidden max-h-[100vh] p-4`}
+        className={` ${
+          menuOpen ? "sm:ml-0" : "hidden"
+        } hidden xl:flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 ml:px-4 h-[100%] justify-between  overflow-hidden max-h-[100vh] p-4`}
       >
         <div className="hidden  xl:flex flex-col items-start justify-center">
           <h1 className="text-[#000] text-2xl font-bold mb-1">
@@ -281,33 +272,6 @@ export default function Route({ params }) {
               />
             </svg>
           </ButtonCrud>
-          {/* <button
-            onClick={() => setModifyRoute((prev) => ({ ...prev, state: true }))}
-            className="bg-[#ececec] text-black px-2 py-2 mb-2 rounded-[50px] h-14 w-52 flex items-center justify-between font-bold"
-          >
-            <svg
-              className="h-[50px] w-[50px] text-blue-500 pr-2"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <circle cx="10" cy="10" r="8" />
-            </svg>
-            <span className="mr-10">Editar Ruta</span>
-          </button> */}
-
-          {/* <button
-            onClick={removeDairectionHandle}
-            className="bg-[#ececec] text-black px-2 py-2 mb-2 rounded-[50px] h-14 w-52 flex items-center justify-between font-bold"
-          >
-            <svg
-              className="h-[50px] w-[50px] text-red-500 pr-2"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <circle cx="10" cy="10" r="8" />
-            </svg>
-            <span className="mr-10 text-[14px]">Eliminar</span>
-          </button> */}
         </div>
       </div>
       <div
@@ -439,8 +403,9 @@ export default function Route({ params }) {
 
         {modifyRoute.route && (
           <div
-            className={`bg-[#1d1b1b6e] z-20 absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${modifyRoute.state ? "visible" : "hidden"
-              }`}
+            className={`bg-[#1d1b1b6e] z-20 absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${
+              modifyRoute.state ? "visible" : "hidden"
+            }`}
           >
             <form
               onSubmit={onHandleform_EditRoute}
