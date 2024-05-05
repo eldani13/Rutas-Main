@@ -129,13 +129,16 @@ export default function Route({ params }) {
     let result =
       parseInt(efectivo) + parseInt(mercancia) - parseInt(resultDownload);
 
+    if(isNaN(result)) {
+      alert('no hay nada que calcular')
+    }
     console.log(result);
     setDiferencia(result);
   };
 
-  useEffect(() => {
-    returnResultDifference();
-  }, []);
+  // useEffect(() => {
+  //   returnResultDifference();
+  // }, []);
 
   useEffect(() => {
     console.log(diferencia);
