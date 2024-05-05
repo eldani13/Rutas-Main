@@ -5,6 +5,7 @@ import { processEnv } from "@/utils/cookies";
 import { courtResponse } from "@/temp/TempCourtResponse";
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import CourtPDF from "@/pdf/CourtPDF";
+import toast, { Toaster } from "react-hot-toast";
 import { RootRoute } from "@/types/routes";
 
 // @ts-ignore
@@ -129,8 +130,8 @@ export default function Route({ params }) {
     let result =
       parseInt(efectivo) + parseInt(mercancia) - parseInt(resultDownload);
 
-    if(isNaN(result)) {
-      alert('no hay nada que calcular')
+    if (isNaN(result)) {
+      toast("no hay nada que calcular de pana");
     }
     console.log(result);
     setDiferencia(result);
@@ -435,6 +436,7 @@ export default function Route({ params }) {
                       >
                         Calcular Diferencia
                       </button>
+                      <Toaster />
                     </tr>
                   </thead>
                   <tbody>
