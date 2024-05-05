@@ -130,9 +130,8 @@ export default function Route({ params }) {
     let result =
       parseInt(efectivo) + parseInt(mercancia) - parseInt(resultDownload);
 
-    if (isNaN(result)) {
-      toast("no hay nada que calcular de pana");
-    }
+    if (isNaN(result)) toast("no hay nada que calcular de pana");
+
     console.log(result);
     setDiferencia(result);
   };
@@ -190,9 +189,8 @@ export default function Route({ params }) {
     <>
       <div className=" h-[100vh]">
         <div
-          className={` ${
-            isOpenMenu ? "visible" : "hidden"
-          } z-10 absolute left-15 xl:static bg-white  xl:flex flex-col items-start xl:border-r-2 xl:border-[#bbbcbc] pt-14 px-4 h-[100%] justify-between  overflow-hidden max-h-[100vh]`}
+          className={` ${isOpenMenu ? "visible" : "hidden"
+            } z-10 absolute left-15 xl:static bg-white  xl:flex flex-col items-start xl:border-r-2 xl:border-[#bbbcbc] pt-14 px-4 h-[100%] justify-between  overflow-hidden max-h-[100vh]`}
         >
           <div className="flex flex-col items-start justify-center">
             <h1 className="text-[#000] text-2xl font-bold mb-1">
@@ -462,9 +460,8 @@ export default function Route({ params }) {
           </div>
         )}
         <div
-          className={`bg-[#1d1b1b6e] absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${
-            viewAddproductos[0] ? "visible" : "hidden"
-          }`}
+          className={`bg-[#1d1b1b6e] absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${viewAddproductos[0] ? "visible" : "hidden"
+            }`}
         ></div>
       </div>
     </>
