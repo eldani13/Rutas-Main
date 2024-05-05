@@ -46,7 +46,6 @@ export default function Route({ params }) {
   const [showPDF, setShowPDF] = useState(false);
   const [currentCourt, setCurrentCourt] = useState(courtResponse);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-  // const [store, setCurrentStore] = useState();
   const [tiendas, setTiendas] = useState([]);
   const [inputsMercancia, setInputsMercancia] = useState(tiendas.map(() => 0));
   const [inputsEfectivo, setInputsEfectivo] = useState(tiendas.map(() => 0));
@@ -124,15 +123,23 @@ export default function Route({ params }) {
     console.log(efectivo);
   }, [efectivo]);
 
-  // const [diferencia, setDiferencia] = useState<any>();
+  const [diferencia, setDiferencia] = useState<number>();
 
-  // useEffect(() => {
-  //   // const result = efectivo + mercancia - resultDownload;
+  const returnResultDifference = () => {
+    let result =
+      parseInt(efectivo) + parseInt(mercancia) - parseInt(resultDownload);
 
-  //   // setDiferencia(result);
-  // }, [diferencia]);
+    console.log(result);
+    setDiferencia(result);
+  };
 
-  // console.log(diferencia);
+  useEffect(() => {
+    returnResultDifference();
+  }, []);
+
+  useEffect(() => {
+    console.log(diferencia);
+  }, [diferencia]);
 
   // descarga here
   const [routes, setRoutes] = useState<null | RootRoute>(null);
@@ -156,7 +163,7 @@ export default function Route({ params }) {
 
   console.log(routes);
 
-  const [resultDownload, setDownloadResult] = useState<number[]>([]);
+  const [resultDownload, setDownloadResult] = useState<any>();
   useEffect(() => {
     let amountContent: number[] = [];
 
@@ -403,11 +410,6 @@ export default function Route({ params }) {
                       ))}
                     </td>
                   </tr>
-                  <br />
-                  <p>
-                    <strong>Resultado: </strong>
-                    {resultDownload}
-                  </p>
                 </tbody>
               </table>
             </div>
@@ -423,22 +425,30 @@ export default function Route({ params }) {
                         Efectivo ruta
                       </th>
                       <th className="px-4 py-2">En mercancia Ruta</th>
-                      <th className="px-4 py-2">Diferencia</th>
+                      <th className="px-4 py-2">Diferencia</th>{" "}
+                      <button
+                        onClick={returnResultDifference}
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                      >
+                        Calcular Diferencia
+                      </button>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
                       {/* suma de descarga */}
-                      <td className="px-4 py-2">{resultDownload}</td>
+                      <td className="px-4 py-2">{resultDownload ?? 0}</td>
 
                       {/* mercancia ruta */}
-                      <td className="px-4 py-2">{mercancia}</td>
+                      <td className="px-4 py-2">{mercancia ?? 0}</td>
 
                       {/* entregado en efectivo */}
-                      <td className="px-4 py-2">{efectivo}</td>
+                      <td className="px-4 py-2">{efectivo ?? 0}</td>
 
                       {/* diferencia */}
-                      <td className="px-4 py-2"></td>
+                      <td className="px-4 py-2">
+                        {Number.isNaN(diferencia) ? 0 : diferencia}
+                      </td>
                     </tr>
                   </tbody>
                 </table>
