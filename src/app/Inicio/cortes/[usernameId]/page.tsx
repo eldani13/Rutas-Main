@@ -5,7 +5,6 @@ import { processEnv } from "@/utils/cookies";
 import { courtResponse } from "@/temp/TempCourtResponse";
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import CourtPDF from "@/pdf/CourtPDF";
-import { getAllFetchDataValues } from "@/utils/api";
 import { RootRoute } from "@/types/routes";
 
 // @ts-ignore
@@ -47,10 +46,10 @@ export default function Route({ params }) {
   const [showPDF, setShowPDF] = useState(false);
   const [currentCourt, setCurrentCourt] = useState(courtResponse);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-  const [store, setCurrentStore] = useState();
-  const [mercancia, setMercancia] = useState();
+  // const [store, setCurrentStore] = useState();
   const [tiendas, setTiendas] = useState([]);
-  const [inputs, setInputs] = useState(tiendas.map(() => 0)); // Estado para almacenar los valores de los inputs
+  const [inputsMercancia, setInputsMercancia] = useState(tiendas.map(() => 0));
+  const [inputsEfectivo, setInputsEfectivo] = useState(tiendas.map(() => 0));
 
   console.log(currentCourt);
 
@@ -79,36 +78,53 @@ export default function Route({ params }) {
     fetchTiendas();
   }, []);
 
-  const handleInputChange = (index: any, value: any) => {
-    const newInputs = [...inputs];
+  const handleInputChangeMercancia = (index: any, value: any) => {
+    const newInputs = [...inputsMercancia];
     newInputs[index] = value;
-    setInputs(newInputs);
+    setInputsMercancia(newInputs);
+  };
+
+  const handleInputChangeEfectivo = (index: any, value: any) => {
+    const newInputs = [...inputsEfectivo];
+    newInputs[index] = value;
+    setInputsEfectivo(newInputs);
   };
 
   // save entregado en mercancia
+  const [mercancia, setMercancia] = useState<any>();
   const saveMercancia = async () => {
-    console.log(inputs);
-    const api = await fetch(`${processEnv.back}create-mercancia`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(inputs),
-    });
+    console.log(inputsMercancia);
+    let resultMercanciaTotal = inputsMercancia.reduce(
+      (valor, result) => valor + result,
+      0
+    );
 
-    console.log(api);
-
-    if (!api.ok) throw new Error("error al intentar hacer esoxd");
-
-    const result = await api.json();
-
-    console.log(result);
+    // aqui hay que guardar en la db el resultMercanciaTotal
+    setMercancia(resultMercanciaTotal);
   };
 
-  const showMercancia = async () => { };
+  useEffect(() => {
+    console.log(mercancia);
+  }, [mercancia]);
+
+  // save entregado en efectivo
+  const [efectivo, setEfectivo] = useState<any>();
+  const saveEfectivo = async () => {
+    console.log(inputsMercancia);
+    let resultEfectivoTotal = inputsEfectivo.reduce(
+      (valor, result) => valor + result,
+      0
+    );
+
+    // aqui hay que guardar en la db el resultEfectivoTotal
+    setEfectivo(resultEfectivoTotal);
+  };
+
+  useEffect(() => {
+    console.log(efectivo);
+  }, [efectivo]);
 
   // descarga here
-  // const [routeCurrent, setRoutes] = useState();
   const [routes, setRoutes] = useState<null | RootRoute>(null);
 
   const getAllData = async () => {
@@ -121,22 +137,41 @@ export default function Route({ params }) {
       setRoutes(data);
     } catch (error) {
       console.error(error);
-      // Manejar el error, por ejemplo, mostrar un mensaje de error al usuario
     }
   };
 
   useEffect(() => {
     getAllData();
-  }, []); // Ejecutar solo una vez, cuando el componente se monte
+  }, []);
 
   console.log(routes);
+
+  const [resultDownload, setDownloadResult] = useState<number[]>([]);
+  useEffect(() => {
+    let amountContent: number[] = [];
+
+    routes?.message.forEach((numbers) => {
+      let value = numbers.amountOfMerchandise;
+      amountContent.push(value);
+    });
+
+    const resultAmountTotal = amountContent.reduce(
+      (total, currentValue) => total + currentValue,
+      0
+    );
+
+    setDownloadResult([resultAmountTotal]);
+  }, [routes?.message]);
+
+  console.log(resultDownload);
 
   return (
     <>
       <div className=" h-[100vh]">
         <div
-          className={` ${isOpenMenu ? "visible" : "hidden"
-            } z-10 absolute left-15 xl:static bg-white  xl:flex flex-col items-start xl:border-r-2 xl:border-[#bbbcbc] pt-14 px-4 h-[100%] justify-between  overflow-hidden max-h-[100vh]`}
+          className={` ${
+            isOpenMenu ? "visible" : "hidden"
+          } z-10 absolute left-15 xl:static bg-white  xl:flex flex-col items-start xl:border-r-2 xl:border-[#bbbcbc] pt-14 px-4 h-[100%] justify-between  overflow-hidden max-h-[100vh]`}
         >
           <div className="flex flex-col items-start justify-center">
             <h1 className="text-[#000] text-2xl font-bold mb-1">
@@ -300,23 +335,26 @@ export default function Route({ params }) {
                           <input
                             className="border-4"
                             type="number"
-                            value={inputs[index]} // Enlazar el valor del input con el estado correspondiente
+                            value={inputsMercancia[index]}
                             min={0}
                             onChange={(e) =>
-                              handleInputChange(index, parseInt(e.target.value))
-                            } // Actualizar el estado al cambiar el valor del input
+                              handleInputChangeMercancia(
+                                index,
+                                parseInt(e.target.value)
+                              )
+                            }
                             name=""
                             id=""
                           />
-                          <button
-                            onClick={saveMercancia}
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded flex items-center justify-center"
-                            type="button"
-                          >
-                            🔰
-                          </button>
                         </div>
                       ))}
+                      <button
+                        onClick={saveMercancia}
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded flex items-center justify-center"
+                        type="button"
+                      >
+                        🔰
+                      </button>
                     </td>
 
                     {/* entregado en efectivo */}
@@ -326,19 +364,26 @@ export default function Route({ params }) {
                           <input
                             className="border-4"
                             type="number"
-                            value={0}
+                            value={inputsEfectivo[index]}
                             min={0}
+                            onChange={(e) =>
+                              handleInputChangeEfectivo(
+                                index,
+                                parseInt(e.target.value)
+                              )
+                            }
                             name=""
                             id=""
                           />
-                          <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded flex items-center justify-center"
-                            type="button"
-                          >
-                            🔰
-                          </button>
                         </div>
                       ))}
+                      <button
+                        onClick={saveEfectivo}
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded flex items-center justify-center"
+                        type="button"
+                      >
+                        🔰
+                      </button>
                     </td>
 
                     {/* diferencia */}
@@ -348,40 +393,49 @@ export default function Route({ params }) {
                       ))}
                     </td>
                   </tr>
+                  <br />
+                  <p>
+                    <strong>Resultado: </strong>
+                    {resultDownload}
+                  </p>
                 </tbody>
               </table>
             </div>
-
             <div className="flex text-black px-3 xl:col-span-2 col-span-3 row-start-2 h-[20vh]">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="bg-[#ccc] rounded-full py-2">
-                    <th>Descarga</th>
-                    <th>En efectivo</th>
-                    <th>En mercancia</th>
-                    <th>Diferencia</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentCourt.productosNoVendidos.map((product, index) => (
-                    <tr
-                      key={"productoNoVendido-" + index}
-                      className="py-2.5 text-center"
-                    >
-                      <td>ejemplo de otra tabla alaburguer</td>
-                      <td>ejemplo de otra tabla alaburguer</td>
-                      <td>ejemplo de otra tabla alaburguer</td>
-                      <td>ejemplo de otra tabla alaburguer</td>
+              <div className="flex text-black px-3 xl:col-span-2 col-span-3 col-start-1 row-start-1 h-[20vh] ">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="bg-[#ccc] rounded-full py-2.5">
+                      <th className="hidden md:table-cell">Descarga ruta</th>
+                      <th className="hidden md:table-cell">Efectivo ruta</th>
+                      <th>En mercancia Ruta</th>
+                      <th>Diferencia</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      {/* suma de descarga */}
+                      <td>{resultDownload}</td>
+
+                      {/* mercancia ruta */}
+                      <td>{mercancia}</td>
+
+                      {/* diferencia */}
+                      <td>{}</td>
+
+                      {/* entregado en efectivo */}
+                      <td>{efectivo}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
         <div
-          className={`bg-[#1d1b1b6e] absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${viewAddproductos[0] ? "visible" : "hidden"
-            }`}
+          className={`bg-[#1d1b1b6e] absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${
+            viewAddproductos[0] ? "visible" : "hidden"
+          }`}
         ></div>
       </div>
     </>
