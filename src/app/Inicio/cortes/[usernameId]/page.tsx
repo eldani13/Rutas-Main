@@ -130,15 +130,11 @@ export default function Route({ params }) {
     let result =
       parseInt(efectivo) + parseInt(mercancia) - parseInt(resultDownload);
 
-    if (isNaN(result)) toast("no hay nada que calcular de pana");
+    if (isNaN(result)) toast("no hay nada que calcular");
 
     console.log(result);
     setDiferencia(result);
   };
-
-  // useEffect(() => {
-  //   returnResultDifference();
-  // }, []);
 
   useEffect(() => {
     console.log(diferencia);
@@ -186,6 +182,9 @@ export default function Route({ params }) {
   console.log(resultDownload);
 
   return (
+    // ￼
+    // ￼
+    // ￼
     <>
       <div className=" h-[100vh]">
         <div
@@ -233,48 +232,10 @@ export default function Route({ params }) {
           </div>
 
           {/* Botones */}
-          <div className="pb-10 flex flex-col space-y-10 items-center">
-            <div className="flex bg-[#ececec] justify-center items-center gap-4 rounded-full h-14 w-52 px-2 py-2 mb-2">
-              <button
-                onClick={() => setShowPDF(!showPDF)}
-                className="flex w-5/6 justify-center items-center text-black font-bold"
-              >
-                <svg
-                  className="h-[50px] w-[50px] text-blue-500 pr-2"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <circle cx="10" cy="10" r="8" />
-                </svg>
-                <span className="ml-2 text-[14px]">Finalizar corte</span>
-              </button>
-              <PDFDownloadLink
-                className="w-1/6 flex justify-center items-center border-l-2 border-[#bbbcbc]"
-                document={<CourtPDF corte={currentCourt} />}
-                fileName="sistemaCorte.pdf"
-                title="Descargar PDF"
-              >
-                <svg
-                  className="h-[50px] w-[50px] "
-                  data-slot="icon"
-                  fill="none"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
-                  ></path>
-                </svg>
-              </PDFDownloadLink>
-            </div>
+
           </div>
         </div>
-      </div>
+      {/* </div> */}
       <div
         className="flex flex-col justify-between px-3  max-h-[100vh] h-full overflow-y-auto"
         style={{ alignSelf: "flex-start" }}
