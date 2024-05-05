@@ -67,12 +67,15 @@ export const patchEditVal = async (
 ): Promise<any> => {
   try {
     const response = await fetch(pathForResponse, {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(dataBody),
     });
+
+    console.log(response);
+    
     if (response.ok) {
       functionDataOk();
 

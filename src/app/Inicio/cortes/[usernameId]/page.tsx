@@ -1,17 +1,18 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MessageEmployees } from "@/types/employees";
 import { processEnv } from "@/utils/cookies";
 import { courtResponse } from "@/temp/TempCourtResponse";
-import { ButtonCrud } from "@/components/buttons/ButtonCrud";
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import CourtPDF from "@/pdf/CourtPDF";
-import { log } from "console";
+import { getAllFetchDataValues } from "@/utils/api";
+import { RootRoute } from "@/types/routes";
 
 // @ts-ignore
 export default function Route({ params }) {
   const { usernameId } = params;
   console.log(usernameId);
+
   const [employeCurrent, setEmployeCurrent] = useState<null | MessageEmployees>(
     null
   );
@@ -47,14 +48,16 @@ export default function Route({ params }) {
   const [currentCourt, setCurrentCourt] = useState(courtResponse);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const [store, setCurrentStore] = useState();
+  const [mercancia, setMercancia] = useState();
+  const [tiendas, setTiendas] = useState([]);
+  const [inputs, setInputs] = useState(tiendas.map(() => 0)); // Estado para almacenar los valores de los inputs
+
   console.log(currentCourt);
 
   const [viewAddproductos, setviewAddproductos] = useState<[boolean, string]>([
     false,
     "insert",
   ]);
-
-  const [tiendas, setTiendas] = useState([]);
 
   useEffect(() => {
     const fetchTiendas = async () => {
@@ -76,27 +79,64 @@ export default function Route({ params }) {
     fetchTiendas();
   }, []);
 
-  // save entregado en mercancia
+  const handleInputChange = (index: any, value: any) => {
+    const newInputs = [...inputs];
+    newInputs[index] = value;
+    setInputs(newInputs);
+  };
 
+  // save entregado en mercancia
   const saveMercancia = async () => {
+    console.log(inputs);
     const api = await fetch(`${processEnv.back}create-mercancia`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: "",
+      body: JSON.stringify(inputs),
     });
+
+    console.log(api);
+
+    if (!api.ok) throw new Error("error al intentar hacer esoxd");
+
+    const result = await api.json();
+
+    console.log(result);
   };
 
-  const showMercancia = async () => {};
+  const showMercancia = async () => { };
+
+  // descarga here
+  // const [routeCurrent, setRoutes] = useState();
+  const [routes, setRoutes] = useState<null | RootRoute>(null);
+
+  const getAllData = async () => {
+    try {
+      const response = await fetch(`${processEnv.back}rutas/`);
+      if (!response.ok) {
+        throw new Error("Error al obtener los datos de las rutas");
+      }
+      const data = await response.json();
+      setRoutes(data);
+    } catch (error) {
+      console.error(error);
+      // Manejar el error, por ejemplo, mostrar un mensaje de error al usuario
+    }
+  };
+
+  useEffect(() => {
+    getAllData();
+  }, []); // Ejecutar solo una vez, cuando el componente se monte
+
+  console.log(routes);
 
   return (
     <>
       <div className=" h-[100vh]">
         <div
-          className={` ${
-            isOpenMenu ? "visible" : "hidden"
-          } z-10 absolute left-15 xl:static bg-white  xl:flex flex-col items-start xl:border-r-2 xl:border-[#bbbcbc] pt-14 px-4 h-[100%] justify-between  overflow-hidden max-h-[100vh]`}
+          className={` ${isOpenMenu ? "visible" : "hidden"
+            } z-10 absolute left-15 xl:static bg-white  xl:flex flex-col items-start xl:border-r-2 xl:border-[#bbbcbc] pt-14 px-4 h-[100%] justify-between  overflow-hidden max-h-[100vh]`}
         >
           <div className="flex flex-col items-start justify-center">
             <h1 className="text-[#000] text-2xl font-bold mb-1">
@@ -248,39 +288,56 @@ export default function Route({ params }) {
 
                     {/* descarga */}
                     <td>
-                      {tiendas.map((nombre, index) => (
-                        <li key={index}>{nombre}</li>
+                      {routes?.message.map((nombre, index) => (
+                        <li key={index}>{nombre.amountOfMerchandise}</li>
                       ))}
                     </td>
 
                     {/* entregado en mercancia */}
                     <td>
                       {tiendas.map((nombre, index) => (
-                        // <li key={index}>{nombre}</li>
-                        <input
-                          key={index}
-                          className="border-4"
-                          type="number"
-                          value={0}
-                          min={0}
-                          name=""
-                          id=""
-                        />
+                        <div key={index} className="flex items-center gap-2">
+                          <input
+                            className="border-4"
+                            type="number"
+                            value={inputs[index]} // Enlazar el valor del input con el estado correspondiente
+                            min={0}
+                            onChange={(e) =>
+                              handleInputChange(index, parseInt(e.target.value))
+                            } // Actualizar el estado al cambiar el valor del input
+                            name=""
+                            id=""
+                          />
+                          <button
+                            onClick={saveMercancia}
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded flex items-center justify-center"
+                            type="button"
+                          >
+                            🔰
+                          </button>
+                        </div>
                       ))}
                     </td>
 
                     {/* entregado en efectivo */}
                     <td>
                       {tiendas.map((nombre, index) => (
-                        <input
-                          key={index}
-                          className="border-4"
-                          type="number"
-                          value={0}
-                          min={0}
-                          name=""
-                          id=""
-                        />
+                        <div key={index} className="flex items-center gap-2">
+                          <input
+                            className="border-4"
+                            type="number"
+                            value={0}
+                            min={0}
+                            name=""
+                            id=""
+                          />
+                          <button
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded flex items-center justify-center"
+                            type="button"
+                          >
+                            🔰
+                          </button>
+                        </div>
                       ))}
                     </td>
 
@@ -323,9 +380,8 @@ export default function Route({ params }) {
           </div>
         )}
         <div
-          className={`bg-[#1d1b1b6e] absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${
-            viewAddproductos[0] ? "visible" : "hidden"
-          }`}
+          className={`bg-[#1d1b1b6e] absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${viewAddproductos[0] ? "visible" : "hidden"
+            }`}
         ></div>
       </div>
     </>

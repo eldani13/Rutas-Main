@@ -56,6 +56,8 @@ export default function Route() {
     fetchName();
   }, []);
 
+  console.log(routes?.message);
+
   return (
     <>
       <div className="h-[100%]">

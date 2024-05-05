@@ -76,6 +76,8 @@ export default function Route({ params }) {
       })
       .catch(() => null);
 
+    console.log(dataValues);
+
     setRouteCurrent(dataValues || null);
     setModifyRoute((prev) => ({ ...prev, route: dataValues || null }));
     await getDataDirections(dataValues || null);
@@ -169,9 +171,8 @@ export default function Route({ params }) {
   return (
     <>
       <div
-        className={` ${
-          menuOpen ? "sm:ml-0" : "hidden"
-        } hidden xl:flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 ml:px-4 h-[100%] justify-between  overflow-hidden max-h-[100vh] p-4`}
+        className={` ${menuOpen ? "sm:ml-0" : "hidden"
+          } hidden xl:flex flex-col items-start border-r-2 border-[#bbbcbc] pt-14 ml:px-4 h-[100%] justify-between  overflow-hidden max-h-[100vh] p-4`}
       >
         <div className="hidden  xl:flex flex-col items-start justify-center">
           <h1 className="text-[#000] text-2xl font-bold mb-1">
@@ -403,9 +404,8 @@ export default function Route({ params }) {
 
         {modifyRoute.route && (
           <div
-            className={`bg-[#1d1b1b6e] z-20 absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${
-              modifyRoute.state ? "visible" : "hidden"
-            }`}
+            className={`bg-[#1d1b1b6e] z-20 absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${modifyRoute.state ? "visible" : "hidden"
+              }`}
           >
             <form
               onSubmit={onHandleform_EditRoute}

@@ -92,7 +92,6 @@ export default function Products({ params }: { params: { storeId: string } }) {
     );
     await patchEditVal(
       `${processEnv.back}tienda/rempleaceproducts/${storeId}`,
-
       selectData.map((prev) => ({
         product: prev._id,
         price: prev.productPrice,
