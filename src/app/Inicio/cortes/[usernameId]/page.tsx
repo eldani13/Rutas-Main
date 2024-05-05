@@ -104,7 +104,7 @@ export default function Route({ params }) {
   };
 
   useEffect(() => {
-    console.log(mercancia);
+    console.log(typeof mercancia);
   }, [mercancia]);
 
   // save entregado en efectivo
@@ -123,6 +123,16 @@ export default function Route({ params }) {
   useEffect(() => {
     console.log(efectivo);
   }, [efectivo]);
+
+  // const [diferencia, setDiferencia] = useState<any>();
+
+  // useEffect(() => {
+  //   // const result = efectivo + mercancia - resultDownload;
+
+  //   // setDiferencia(result);
+  // }, [diferencia]);
+
+  // console.log(diferencia);
 
   // descarga here
   const [routes, setRoutes] = useState<null | RootRoute>(null);
@@ -402,29 +412,33 @@ export default function Route({ params }) {
               </table>
             </div>
             <div className="flex text-black px-3 xl:col-span-2 col-span-3 row-start-2 h-[20vh]">
-              <div className="flex text-black px-3 xl:col-span-2 col-span-3 col-start-1 row-start-1 h-[20vh] ">
+              <div className="flex text-black px-3 xl:col-span-2 col-span-3 col-start-1 row-start-1 h-[20vh]">
                 <table className="w-full border-collapse">
                   <thead>
                     <tr className="bg-[#ccc] rounded-full py-2.5">
-                      <th className="hidden md:table-cell">Descarga ruta</th>
-                      <th className="hidden md:table-cell">Efectivo ruta</th>
-                      <th>En mercancia Ruta</th>
-                      <th>Diferencia</th>
+                      <th className="hidden md:table-cell px-4 py-2">
+                        Descarga ruta
+                      </th>
+                      <th className="hidden md:table-cell px-4 py-2">
+                        Efectivo ruta
+                      </th>
+                      <th className="px-4 py-2">En mercancia Ruta</th>
+                      <th className="px-4 py-2">Diferencia</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
                       {/* suma de descarga */}
-                      <td>{resultDownload}</td>
+                      <td className="px-4 py-2">{resultDownload}</td>
 
                       {/* mercancia ruta */}
-                      <td>{mercancia}</td>
-
-                      {/* diferencia */}
-                      <td>{}</td>
+                      <td className="px-4 py-2">{mercancia}</td>
 
                       {/* entregado en efectivo */}
-                      <td>{efectivo}</td>
+                      <td className="px-4 py-2">{efectivo}</td>
+
+                      {/* diferencia */}
+                      <td className="px-4 py-2"></td>
                     </tr>
                   </tbody>
                 </table>
