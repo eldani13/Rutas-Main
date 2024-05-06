@@ -462,22 +462,20 @@ export default function Vehicle() {
                   <input
                     type="button"
                     onClick={async () => {
-                      // Obtener la fecha del último cambio de aceite
                       const lastOilChangeDate = new Date(
                         input_ultimoCambioAceite.current?.value || "0000"
                       );
 
-                      // Sumar 2 meses a la fecha del último cambio de aceite
                       lastOilChangeDate.setMonth(
                         lastOilChangeDate.getMonth() + 2
                       );
 
-                      // Actualizar el valor del campo "Próximo cambio de aceite"
+                      // @ts-ignore
                       input_proximoCambioAceite.current.value =
                         lastOilChangeDate.toISOString().slice(0, 10);
                     }}
-                    className="flex w-full h-auto px-3 bg-gray-600"
-                    value="dame click pto"
+                    className="flex w-full h-auto px-3 bg-green-600"
+                    value="+"
                   />
                 </div>
               </div>
