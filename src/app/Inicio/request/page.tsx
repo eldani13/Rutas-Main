@@ -7,7 +7,7 @@ import {
   postInsertData,
 } from "@/utils/api";
 import React, { useEffect, useRef, useState, FormEvent } from "react";
-import { ButtonCrud } from "@/components/buttons/ButtonCrud";
+// import { ButtonCrud } from "@/components/buttons/ButtonCrud";
 import { getCookie, processEnv } from "@/utils/cookies";
 import jwt from "jsonwebtoken";
 import { MessageRequestProducts } from "@/types/requestProducts";
@@ -84,8 +84,12 @@ export default function Product() {
       state: "pendiente",
       dateTime: new Date().toISOString(),
       products: getProductsSelect?.map((product) => ({
-        productId: product._id,
+        product: product._id,
+
+        //stateProduct: "no vendido",
+
         amount: product.amount,
+        stateProduct: "registrado",
       })),
     };
 
@@ -330,9 +334,9 @@ export default function Product() {
                     >
                       <path
                         fill="currentColor"
-                        fill-rule="evenodd"
+                        fillRule="evenodd"
                         d="M1.707.293A1 1 0 0 0 .293 1.707L5.586 7L.293 12.293a1 1 0 1 0 1.414 1.414L7 8.414l5.293 5.293a1 1 0 0 0 1.414-1.414L8.414 7l5.293-5.293A1 1 0 0 0 12.293.293L7 5.586z"
-                        clip-rule="evenodd"
+                        clipRule="evenodd"
                       />
                     </svg>
                   </button>
@@ -349,7 +353,7 @@ export default function Product() {
                           )
                             .toLowerCase()
                             .includes(getInputData.toLowerCase()) &&
-                          !getProductsSelect?.includes(u)
+                          !getProductsSelect?.some((objd) => objd._id === u._id)
                       )
                       .map((product, index) => (
                         <div
@@ -375,8 +379,17 @@ export default function Product() {
                             <button
                               onClick={() =>
                                 setProductsSelect((prev) => {
-                                  if (prev === null) return [product];
-                                  return [...prev, product];
+                                  if (prev === null)
+                                    return [
+                                      {
+                                        ...product,
+                                        amount: 1,
+                                      } as MessageProduct,
+                                    ];
+                                  return [
+                                    ...prev,
+                                    { ...product, amount: 1 } as MessageProduct,
+                                  ];
                                 })
                               }
                             >
@@ -420,9 +433,9 @@ export default function Product() {
                             <path
                               fill="none"
                               stroke="currentColor"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
                               d="M4 7h16M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3m-5 5l4 4m0-4l-4 4"
                             />
                           </svg>
