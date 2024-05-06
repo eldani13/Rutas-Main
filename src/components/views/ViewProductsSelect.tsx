@@ -4,18 +4,30 @@ import { Dispatch, SetStateAction } from "react";
 export default function ViewProductsSelect({
   productsSelect,
   setProductsSelect = null,
+  utils
 }: {
   productsSelect: MessageProduct[] | null;
   setProductsSelect?: Dispatch<SetStateAction<MessageProduct[] | null>> | null;
+  utils: any
 }) {
+
   const handleUpdateProductSelect = (index: number, newNumber: number) => {
     if (!setProductsSelect) return;
+    
     setProductsSelect((prev) => {
       const newArray: MessageProduct[] | null = prev && [...prev];
       if (newArray) newArray[index].productPrice = newNumber;
+
+      console.log('sangre de JUNIORSSSSSSS!!!!!')
       return newArray;
     });
   };
+
+  const handleUpdateUtilsProductSelect = () => {
+    if (!utils) return
+
+    utils()
+  }
 
   return (
     <div className="w-full pt-5 flex flex-col gap-6">
@@ -60,6 +72,18 @@ export default function ViewProductsSelect({
               </p>
             </div>
             <div className="flex items-center gap-1 font-bold text-xl">
+              {/* precio producto */}
+              <input
+                type="number"
+                className="flex gap-2 w-32 text-center p-2 border rounded-xl outline-none "
+                min={0}
+                onChange={(e) =>
+                  handleUpdateProductSelect(index, parseInt(e.target.value))
+                }
+                value={product.productPrice ?? 0}
+              />
+
+              {/* utilidades */}
               <input
                 type="number"
                 className="flex gap-2 w-32 text-center p-2 border rounded-xl outline-none "

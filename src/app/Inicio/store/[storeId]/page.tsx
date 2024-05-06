@@ -20,6 +20,10 @@ export default function Products({ params }: { params: { storeId: string } }) {
     MessageProduct[] | null
   >(null);
   const [selectData, setSelectData] = useState<MessageProduct[] | null>(null);
+  const [selectDataUtils, setSelectDataUtils] = useState<
+    MessageProduct[] | null
+  >(null);
+  
   const [storeCurrent, setStoreCurrent] = useState<MessageStores | null>(null);
   const [productsInStore, setProductsInStore] = useState<
     MessageProduct[] | null
@@ -83,6 +87,8 @@ export default function Products({ params }: { params: { storeId: string } }) {
 
   const handleSendData = async () => {
     if (!selectData) return;
+    if (!selectDataUtils) return;
+
     setIsLoading(true);
     console.log(
       selectData.map((prev) => ({
@@ -90,6 +96,7 @@ export default function Products({ params }: { params: { storeId: string } }) {
         price: prev.productPrice,
       }))
     );
+    
     await patchEditVal(
       `${processEnv.back}tienda/rempleaceproducts/${storeId}`,
       selectData.map((prev) => ({
@@ -110,15 +117,6 @@ export default function Products({ params }: { params: { storeId: string } }) {
   // console.log(productsInStoreInitial);
   return (
     <>
-      {/* <div className="h-[100%]">
-        <div className="z-10 rigth-0 bottom-0 h-fit absolute xl:static xl:flex flex-col items-start xl:border-r-2 xl:border-[#bbbcbc] md:pt-14  xl:h-[100%]">
-          <div className="hidden xl:visible xl:flex flex-col items-start justify-center px-2">
-            <h1 className="text-[#000] text-2xl font-bold mb-1">Rutas</h1>
-            <span className="">Listado de rutas</span>
-          </div>
-
-        </div>
-      </div> */}
       <span></span>
       <div className="max-h-[100vh] h-full pt-14 flex flex-col overflow-y-auto p-5 ">
         <div className="absolute right-2 top-2 flex gap-5">
@@ -167,16 +165,19 @@ export default function Products({ params }: { params: { storeId: string } }) {
                 </svg>
               </button>
             </form>
+
             <ViewAllProducts
               dataFilter={searchData}
               noIncludeData={selectData}
               setProductsSelect={setSelectData}
               setAllDataProductsProp={setAllDataProducts}
             />
-            {/* Contenido */}
+
+            {/* productos a;adidos */}
             <ViewProductsSelect
               productsSelect={selectData}
               setProductsSelect={setSelectData}
+              utils={setSelectData}
             />
           </div>
         )}
