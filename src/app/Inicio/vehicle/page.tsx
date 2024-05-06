@@ -27,6 +27,7 @@ export default function Vehicle() {
   const input_modelo = useRef<HTMLInputElement>(null);
   const input_ultimoCambioAceite = useRef<HTMLInputElement>(null);
   const input_proximoCambioAceite = useRef<HTMLInputElement>(null);
+  // const input_kilometraje = useRef<HTMLInputElement>(null)
 
   const getDaysDiference = (dateCurrent: string) => {
     const days: number = Math.floor(
@@ -36,8 +37,8 @@ export default function Vehicle() {
     return days == 0
       ? "Hoy"
       : days < 0
-        ? `Hace ${Math.abs(days)} días`
-        : `En ${days} días`;
+      ? `Hace ${Math.abs(days)} días`
+      : `En ${days} días`;
   };
 
   const updateTable = async () => {
@@ -107,6 +108,27 @@ export default function Vehicle() {
     );
   };
 
+  const handleSumMonths = async () => {
+    const lastOilChangeDate = new Date(
+      input_ultimoCambioAceite.current?.value || "0000"
+    );
+
+    // Sumar 2 meses a la fecha actual
+    lastOilChangeDate.setMonth(lastOilChangeDate.getMonth() + 2);
+    await patchEditVal(
+      `${processEnv.back}car-unit/edit/${clickInVehicle?._id}`,
+      {
+        lastOilChange: lastOilChangeDate.toISOString(),
+      },
+      () => {
+        setviewAddVehicle([false, "insert"]);
+        updateTable();
+        formRef.current?.reset();
+      },
+      "vehículo"
+    );
+  };
+
   const insertVehicleFunction = async () => {
     await postInsertData(
       `${processEnv.back}car-unit/new/`,
@@ -141,6 +163,11 @@ export default function Vehicle() {
     );
   };
 
+  const handleKm = (e: Event) => {
+    // @ts-ignore
+    console.log(e.target.value);
+  };
+
   const [kmCar, setCarKilom] = useState<any>();
   const getKilometros = async () => {
     const API = await fetch("http://localhost:5000/api/v1/cars-units");
@@ -148,6 +175,10 @@ export default function Vehicle() {
 
     if (!API.ok) throw new Error("error en consumir el auto");
 
+    const mapKm = response.message.filter((km: any) => km.kilometros >= 1);
+
+    setCarKilom(mapKm);
+    console.log(mapKm);
     console.log(response.message);
   };
 
@@ -155,14 +186,11 @@ export default function Vehicle() {
     getKilometros();
   }, []);
 
-  const calculateKmToCar = (e: Event) => {
-    // @ts-ignore
-    const event = e.target.value;
+  useEffect(() => {
+    console.log(kmCar);
+  }, [kmCar]);
 
-    console.log(event);
-  };
-
-  const saveKmToCar = async () => { };
+  const saveKmToCar = async () => {};
 
   return (
     <>
@@ -247,23 +275,6 @@ export default function Vehicle() {
               </svg>
             </ButtonCrud>
             <button>guardar cambios de KM</button>
-            {/* <ButtonCrud
-              isHidden={false}
-              text="Agregar"
-              color="bg-green-500"
-              onclickHandle={() => setviewAddVehicle([true, "insert"])}
-            >
-              <svg
-                className="w-6 h-6"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="black"
-                  d="M12 4a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2h-6v6a1 1 0 1 1-2 0v-6H5a1 1 0 1 1 0-2h6V5a1 1 0 0 1 1-1"
-                />
-              </svg>
-            </ButtonCrud> */}
           </div>
         </div>
       </div>
@@ -283,7 +294,7 @@ export default function Vehicle() {
               <p>Último cambio de aceite</p>
               <p>Próximo cambio de aceite</p>
               <p>kilometraje</p>
-              <p>Km</p>
+              {/* <p>Km</p> */}
             </div>
             {dataVehicle &&
               dataVehicle?.message.map(
@@ -294,10 +305,11 @@ export default function Vehicle() {
                       setclickInVehicle(clickInVehicle !== null ? null : data)
                     }
                     className={`bg-[linear-gradient(225deg,_#a1c4fd_10%,_#c2e9fb_90%)] 
-          relative my-2   py-6 md:py-2  rounded-xl flex flex-col px-3 pl-5 gap-1 font-semibold hover:bg-slate-200 cursor-pointer ${clickInVehicle?._id === data._id
-                        ? "bg-[linear-gradient(225deg,_#acfca2_10%,_#c0faea_90%)]"
-                        : " md:bg-none"
-                      }
+          relative my-2   py-6 md:py-2  rounded-xl flex flex-col px-3 pl-5 gap-1 font-semibold hover:bg-slate-200 cursor-pointer ${
+            clickInVehicle?._id === data._id
+              ? "bg-[linear-gradient(225deg,_#acfca2_10%,_#c0faea_90%)]"
+              : " md:bg-none"
+          }
           md:grid  justify-items-center  md:rounded-full overflow-hidden md:items-center`}
                     style={{
                       gridTemplateColumns: "50px 1fr 1fr 1fr 1fr 1fr 1fr",
@@ -329,10 +341,16 @@ export default function Vehicle() {
                     </div>
                     <div className="flex gap-1">
                       <span className="md:hidden font-black">kilometraje:</span>
-                      {/* <p>{getDaysDiference(data.nextOilChange)}</p> */}
-                      <p>{data.kilometraje ?? 0}</p>
+                      <input
+                        // @ts-ignore
+                        onChange={handleKm}
+                        min="0"
+                        value={kmCar ?? 0}
+                        className="border border-gray-300 rounded-md px-3 py-2"
+                        type="number"
+                      />
                     </div>
-                    <div className="flex gap-1">
+                    {/* <div className="flex gap-1">
                       <span className="md:hidden font-black">Km:</span>
                       <input
                         onChange={calculateKmToCar}
@@ -340,7 +358,7 @@ export default function Vehicle() {
                         className="border border-gray-300 rounded-md px-3 py-2"
                         type="number"
                       />
-                    </div>
+                    </div> */}
                   </div>
                 )
               )}
@@ -348,8 +366,9 @@ export default function Vehicle() {
         </div>
 
         <div
-          className={`bg-[#1d1b1b6e] absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${viewAddVehicle[0] ? "visible" : "hidden"
-            }`}
+          className={`bg-[#1d1b1b6e] absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${
+            viewAddVehicle[0] ? "visible" : "hidden"
+          }`}
         >
           <form
             ref={formRef}
@@ -359,8 +378,9 @@ export default function Vehicle() {
           >
             <div className="w-full flex absolute justify-center top-[0] -translate-y-[50%] left-0 right-0 ">
               <div
-                className={`${viewAddVehicle[1] == "insert" ? "bg-teal-300" : "bg-sky-400"
-                  } w-20 h-20 flex rounded-full items-center justify-center shadow-lg shadow-emerald-800`}
+                className={`${
+                  viewAddVehicle[1] == "insert" ? "bg-teal-300" : "bg-sky-400"
+                } w-20 h-20 flex rounded-full items-center justify-center shadow-lg shadow-emerald-800`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -438,6 +458,26 @@ export default function Vehicle() {
                     type="date"
                     ref={input_ultimoCambioAceite}
                     className="flex w-full h-auto px-3"
+                  />
+                  <input
+                    type="button"
+                    onClick={async () => {
+                      // Obtener la fecha del último cambio de aceite
+                      const lastOilChangeDate = new Date(
+                        input_ultimoCambioAceite.current?.value || "0000"
+                      );
+
+                      // Sumar 2 meses a la fecha del último cambio de aceite
+                      lastOilChangeDate.setMonth(
+                        lastOilChangeDate.getMonth() + 2
+                      );
+
+                      // Actualizar el valor del campo "Próximo cambio de aceite"
+                      input_proximoCambioAceite.current.value =
+                        lastOilChangeDate.toISOString().slice(0, 10);
+                    }}
+                    className="flex w-full h-auto px-3 bg-gray-600"
+                    value="dame click pto"
                   />
                 </div>
               </div>
