@@ -27,19 +27,33 @@ export default function Vehicle() {
   const input_modelo = useRef<HTMLInputElement>(null);
   const input_ultimoCambioAceite = useRef<HTMLInputElement>(null);
   const input_proximoCambioAceite = useRef<HTMLInputElement>(null);
-  // const input_kilometraje = useRef<HTMLInputElement>(null)
 
-  const getDaysDiference = (dateCurrent: string) => {
-    const days: number = Math.floor(
-      (new Date(dateCurrent).getTime() - actualTime.getTime()) / timeInDay
-    );
+  const getDaysDiference = (dateCurrent: string | Date) => {
+    // Convertir la cadena de fecha a un objeto Date si es necesario
+    const currentDate = typeof dateCurrent === 'string' ? new Date(dateCurrent) : dateCurrent;
 
-    return days == 0
-      ? "Hoy"
-      : days < 0
-      ? `Hace ${Math.abs(days)} días`
-      : `En ${days} días`;
+    // Obtener la fecha actual
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Obtener la diferencia en milisegundos entre las fechas
+    const differenceInMs = currentDate.getTime() - today.getTime();
+
+    // Convertir la diferencia a días
+    const differenceInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
+
+    // Manejar los casos especiales
+    if (differenceInDays === 0) {
+      return "Hoy";
+    } else if (differenceInDays === 1) {
+      return "Hace 1 día";
+    } else if (differenceInDays < 0) {
+      return `Hace ${Math.abs(differenceInDays)} días`;
+    } else {
+      return `En ${differenceInDays} días`;
+    }
   };
+
 
   const updateTable = async () => {
     await getAllFetchDataValues(`${processEnv.back}cars-units`).then((rec) => {
@@ -190,7 +204,7 @@ export default function Vehicle() {
     console.log(kmCar);
   }, [kmCar]);
 
-  const saveKmToCar = async () => {};
+  const saveKmToCar = async () => { };
 
   return (
     <>
@@ -293,7 +307,7 @@ export default function Vehicle() {
               <p>Modelo</p>
               <p>Último cambio de aceite</p>
               <p>Próximo cambio de aceite</p>
-              <p>kilometraje</p>
+              {/* <p>kilometraje</p> */}
               {/* <p>Km</p> */}
             </div>
             {dataVehicle &&
@@ -305,11 +319,10 @@ export default function Vehicle() {
                       setclickInVehicle(clickInVehicle !== null ? null : data)
                     }
                     className={`bg-[linear-gradient(225deg,_#a1c4fd_10%,_#c2e9fb_90%)] 
-          relative my-2   py-6 md:py-2  rounded-xl flex flex-col px-3 pl-5 gap-1 font-semibold hover:bg-slate-200 cursor-pointer ${
-            clickInVehicle?._id === data._id
-              ? "bg-[linear-gradient(225deg,_#acfca2_10%,_#c0faea_90%)]"
-              : " md:bg-none"
-          }
+          relative my-2   py-6 md:py-2  rounded-xl flex flex-col px-3 pl-5 gap-1 font-semibold hover:bg-slate-200 cursor-pointer ${clickInVehicle?._id === data._id
+                        ? "bg-[linear-gradient(225deg,_#acfca2_10%,_#c0faea_90%)]"
+                        : " md:bg-none"
+                      }
           md:grid  justify-items-center  md:rounded-full overflow-hidden md:items-center`}
                     style={{
                       gridTemplateColumns: "50px 1fr 1fr 1fr 1fr 1fr 1fr",
@@ -339,22 +352,13 @@ export default function Vehicle() {
                       </span>
                       <p>{getDaysDiference(data.nextOilChange)}</p>
                     </div>
-                    <div className="flex gap-1">
+                    {/* <div className="flex gap-1">
                       <span className="md:hidden font-black">kilometraje:</span>
                       <input
                         // @ts-ignore
                         onChange={handleKm}
                         min="0"
                         value={kmCar ?? 0}
-                        className="border border-gray-300 rounded-md px-3 py-2"
-                        type="number"
-                      />
-                    </div>
-                    {/* <div className="flex gap-1">
-                      <span className="md:hidden font-black">Km:</span>
-                      <input
-                        onChange={calculateKmToCar}
-                        min="0"
                         className="border border-gray-300 rounded-md px-3 py-2"
                         type="number"
                       />
@@ -365,10 +369,10 @@ export default function Vehicle() {
           </div>
         </div>
 
+        {/* editar form */}
         <div
-          className={`bg-[#1d1b1b6e] absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${
-            viewAddVehicle[0] ? "visible" : "hidden"
-          }`}
+          className={`bg-[#1d1b1b6e] absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${viewAddVehicle[0] ? "visible" : "hidden"
+            }`}
         >
           <form
             ref={formRef}
@@ -378,9 +382,8 @@ export default function Vehicle() {
           >
             <div className="w-full flex absolute justify-center top-[0] -translate-y-[50%] left-0 right-0 ">
               <div
-                className={`${
-                  viewAddVehicle[1] == "insert" ? "bg-teal-300" : "bg-sky-400"
-                } w-20 h-20 flex rounded-full items-center justify-center shadow-lg shadow-emerald-800`}
+                className={`${viewAddVehicle[1] == "insert" ? "bg-teal-300" : "bg-sky-400"
+                  } w-20 h-20 flex rounded-full items-center justify-center shadow-lg shadow-emerald-800`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -462,23 +465,19 @@ export default function Vehicle() {
                   <input
                     type="button"
                     onClick={() => {
-                      // Obtener la fecha actual
                       const currentDate = new Date();
                       currentDate.setHours(0, 0, 0, 0);
 
-                      // Establecer el valor del campo "Último cambio de aceite" como la fecha actual
                       // @ts-ignore
                       input_ultimoCambioAceite.current.value = currentDate
                         .toISOString()
                         .slice(0, 10);
 
-                      // Crear una copia de la fecha actual y sumarle 2 meses
                       const nextOilChangeDate = new Date(currentDate);
                       nextOilChangeDate.setMonth(
                         nextOilChangeDate.getMonth() + 2
                       );
 
-                      // Establecer el valor del campo "Próximo cambio de aceite" como la fecha actual más 2 meses
                       // @ts-ignore
                       input_proximoCambioAceite.current.value =
                         nextOilChangeDate.toISOString().slice(0, 10);
