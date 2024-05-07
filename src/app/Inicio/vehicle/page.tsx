@@ -462,6 +462,31 @@ export default function Vehicle() {
                   <input
                     type="button"
                     onClick={async () => {
+                      const currentDate = new Date();
+                      // @ts-ignore
+                      input_ultimoCambioAceite.current.value = currentDate
+                        .toISOString()
+                        .slice(0, 10);
+
+                      const lastOilChangeDate = new Date(
+                        input_proximoCambioAceite.current?.value || "0000"
+                      );
+
+                      lastOilChangeDate.setMonth(
+                        lastOilChangeDate.getMonth() + 2
+                      );
+
+                      // @ts-ignore
+                      input_proximoCambioAceite.current.value =
+                        lastOilChangeDate.toISOString().slice(0, 10);
+                    }}
+                    className="flex w-full h-auto px-3 bg-green-600"
+                    value="+"
+                  />
+
+                  {/* <input
+                    type="button"
+                    onClick={async () => {
                       const lastOilChangeDate = new Date(
                         input_ultimoCambioAceite.current?.value || "0000"
                       );
@@ -476,7 +501,7 @@ export default function Vehicle() {
                     }}
                     className="flex w-full h-auto px-3 bg-green-600"
                     value="+"
-                  />
+                  /> */}
                 </div>
               </div>
               <div>
