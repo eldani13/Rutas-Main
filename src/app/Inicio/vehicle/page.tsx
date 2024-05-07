@@ -37,8 +37,8 @@ export default function Vehicle() {
     return days == 0
       ? "Hoy"
       : days < 0
-        ? `Hace ${Math.abs(days)} días`
-        : `En ${days} días`;
+      ? `Hace ${Math.abs(days)} días`
+      : `En ${days} días`;
   };
 
   const updateTable = async () => {
@@ -190,7 +190,7 @@ export default function Vehicle() {
     console.log(kmCar);
   }, [kmCar]);
 
-  const saveKmToCar = async () => { };
+  const saveKmToCar = async () => {};
 
   return (
     <>
@@ -305,10 +305,11 @@ export default function Vehicle() {
                       setclickInVehicle(clickInVehicle !== null ? null : data)
                     }
                     className={`bg-[linear-gradient(225deg,_#a1c4fd_10%,_#c2e9fb_90%)] 
-          relative my-2   py-6 md:py-2  rounded-xl flex flex-col px-3 pl-5 gap-1 font-semibold hover:bg-slate-200 cursor-pointer ${clickInVehicle?._id === data._id
-                        ? "bg-[linear-gradient(225deg,_#acfca2_10%,_#c0faea_90%)]"
-                        : " md:bg-none"
-                      }
+          relative my-2   py-6 md:py-2  rounded-xl flex flex-col px-3 pl-5 gap-1 font-semibold hover:bg-slate-200 cursor-pointer ${
+            clickInVehicle?._id === data._id
+              ? "bg-[linear-gradient(225deg,_#acfca2_10%,_#c0faea_90%)]"
+              : " md:bg-none"
+          }
           md:grid  justify-items-center  md:rounded-full overflow-hidden md:items-center`}
                     style={{
                       gridTemplateColumns: "50px 1fr 1fr 1fr 1fr 1fr 1fr",
@@ -365,8 +366,9 @@ export default function Vehicle() {
         </div>
 
         <div
-          className={`bg-[#1d1b1b6e] absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${viewAddVehicle[0] ? "visible" : "hidden"
-            }`}
+          className={`bg-[#1d1b1b6e] absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center ${
+            viewAddVehicle[0] ? "visible" : "hidden"
+          }`}
         >
           <form
             ref={formRef}
@@ -376,8 +378,9 @@ export default function Vehicle() {
           >
             <div className="w-full flex absolute justify-center top-[0] -translate-y-[50%] left-0 right-0 ">
               <div
-                className={`${viewAddVehicle[1] == "insert" ? "bg-teal-300" : "bg-sky-400"
-                  } w-20 h-20 flex rounded-full items-center justify-center shadow-lg shadow-emerald-800`}
+                className={`${
+                  viewAddVehicle[1] == "insert" ? "bg-teal-300" : "bg-sky-400"
+                } w-20 h-20 flex rounded-full items-center justify-center shadow-lg shadow-emerald-800`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -458,31 +461,31 @@ export default function Vehicle() {
                   />
                   <input
                     type="button"
-                    onClick={async () => {
-                      const currentDate = new Date()
-                      currentDate.setHours(0,0,0,0)
-                      
+                    onClick={() => {
+                      // Obtener la fecha actual
+                      const currentDate = new Date();
+                      currentDate.setHours(0, 0, 0, 0);
+
+                      // Establecer el valor del campo "Último cambio de aceite" como la fecha actual
                       // @ts-ignore
                       input_ultimoCambioAceite.current.value = currentDate
                         .toISOString()
                         .slice(0, 10);
 
-                      const lastOilChangeDate = new Date(
-                        input_proximoCambioAceite.current?.value || "0000"
+                      // Crear una copia de la fecha actual y sumarle 2 meses
+                      const nextOilChangeDate = new Date(currentDate);
+                      nextOilChangeDate.setMonth(
+                        nextOilChangeDate.getMonth() + 2
                       );
 
-                      lastOilChangeDate.setMonth(
-                        lastOilChangeDate.getMonth() + 2
-                      );
-
+                      // Establecer el valor del campo "Próximo cambio de aceite" como la fecha actual más 2 meses
                       // @ts-ignore
                       input_proximoCambioAceite.current.value =
-                        lastOilChangeDate.toISOString().slice(0, 10);
+                        nextOilChangeDate.toISOString().slice(0, 10);
                     }}
                     className="flex w-full h-auto px-3 bg-green-600"
                     value="+"
                   />
-
                 </div>
               </div>
               <div>
