@@ -459,7 +459,9 @@ export default function Vehicle() {
                   <input
                     type="button"
                     onClick={async () => {
-                      const currentDate = new Date();
+                      const currentDate = new Date()
+                      currentDate.setHours(0,0,0,0)
+                      
                       // @ts-ignore
                       input_ultimoCambioAceite.current.value = currentDate
                         .toISOString()
@@ -480,6 +482,7 @@ export default function Vehicle() {
                     className="flex w-full h-auto px-3 bg-green-600"
                     value="+"
                   />
+
                 </div>
               </div>
               <div>
