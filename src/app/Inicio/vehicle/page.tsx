@@ -29,31 +29,20 @@ export default function Vehicle() {
   const input_proximoCambioAceite = useRef<HTMLInputElement>(null);
 
   const getDaysDiference = (dateCurrent: string | Date) => {
-    // Convertir la cadena de fecha a un objeto Date si es necesario
-    const currentDate = typeof dateCurrent === 'string' ? new Date(dateCurrent) : dateCurrent;
+    const currentDate =
+      typeof dateCurrent === "string" ? new Date(dateCurrent) : dateCurrent;
 
-    // Obtener la fecha actual
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-
-    // Obtener la diferencia en milisegundos entre las fechas
     const differenceInMs = currentDate.getTime() - today.getTime();
-
-    // Convertir la diferencia a días
     const differenceInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
 
-    // Manejar los casos especiales
-    if (differenceInDays === 0) {
-      return "Hoy";
-    } else if (differenceInDays === 1) {
-      return "Hace 1 día";
-    } else if (differenceInDays < 0) {
-      return `Hace ${Math.abs(differenceInDays)} días`;
-    } else {
-      return `En ${differenceInDays} días`;
-    }
-  };
+    if (differenceInDays === 0) return "Hoy";
+    if (differenceInDays === 1) return "Hace 1 día";
+    if (differenceInDays < 0) return `Hace ${Math.abs(differenceInDays)} días`;
 
+    return `En ${differenceInDays} días`;
+  };
 
   const updateTable = async () => {
     await getAllFetchDataValues(`${processEnv.back}cars-units`).then((rec) => {

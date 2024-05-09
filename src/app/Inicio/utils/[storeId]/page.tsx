@@ -14,19 +14,19 @@ import { MessageStores, ProductsInStores } from "@/types/stores";
 import StoreForm from "@/components/forms/StoreForm";
 import Link from "next/link";
 
-export default function Products({ params }: { params: { storeId: string } }) {
+export default function UtilsProducts({ params }: { params: { storeId: string } }) {
   const { storeId } = params;
 
-  console.log(storeId)
-  const [store, setStoreParams] = useState('')
+  console.log(storeId);
+  const [store, setStoreParams] = useState("");
 
-  useEffect(()=> {
-  setStoreParams(storeId)
-  }, [])
+  useEffect(() => {
+    setStoreParams(storeId);
+  }, []);
 
-  useEffect(()=> {
-    console.log(store)
-  }, [store])
+  useEffect(() => {
+    console.log(store);
+  }, [store]);
 
   const [searchData, setSearchData] = useState("");
   const [allDataProducts, setAllDataProducts] = useState<
@@ -143,13 +143,13 @@ export default function Products({ params }: { params: { storeId: string } }) {
       <span></span>
       <div className="max-h-[100vh] h-full pt-14 flex flex-col overflow-y-auto p-5 ">
         <div className="absolute right-2 top-2 flex gap-5">
-        <Link
+          <Link
             key={store}
             href={`utils/${store}`}
             className="bg-green-400 rounded-xl hover:bg-green-500 px-2 py-1 text-slate-50"
           >
             Utilidades
-        </Link>
+          </Link>
           <button
             onClick={() => setIsModifyStore(true)}
             className="bg-blue-400 rounded-xl hover:bg-blue-500 px-2 py-1 text-slate-50"
@@ -187,7 +187,6 @@ export default function Products({ params }: { params: { storeId: string } }) {
                   />
                 </svg>
               </button>
-              
             </form>
 
             <ViewAllProducts
@@ -209,7 +208,6 @@ export default function Products({ params }: { params: { storeId: string } }) {
               setProductsSelect={setSelectData}
               utils={setSelectData}
             /> */}
-
 
             {/* ViewUtilsProducts */}
             {/* <input

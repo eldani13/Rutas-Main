@@ -1,7 +1,7 @@
 import { MessageProduct } from "@/types/product";
 import { Dispatch, SetStateAction } from "react";
 
-export default function ViewProductsSelect({
+export default function ViewUtilsProducts({
   productsSelect,
   setProductsSelect = null,
   utils,
